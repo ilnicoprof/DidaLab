@@ -706,7 +706,7 @@ export default function App() {
                     </div>
                     <h3 className="text-lg font-bold text-slate-800 mb-2">{topic.name}</h3>
                     <p className="text-slate-500 text-sm mb-4">Esercizi e lezioni interattive</p>
-                    <div className="grid grid-cols-3 gap-2" onClickCapture={(e) => e.stopPropagation()}>
+                    <div className="grid grid-cols-3 gap-2" onClick={(e) => e.stopPropagation()}>
                       <button id={`impara-${topic.id}`} onClick={() => { setModalTopic(topic); setModalAction('impara'); }} className="flex items-center justify-center gap-2 rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-dida-blue hover:bg-blue-50 hover:border-dida-blue/30 transition cursor-pointer">
                         <BookOpen size={16} />
                         Impara
@@ -956,32 +956,28 @@ export default function App() {
               className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-lg max-h-[80vh] overflow-hidden flex flex-col"
             >
               {/* Modal Header */}
-              <div className={`p-6 pb-4 border-b border-slate-100 ${
-                modalAction === 'impara' ? 'bg-gradient-to-r from-blue-50 to-white' :
-                modalAction === 'allena' ? 'bg-gradient-to-r from-amber-50 to-white' :
-                'bg-gradient-to-r from-emerald-50 to-white'
+              <div className={`relative p-8 pb-6 border-b border-slate-100 ${
+                modalAction === 'impara' ? 'bg-gradient-to-br from-blue-50 to-white' :
+                modalAction === 'allena' ? 'bg-gradient-to-br from-amber-50 to-white' :
+                'bg-gradient-to-br from-emerald-50 to-white'
               }`}>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                      modalAction === 'impara' ? 'bg-dida-blue text-white' :
-                      modalAction === 'allena' ? 'bg-amber-500 text-white' :
-                      'bg-emerald-500 text-white'
-                    }`}>
-                      {modalAction === 'impara' ? <BookOpen size={20} /> : modalAction === 'allena' ? <Zap size={20} /> : <Gamepad size={20} />}
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-slate-800">
-                        {modalAction === 'impara' ? 'Impara' : modalAction === 'allena' ? 'Allenati' : 'Gioca'}
-                      </h3>
-                      <p className="text-sm text-slate-500">{modalTopic.name}</p>
-                    </div>
+                <button onClick={closeModal} className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white border border-slate-200 hover:bg-slate-100 flex items-center justify-center text-slate-500 transition cursor-pointer shadow-sm">
+                  ✕
+                </button>
+                <div className="flex flex-col items-center justify-center text-center">
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-md mb-4 ${
+                    modalAction === 'impara' ? 'bg-dida-blue text-white shadow-blue-200' :
+                    modalAction === 'allena' ? 'bg-amber-500 text-white shadow-amber-200' :
+                    'bg-emerald-500 text-white shadow-emerald-200'
+                  }`}>
+                    {modalAction === 'impara' ? <BookOpen size={28} /> : modalAction === 'allena' ? <Zap size={28} /> : <Gamepad size={28} />}
                   </div>
-                  <button onClick={closeModal} className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition cursor-pointer">
-                    ✕
-                  </button>
+                  <h3 className="text-2xl font-black text-slate-800">
+                    {modalAction === 'impara' ? 'Impara' : modalAction === 'allena' ? 'Allenati' : 'Gioca'}
+                  </h3>
+                  <p className="text-base font-medium text-slate-500 mt-1">{modalTopic.name}</p>
                 </div>
-                <p className="text-sm text-slate-500 mt-3">
+                <p className="text-sm text-slate-500 mt-4 text-center">
                   {modalAction === 'impara' ? 'Scegli un sottoargomento per imparare in modo interattivo.' :
                    modalAction === 'allena' ? 'Scegli un sottoargomento per allenarti con gli esercizi.' :
                    'Scegli un sottoargomento per imparare giocando.'}
@@ -1002,6 +998,9 @@ export default function App() {
                         setSelectedTopic(modalTopic);
                         setSelectedSubtopicId(sub.id);
                         setView('learn-lesson');
+                        closeModal();
+                      } else {
+                        alert(`La sezione "${modalAction}" per "${sub.name}" è ancora in fase di sviluppo!`);
                         closeModal();
                       }
                     }}
