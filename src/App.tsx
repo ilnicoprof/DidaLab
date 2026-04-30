@@ -415,6 +415,12 @@ export default function App() {
   const [selectedQuizItems, setSelectedQuizItems] = useState<string[]>([]);
   const [selectedSubtopicId, setSelectedSubtopicId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [flippedSubtopics, setFlippedSubtopics] = useState<Record<string, boolean>>({});
+
+  const toggleFlip = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setFlippedSubtopics(prev => ({ ...prev, [id]: !prev[id] }));
+  };
   const [modalTopic, setModalTopic] = useState<Topic | null>(null);
   const [modalAction, setModalAction] = useState<'impara' | 'allena' | 'gioca' | null>(null);
 
@@ -837,50 +843,82 @@ export default function App() {
                 <h3 className="text-2xl font-bold text-slate-800 mb-3">Sottoargomenti</h3>
                 <p className="text-slate-500 mb-6">Scegli se imparare, allenarti o giocare con i contenuti disponibili.</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {subtopics[selectedTopic.id]?.map((subtopic) => (
-                    <div
-                      key={subtopic.id}
-                      className={`rounded-3xl border p-5 transition-all ${subtopic.active ? 'border-slate-200 bg-slate-50 hover:border-dida-blue/30 hover:bg-white cursor-pointer' : 'border-slate-200 bg-slate-100 text-slate-400 cursor-not-allowed'}`}
-                    >
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">{subtopic.active ? 'Attivo' : 'Disattivato'}</span>
-                      </div>
-                      <h4 className="text-lg font-bold text-slate-900 mb-2">{subtopic.name}</h4>
-                      {!subtopic.active && subtopic.linkToTopicId ? (
-                        <button
-                          onClick={() => openLinkedTopic(subtopic.linkToTopicId!)}
-                          className="mt-3 inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-400 via-cyan-400 via-teal-400 via-indigo-400 via-purple-400 to-blue-500 text-white px-4 py-2 text-sm font-semibold transition hover:opacity-90"
-                        >
-                          collegamento con {Object.values(topics).flat().find(t => t.id === subtopic.linkToTopicId)?.name || 'Argomento'}
-                        </button>
-                      ) : subtopic.active ? (
-                        <div className="mt-4 grid grid-cols-3 gap-2">
-                          <button
-                            onClick={() => {
-                              if (subtopic.id === 'natural-numbers') {
-                                setSelectedSubtopicId(subtopic.id);
-                                setView('learn-lesson');
-                              }
-                            }}
-                            className={`flex items-center justify-center gap-2 rounded-2xl border border-slate-200 px-3 py-2 text-sm font-semibold transition ${subtopic.id === 'natural-numbers' ? 'text-dida-blue hover:bg-blue-50 hover:border-dida-blue/30 cursor-pointer' : 'text-slate-400 cursor-not-allowed'}`}
-                          >
-                            <BookOpen size={16} />
-                            Impara
-                          </button>
-                          <button className="flex items-center justify-center gap-2 rounded-2xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">
-                            <Zap size={16} />
-                            Allena
-                          </button>
-                          <button className="flex items-center justify-center gap-2 rounded-2xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">
-                            <Gamepad size={16} />
-                            Gioca
-                          </button>
+                  {subtopics[selectedTopic.id]?.map((subtopic) => {
+                    const isFlipped = flippedSubtopics[subtopic.id] || false;
+                    
+                    const renderCardContent = (isBack: boolean) => (
+                      <div className={`rounded-3xl border p-5 w-full h-full flex flex-col transition-colors ${subtopic.active ? (isBack ? 'border-dida-orange/30 bg-orange-50/50 hover:bg-orange-50' : 'border-slate-200 bg-slate-50 hover:border-dida-blue/30 hover:bg-white cursor-pointer') : 'border-slate-200 bg-slate-100 text-slate-400 cursor-not-allowed'}`}>
+                        <div className="flex items-center justify-between mb-4">
+                          <span className={`text-sm font-semibold uppercase tracking-[0.2em] ${isBack ? 'text-dida-orange' : 'text-slate-500'}`}>
+                            {subtopic.active ? (isBack ? 'Inclusione' : 'Attivo') : 'Disattivato'}
+                          </span>
+                          {subtopic.active && (
+                            <button
+                              onClick={(e) => toggleFlip(subtopic.id, e)}
+                              className={`px-3 py-1 rounded-xl text-xs font-bold transition shadow-sm z-10 relative ${isBack ? 'text-white bg-dida-orange hover:bg-orange-600' : 'text-slate-500 bg-white border border-slate-200 hover:bg-slate-50 hover:text-dida-orange'}`}
+                            >
+                              {isBack ? 'Indietro' : 'Inclusione'}
+                            </button>
+                          )}
                         </div>
-                      ) : (
-                        <p className="text-slate-500 text-sm">Contenuto in arrivo</p>
-                      )}
-                    </div>
-                  ))}
+                        <h4 className="text-lg font-bold text-slate-900 mb-2">{subtopic.name}</h4>
+                        {!subtopic.active && subtopic.linkToTopicId ? (
+                          <button
+                            onClick={() => openLinkedTopic(subtopic.linkToTopicId!)}
+                            className="mt-3 inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-400 via-cyan-400 via-teal-400 via-indigo-400 via-purple-400 to-blue-500 text-white px-4 py-2 text-sm font-semibold transition hover:opacity-90 z-10 relative w-fit"
+                          >
+                            collegamento con {Object.values(topics).flat().find(t => t.id === subtopic.linkToTopicId)?.name || 'Argomento'}
+                          </button>
+                        ) : subtopic.active ? (
+                          <div className="mt-4 grid grid-cols-3 gap-2 z-10 relative">
+                            <button
+                              onClick={() => {
+                                if (subtopic.id === 'natural-numbers') {
+                                  setSelectedSubtopicId(subtopic.id);
+                                  setView('learn-lesson');
+                                }
+                              }}
+                              className={`flex items-center justify-center gap-2 rounded-2xl border border-slate-200 px-3 py-2 text-sm font-semibold transition ${subtopic.id === 'natural-numbers' ? 'text-dida-blue hover:bg-blue-50 hover:border-dida-blue/30 cursor-pointer bg-white' : 'text-slate-400 cursor-not-allowed bg-white/50'}`}
+                            >
+                              <BookOpen size={16} />
+                              Impara
+                            </button>
+                            <button className="flex items-center justify-center gap-2 rounded-2xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition cursor-pointer bg-white">
+                              <Zap size={16} />
+                              Allena
+                            </button>
+                            <button className="flex items-center justify-center gap-2 rounded-2xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition cursor-pointer bg-white">
+                              <Gamepad size={16} />
+                              Gioca
+                            </button>
+                          </div>
+                        ) : (
+                          <p className="text-slate-500 text-sm">Contenuto in arrivo</p>
+                        )}
+                      </div>
+                    );
+
+                    return (
+                      <div key={subtopic.id} style={{ perspective: 1000 }} className="relative h-[220px]">
+                        <motion.div
+                          animate={{ rotateY: isFlipped ? 180 : 0 }}
+                          transition={{ duration: 0.6, type: "spring", stiffness: 200, damping: 20 }}
+                          style={{ transformStyle: "preserve-3d" }}
+                          className="w-full h-full relative"
+                        >
+                          {/* Front Side */}
+                          <div style={{ backfaceVisibility: "hidden" }} className="absolute inset-0 w-full h-full">
+                            {renderCardContent(false)}
+                          </div>
+
+                          {/* Back Side */}
+                          <div style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }} className="absolute inset-0 w-full h-full">
+                            {renderCardContent(true)}
+                          </div>
+                        </motion.div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
