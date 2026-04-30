@@ -298,6 +298,9 @@ const topics: Record<string, Topic[]> = {
     { id: 'polyhedra', name: 'I poliedri', grade: 3 },
     { id: 'solids-of-revolution', name: 'I solidi di rotazione', grade: 3 },
   ],
+  'financial-education': [
+    { id: 'finance-interest', name: 'L\'interesse', grade: 3 },
+  ],
   // Altri possono essere aggiunti dopo
 };
 
@@ -360,6 +363,48 @@ const subtopics: Record<string, Subtopic[]> = {
     { id: 'fraction-division', name: 'La divisione tra frazioni', active: true },
     { id: 'fraction-power', name: 'L\'elevamento a potenza di frazioni', active: true },
   ],
+  'absolute-rational-numbers': [
+    { id: 'rational-number-set', name: 'L\'insieme dei numeri razionali', active: false, linkToTopicId: 'set-language' },
+    { id: 'addition-subtraction', name: 'L\'addizione e la sottrazione dei numeri razionali assoluti', active: true },
+    { id: 'multiplication-power', name: 'La moltiplicazione e l\'elevamento a potenza dei numeri razionali assoluti', active: true },
+    { id: 'division', name: 'La divisione nei numeri razionali assoluti', active: true },
+    { id: 'decimal-fractions-limited', name: 'Le frazioni decimali ed i numeri decimali limitati', active: true },
+    { id: 'periodic-decimals', name: 'I numeri decimali illimitati periodici', active: true },
+    { id: 'generating-fractions', name: 'Le frazioni generatrici', active: true },
+    { id: 'approximations', name: 'Le approssimazioni', active: true },
+  ],
+  'square-root': [
+    { id: 'square-root-intro', name: 'La radice quadrata', active: true },
+    { id: 'cubic-root', name: 'La radice cubica', active: true },
+    { id: 'perfect-square-root', name: 'La radice quadrata di un quadrato perfetto', active: true },
+    { id: 'non-perfect-square-root', name: 'La radice quadrata di un numero che non è un quadrato perfetto', active: true },
+    { id: 'any-number-square-root', name: 'La radice quadrata di un numero qualsiasi', active: true },
+    { id: 'absolute-real-numbers', name: 'I numeri reali assoluti', active: true },
+  ],
+  'ratios-proportions-percentages': [
+    { id: 'ratios', name: 'I rapporti', active: true },
+    { id: 'homogeneous-ratios', name: 'Rapporto tra grandezze omogenee', active: true },
+    { id: 'non-homogeneous-ratios', name: 'Rapporto tra grandezze non omogenee', active: true },
+    { id: 'proportions', name: 'Le proporzioni', active: true },
+    { id: 'unknown-term-calculation', name: 'Il calcolo del termine incognito in una proporzione', active: true },
+    { id: 'proportions-properties', name: 'Le proprietà delle proporzioni', active: true },
+    { id: 'enlargements-reductions', name: 'Ingrandimenti e riduzioni', active: true },
+    { id: 'percentages', name: 'Le percentuali', active: true },
+    { id: 'finance-interest-link', name: 'L\'interesse in finanza', active: false, linkToTopicId: 'finance-interest' },
+  ],
+  'direct-inverse-proportionality': [
+    { id: 'direct-proportionality', name: 'Grandezze direttamente proporzionali', active: true },
+    { id: 'inverse-proportionality', name: 'Grandezze inversamente proporzionali', active: true },
+    { id: 'direct-prop-problems', name: 'I problemi con le grandezze direttamente proporzionali', active: true },
+    { id: 'partition-problems', name: 'I problemi di ripartizione', active: true },
+  ],
+  'statistical-surveys': [
+    { id: 'qualitative-surveys', name: 'Le indagini qualitative', active: true },
+    { id: 'statistics-representation', name: 'Le rappresentazioni delle statistiche', active: false, linkToTopicId: 'graphic-representations' },
+    { id: 'quantitative-surveys', name: 'Le indagini quantitative', active: true },
+    { id: 'statistical-indices', name: 'Gli indici statistici: media moda e mediana', active: true },
+    { id: 'information-collection', name: 'La raccolta delle informazioni', active: true },
+  ],
 };
 
 export default function App() {
@@ -374,12 +419,22 @@ export default function App() {
     setView('topic-detail');
   };
 
-  const openGeometryAngleTopic = () => {
-    const subject = subjects.find((s) => s.id === 'math-geometry');
-    const topic = subject ? topics['math-geometry']?.find((t) => t.id === 'angles') : undefined;
-    if (subject && topic) {
-      setSelectedSubject(subject);
-      setSelectedTopic(topic);
+  const openLinkedTopic = (topicId: string) => {
+    let targetSubject: Subject | undefined;
+    let targetTopic: Topic | undefined;
+    
+    for (const [subjId, subjTopics] of Object.entries(topics)) {
+      const foundTopic = subjTopics.find(t => t.id === topicId);
+      if (foundTopic) {
+        targetSubject = subjects.find(s => s.id === subjId);
+        targetTopic = foundTopic;
+        break;
+      }
+    }
+    
+    if (targetSubject && targetTopic) {
+      setSelectedSubject(targetSubject);
+      setSelectedTopic(targetTopic);
       setView('topic-detail');
     }
   };
@@ -717,7 +772,7 @@ export default function App() {
                         </div>
                         {!item.active && item.linkToTopicId ? (
                           <div className="mt-4 inline-flex items-center gap-2 rounded-2xl bg-dida-teal text-white px-4 py-2 text-sm font-semibold">
-                            Vai agli angoli di Geometria
+                            Vai a {Object.values(topics).flat().find(t => t.id === item.linkToTopicId)?.name || 'collegamento'}
                           </div>
                         ) : null}
                       </button>
@@ -785,10 +840,10 @@ export default function App() {
                       <h4 className="text-lg font-bold text-slate-900 mb-2">{subtopic.name}</h4>
                       {!subtopic.active && subtopic.linkToTopicId ? (
                         <button
-                          onClick={openGeometryAngleTopic}
+                          onClick={() => openLinkedTopic(subtopic.linkToTopicId!)}
                           className="mt-3 inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-400 via-cyan-400 via-teal-400 via-indigo-400 via-purple-400 to-blue-500 text-white px-4 py-2 text-sm font-semibold transition hover:opacity-90"
                         >
-                          collegamento con Angoli
+                          collegamento con {Object.values(topics).flat().find(t => t.id === subtopic.linkToTopicId)?.name || 'Argomento'}
                         </button>
                       ) : subtopic.active ? (
                         <div className="mt-4 grid grid-cols-3 gap-2">
