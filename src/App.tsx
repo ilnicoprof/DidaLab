@@ -11,6 +11,7 @@ import {
   Languages, Music, Palette, Monitor, Dumbbell, Sparkles, DollarSign,
   BookOpen, Zap, Gamepad
 } from "lucide-react";
+import NumberLineLesson from "./lessons/NumberLineLesson";
 
 /**
  * Animated Background Illustrations
@@ -408,10 +409,11 @@ const subtopics: Record<string, Subtopic[]> = {
 };
 
 export default function App() {
-  const [view, setView] = useState<'landing' | 'disciplines' | 'subject-detail' | 'quiz-selection' | 'topic-detail'>('landing');
+  const [view, setView] = useState<'landing' | 'disciplines' | 'subject-detail' | 'quiz-selection' | 'topic-detail' | 'learn-lesson'>('landing');
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const [selectedQuizItems, setSelectedQuizItems] = useState<string[]>([]);
+  const [selectedSubtopicId, setSelectedSubtopicId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
 
   const openTopicDetail = (topic: Topic) => {
@@ -847,7 +849,15 @@ export default function App() {
                         </button>
                       ) : subtopic.active ? (
                         <div className="mt-4 grid grid-cols-3 gap-2">
-                          <button className="flex items-center justify-center gap-2 rounded-2xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">
+                          <button
+                            onClick={() => {
+                              if (subtopic.id === 'natural-numbers') {
+                                setSelectedSubtopicId(subtopic.id);
+                                setView('learn-lesson');
+                              }
+                            }}
+                            className={`flex items-center justify-center gap-2 rounded-2xl border border-slate-200 px-3 py-2 text-sm font-semibold transition ${subtopic.id === 'natural-numbers' ? 'text-dida-blue hover:bg-blue-50 hover:border-dida-blue/30 cursor-pointer' : 'text-slate-400 cursor-not-allowed'}`}
+                          >
                             <BookOpen size={16} />
                             Impara
                           </button>
@@ -869,6 +879,14 @@ export default function App() {
               </div>
             </div>
           </motion.div>
+        )}
+
+        {view === 'learn-lesson' && selectedSubtopicId === 'natural-numbers' && selectedSubject && selectedTopic && (
+          <NumberLineLesson
+            onBack={() => { setView('topic-detail'); setSelectedSubtopicId(null); }}
+            subjectName={selectedSubject.name}
+            topicName={selectedTopic.name}
+          />
         )}
       </AnimatePresence>
     </div>
