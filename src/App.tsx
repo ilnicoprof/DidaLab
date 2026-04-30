@@ -415,6 +415,15 @@ export default function App() {
   const [selectedQuizItems, setSelectedQuizItems] = useState<string[]>([]);
   const [selectedSubtopicId, setSelectedSubtopicId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [modalTopic, setModalTopic] = useState<Topic | null>(null);
+  const [modalAction, setModalAction] = useState<'impara' | 'allena' | 'gioca' | null>(null);
+
+  const openActionModal = (topic: Topic, action: 'impara' | 'allena' | 'gioca', e: React.MouseEvent) => {
+    e.stopPropagation();
+    setModalTopic(topic);
+    setModalAction(action);
+  };
+  const closeModal = () => { setModalTopic(null); setModalAction(null); };
 
   const openTopicDetail = (topic: Topic) => {
     setSelectedTopic(topic);
@@ -688,22 +697,19 @@ export default function App() {
                         }`}>
                         {topic.grade}ª Media
                       </span>
-                      <button onClick={(e) => e.stopPropagation()} className="text-dida-blue hover:text-dida-blue/80 font-medium text-sm">
-                        Quiz
-                      </button>
                     </div>
                     <h3 className="text-lg font-bold text-slate-800 mb-2">{topic.name}</h3>
                     <p className="text-slate-500 text-sm mb-4">Esercizi e lezioni interattive</p>
-                    <div className="grid grid-cols-3 gap-2">
-                      <button onClick={(e) => e.stopPropagation()} className="flex items-center justify-center gap-2 rounded-2xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">
+                    <div className="grid grid-cols-3 gap-2" onClickCapture={(e) => e.stopPropagation()}>
+                      <button id={`impara-${topic.id}`} onClick={() => { setModalTopic(topic); setModalAction('impara'); }} className="flex items-center justify-center gap-2 rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-dida-blue hover:bg-blue-50 hover:border-dida-blue/30 transition cursor-pointer">
                         <BookOpen size={16} />
                         Impara
                       </button>
-                      <button onClick={(e) => e.stopPropagation()} className="flex items-center justify-center gap-2 rounded-2xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">
+                      <button id={`allena-${topic.id}`} onClick={() => { setModalTopic(topic); setModalAction('allena'); }} className="flex items-center justify-center gap-2 rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-amber-600 hover:bg-amber-50 hover:border-amber-300 transition cursor-pointer">
                         <Zap size={16} />
                         Allena
                       </button>
-                      <button onClick={(e) => e.stopPropagation()} className="flex items-center justify-center gap-2 rounded-2xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">
+                      <button id={`gioca-${topic.id}`} onClick={() => { setModalTopic(topic); setModalAction('gioca'); }} className="flex items-center justify-center gap-2 rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-emerald-600 hover:bg-emerald-50 hover:border-emerald-300 transition cursor-pointer">
                         <Gamepad size={16} />
                         Gioca
                       </button>
@@ -889,6 +895,127 @@ export default function App() {
           />
         )}
       </AnimatePresence>
+
+      {/* Action Modal */}
+      <AnimatePresence>
+        {modalTopic && modalAction && (
+          <motion.div
+            key="action-modal"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          >
+            {/* Backdrop */}
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={closeModal} />
+
+            {/* Modal */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-lg max-h-[80vh] overflow-hidden flex flex-col"
+            >
+              {/* Modal Header */}
+              <div className={`p-6 pb-4 border-b border-slate-100 ${
+                modalAction === 'impara' ? 'bg-gradient-to-r from-blue-50 to-white' :
+                modalAction === 'allena' ? 'bg-gradient-to-r from-amber-50 to-white' :
+                'bg-gradient-to-r from-emerald-50 to-white'
+              }`}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                      modalAction === 'impara' ? 'bg-dida-blue text-white' :
+                      modalAction === 'allena' ? 'bg-amber-500 text-white' :
+                      'bg-emerald-500 text-white'
+                    }`}>
+                      {modalAction === 'impara' ? <BookOpen size={20} /> : modalAction === 'allena' ? <Zap size={20} /> : <Gamepad size={20} />}
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-slate-800">
+                        {modalAction === 'impara' ? 'Impara' : modalAction === 'allena' ? 'Allenati' : 'Gioca'}
+                      </h3>
+                      <p className="text-sm text-slate-500">{modalTopic.name}</p>
+                    </div>
+                  </div>
+                  <button onClick={closeModal} className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition cursor-pointer">
+                    ✕
+                  </button>
+                </div>
+                <p className="text-sm text-slate-500 mt-3">
+                  {modalAction === 'impara' ? 'Scegli un sottoargomento per imparare in modo interattivo.' :
+                   modalAction === 'allena' ? 'Scegli un sottoargomento per allenarti con gli esercizi.' :
+                   'Scegli un sottoargomento per imparare giocando.'}
+                </p>
+              </div>
+
+              {/* Subtopics List */}
+              <div className="p-6 overflow-y-auto space-y-3 flex-1">
+                {(subtopics[modalTopic.id] ?? []).map((sub, i) => (
+                  <motion.button
+                    key={sub.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                    disabled={!sub.active}
+                    onClick={() => {
+                      if (modalAction === 'impara' && sub.active && sub.id === 'natural-numbers') {
+                        setSelectedTopic(modalTopic);
+                        setSelectedSubtopicId(sub.id);
+                        setView('learn-lesson');
+                        closeModal();
+                      }
+                    }}
+                    className={`w-full text-left p-4 rounded-2xl border transition-all flex items-center justify-between gap-3 ${
+                      sub.active
+                        ? 'border-slate-200 bg-slate-50 hover:bg-white hover:shadow-md hover:border-slate-300 cursor-pointer'
+                        : 'border-slate-100 bg-slate-50/50 opacity-60 cursor-not-allowed'
+                    }`}
+                  >
+                    <div className="flex-1 min-w-0">
+                      <h4 className={`font-bold truncate ${sub.active ? 'text-slate-800' : 'text-slate-400'}`}>{sub.name}</h4>
+                      {!sub.active && (
+                        <p className="text-xs text-slate-400 mt-1 flex items-center gap-1">
+                          <Sparkles size={10} /> Prossimamente
+                        </p>
+                      )}
+                    </div>
+                    {sub.active && (
+                      <div className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold text-white ${
+                        modalAction === 'impara' ? 'bg-dida-blue' :
+                        modalAction === 'allena' ? 'bg-amber-500' :
+                        'bg-emerald-500'
+                      }`}>
+                        {modalAction === 'impara' ? 'Impara' : modalAction === 'allena' ? 'Allena' : 'Gioca'}
+                      </div>
+                    )}
+                  </motion.button>
+                ))}
+                {(subtopics[modalTopic.id] ?? []).length === 0 && (
+                  <p className="text-slate-400 text-center py-8">Nessun sottoargomento disponibile.</p>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Powered by ilnicoprof badge */}
+      <div className="fixed bottom-4 right-4 z-40">
+        <div className="flex items-center gap-2 bg-white/70 backdrop-blur-md border border-slate-200/50 rounded-full pl-1.5 pr-4 py-1.5 shadow-md transition-all opacity-80 hover:opacity-100 hover:shadow-lg hover:bg-white/90">
+          <div className="w-8 h-8 rounded-full overflow-hidden bg-white border border-slate-100 shrink-0">
+            <img
+              src="/ilnicoprof-logo.png"
+              alt="ilnicoprof logo"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <span className="text-xs font-medium text-slate-500">
+            Powered by <strong className="font-extrabold text-slate-800">ilnicoprof</strong>
+          </span>
+        </div>
+      </div>
     </div>
   );
 }
