@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
+  --color-dida-blue: #0070B8;
+  --color-dida-orange: #EF7D00;
+  --color-dida-teal: #26A69A;
+}
+
+@layer base {
+  body {
+    @apply font-sans text-slate-800 antialiased bg-white;
+  }
+}
