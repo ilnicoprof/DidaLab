@@ -2,19 +2,34 @@
 <img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
 
-# Run and deploy your AI Studio app
+# 🚀 DidaLab 1.0
 
-This contains everything you need to run your app locally.
+**DidaLab** è una piattaforma educativa innovativa e inclusiva, progettata specificamente per la **Scuola Secondaria di Primo Grado**. L'obiettivo è trasformare l'apprendimento delle materie curricolari (Matematica, Scienze, e molto altro) in un'esperienza coinvolgente, interattiva e accessibile a tutti gli studenti.
 
-View your app in AI Studio: https://ai.studio/apps/12789b54-3876-4a1b-a884-4458b24daaa2
+## ✨ Caratteristiche Principali
 
-## Run Locally
+*   **🎯 Percorsi Didattici Mirati**: Suddivisione chiara per argomenti (Aritmetica, Algebra, Geometria, Scienze) con contenuti specifici per il primo, secondo e terzo anno.
+*   **🌈 Focus sull'Inclusione**: Strumenti dedicati per la didattica inclusiva (BES/DSA), con sintesi vocale, caroselli semplificati e interfacce ad alta leggibilità.
+*   **🕹️ Impara, Allena, Gioca**: Ogni argomento offre tre modalità:
+    *   **Impara**: Lezioni interattive e multimediali.
+    *   **Allena**: Esercitazioni pratiche per consolidare le conoscenze.
+    *   **Gioca**: Gamification per imparare divertendosi (es. il gioco multiplayer "Eureka!").
+*   **📱 Design Moderno e Responsivo**: Interfaccia premium costruita con React, Tailwind CSS e animazioni fluide per un'esperienza utente eccellente su ogni dispositivo.
 
-**Prerequisites:**  Node.js
+## 🛠️ Tecnologie Utilizzate
 
+*   **React** + **TypeScript**
+*   **Vite** (Build tool)
+*   **Framer Motion** (Animazioni)
+*   **Lucide React** (Icone)
+*   **Tailwind CSS** (Styling)
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## 🚀 Esecuzione Locale
+
+**Prerequisiti:** Node.js installato.
+
+1.  Installa le dipendenze:
+    `npm install`
+2.  Avvia l'app in modalità sviluppo:
+    `npm run dev`
+3.  Apri l'indirizzo mostrato nel terminale (solitamente `http://localhost:5173`).
