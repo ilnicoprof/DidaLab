@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 import NumberLineLesson from "./lessons/NumberLineLesson";
 import NumberLineLessonInclusion from "./lessons/NumberLineLessonInclusion";
+import TablesLesson from "./lessons/TablesLesson";
+import TablesLessonInclusion from "./lessons/TablesLessonInclusion";
 
 /**
  * Animated Background Illustrations
@@ -721,7 +723,8 @@ export default function App() {
               </button>
 
               <button
-                className="bg-white hover:bg-slate-50 text-slate-800 font-bold py-4 px-8 rounded-xl border border-slate-200 shadow-md transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-4 text-xl"
+                disabled
+                className="bg-white text-slate-400 font-bold py-4 px-8 rounded-xl border border-slate-200 shadow-md flex items-center justify-center gap-4 text-xl opacity-60 cursor-not-allowed relative"
                 id="google-login"
               >
                 <div className="flex items-center gap-2">
@@ -1069,12 +1072,13 @@ export default function App() {
                           <div className="mt-4 grid grid-cols-3 gap-2 z-10 relative">
                             <button
                               onClick={() => {
-                                if (subtopic.id === 'natural-numbers') {
+                                const hasLesson = ['natural-numbers', 'tables'].includes(subtopic.id);
+                                if (hasLesson) {
                                   setSelectedSubtopicId(subtopic.id);
                                   setView(isBack ? 'learn-lesson-inclusion' : 'learn-lesson');
                                 }
                               }}
-                              className={`flex items-center justify-center gap-2 rounded-2xl border px-3 py-2 text-sm font-semibold transition ${subtopic.id === 'natural-numbers' ? (isBack ? 'text-dida-orange hover:bg-orange-50 hover:border-dida-orange/30 cursor-pointer bg-white border-dida-orange/20' : 'text-dida-blue hover:bg-blue-50 hover:border-dida-blue/30 cursor-pointer bg-white border-slate-200') : 'text-slate-400 cursor-not-allowed bg-white/50 border-slate-200'}`}
+                              className={`flex items-center justify-center gap-2 rounded-2xl border px-3 py-2 text-sm font-semibold transition ${['natural-numbers', 'tables'].includes(subtopic.id) ? (isBack ? 'text-dida-orange hover:bg-orange-50 hover:border-dida-orange/30 cursor-pointer bg-white border-dida-orange/20' : 'text-dida-blue hover:bg-blue-50 hover:border-dida-blue/30 cursor-pointer bg-white border-slate-200') : 'text-slate-400 cursor-not-allowed bg-white/50 border-slate-200'}`}
                             >
                               <BookOpen size={16} />
                               Impara
@@ -1133,6 +1137,24 @@ export default function App() {
         {view === 'learn-lesson-inclusion' && selectedSubtopicId === 'natural-numbers' && selectedSubject && selectedTopic && (
           <NumberLineLessonInclusion
             key="learn-lesson-inclusion"
+            onBack={() => { setView('topic-detail'); setSelectedSubtopicId(null); }}
+            subjectName={selectedSubject.name}
+            topicName={selectedTopic.name}
+          />
+        )}
+
+        {view === 'learn-lesson' && selectedSubtopicId === 'tables' && selectedSubject && selectedTopic && (
+          <TablesLesson
+            key="learn-tables"
+            onBack={() => { setView('topic-detail'); setSelectedSubtopicId(null); }}
+            subjectName={selectedSubject.name}
+            topicName={selectedTopic.name}
+          />
+        )}
+
+        {view === 'learn-lesson-inclusion' && selectedSubtopicId === 'tables' && selectedSubject && selectedTopic && (
+          <TablesLessonInclusion
+            key="learn-tables-inclusion"
             onBack={() => { setView('topic-detail'); setSelectedSubtopicId(null); }}
             subjectName={selectedSubject.name}
             topicName={selectedTopic.name}
@@ -1200,7 +1222,8 @@ export default function App() {
                     transition={{ delay: i * 0.05 }}
                     disabled={!sub.active}
                     onClick={() => {
-                      if (modalAction === 'impara' && sub.active && sub.id === 'natural-numbers') {
+                      const hasLesson = ['natural-numbers', 'tables'].includes(sub.id);
+                      if (modalAction === 'impara' && sub.active && hasLesson) {
                         setSelectedTopic(modalTopic);
                         setSelectedSubtopicId(sub.id);
                         setView('learn-lesson');
