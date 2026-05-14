@@ -12,6 +12,7 @@ import {
   BookOpen, Zap, Gamepad
 } from "lucide-react";
 import NumberLineLesson from "./lessons/NumberLineLesson";
+import NumberLineLessonInclusion from "./lessons/NumberLineLessonInclusion";
 
 /**
  * Animated Background Illustrations
@@ -604,7 +605,7 @@ const subtopics: Record<string, Subtopic[]> = {
 };
 
 export default function App() {
-  const [view, setView] = useState<'landing' | 'disciplines' | 'subject-detail' | 'quiz-selection' | 'topic-detail' | 'learn-lesson'>('landing');
+  const [view, setView] = useState<'landing' | 'disciplines' | 'subject-detail' | 'quiz-selection' | 'topic-detail' | 'learn-lesson' | 'learn-lesson-inclusion'>('landing');
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const [selectedQuizItems, setSelectedQuizItems] = useState<string[]>([]);
@@ -1070,19 +1071,19 @@ export default function App() {
                               onClick={() => {
                                 if (subtopic.id === 'natural-numbers') {
                                   setSelectedSubtopicId(subtopic.id);
-                                  setView('learn-lesson');
+                                  setView(isBack ? 'learn-lesson-inclusion' : 'learn-lesson');
                                 }
                               }}
-                              className={`flex items-center justify-center gap-2 rounded-2xl border border-slate-200 px-3 py-2 text-sm font-semibold transition ${subtopic.id === 'natural-numbers' ? 'text-dida-blue hover:bg-blue-50 hover:border-dida-blue/30 cursor-pointer bg-white' : 'text-slate-400 cursor-not-allowed bg-white/50'}`}
+                              className={`flex items-center justify-center gap-2 rounded-2xl border px-3 py-2 text-sm font-semibold transition ${subtopic.id === 'natural-numbers' ? (isBack ? 'text-dida-orange hover:bg-orange-50 hover:border-dida-orange/30 cursor-pointer bg-white border-dida-orange/20' : 'text-dida-blue hover:bg-blue-50 hover:border-dida-blue/30 cursor-pointer bg-white border-slate-200') : 'text-slate-400 cursor-not-allowed bg-white/50 border-slate-200'}`}
                             >
                               <BookOpen size={16} />
                               Impara
                             </button>
-                            <button className="flex items-center justify-center gap-2 rounded-2xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition cursor-pointer bg-white">
+                            <button className={`flex items-center justify-center gap-2 rounded-2xl border px-3 py-2 text-sm font-semibold hover:bg-slate-50 transition cursor-pointer bg-white ${isBack ? 'border-dida-orange/20 text-slate-700' : 'border-slate-200 text-slate-700'}`}>
                               <Zap size={16} />
                               Allena
                             </button>
-                            <button className="flex items-center justify-center gap-2 rounded-2xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition cursor-pointer bg-white">
+                            <button className={`flex items-center justify-center gap-2 rounded-2xl border px-3 py-2 text-sm font-semibold hover:bg-slate-50 transition cursor-pointer bg-white ${isBack ? 'border-dida-orange/20 text-slate-700' : 'border-slate-200 text-slate-700'}`}>
                               <Gamepad size={16} />
                               Gioca
                             </button>
@@ -1102,12 +1103,12 @@ export default function App() {
                           className="w-full h-full relative"
                         >
                           {/* Front Side */}
-                          <div style={{ backfaceVisibility: "hidden" }} className="absolute inset-0 w-full h-full">
+                          <div style={{ backfaceVisibility: "hidden", pointerEvents: isFlipped ? "none" : "auto" }} className="absolute inset-0 w-full h-full">
                             {renderCardContent(false)}
                           </div>
 
                           {/* Back Side */}
-                          <div style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }} className="absolute inset-0 w-full h-full">
+                          <div style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)", pointerEvents: isFlipped ? "auto" : "none" }} className="absolute inset-0 w-full h-full">
                             {renderCardContent(true)}
                           </div>
                         </motion.div>
@@ -1123,6 +1124,15 @@ export default function App() {
         {view === 'learn-lesson' && selectedSubtopicId === 'natural-numbers' && selectedSubject && selectedTopic && (
           <NumberLineLesson
             key="learn-lesson"
+            onBack={() => { setView('topic-detail'); setSelectedSubtopicId(null); }}
+            subjectName={selectedSubject.name}
+            topicName={selectedTopic.name}
+          />
+        )}
+
+        {view === 'learn-lesson-inclusion' && selectedSubtopicId === 'natural-numbers' && selectedSubject && selectedTopic && (
+          <NumberLineLessonInclusion
+            key="learn-lesson-inclusion"
             onBack={() => { setView('topic-detail'); setSelectedSubtopicId(null); }}
             subjectName={selectedSubject.name}
             topicName={selectedTopic.name}
