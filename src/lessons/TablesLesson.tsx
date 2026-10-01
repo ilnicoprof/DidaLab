@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 
 interface Props {
+  key?: string;
   onBack: () => void;
   subjectName: string;
   topicName: string;

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Rocket, Search, Settings, GraduationCap, School, ArrowLeft,
@@ -15,6 +15,10 @@ import NumberLineLesson from "./lessons/NumberLineLesson";
 import NumberLineLessonInclusion from "./lessons/NumberLineLessonInclusion";
 import TablesLesson from "./lessons/TablesLesson";
 import TablesLessonInclusion from "./lessons/TablesLessonInclusion";
+import SetsLesson from "./lessons/SetsLesson";
+import SetsLessonInclusion from "./lessons/SetsLessonInclusion";
+import GraphicRepresentationsLesson from "./lessons/GraphicRepresentationsLesson";
+import GraphicRepresentationsLessonInclusion from "./lessons/GraphicRepresentationsLessonInclusion";
 
 /**
  * Animated Background Illustrations
@@ -230,6 +234,8 @@ interface Topic {
   id: string;
   name: string;
   grade: 1 | 2 | 3; // 1: prima media, 2: seconda, 3: terza
+  active?: boolean;
+  linkToTopicId?: string;
 }
 
 interface Subtopic {
@@ -312,16 +318,16 @@ const subtopics: Record<string, Subtopic[]> = {
   'graphic-representations': [
     { id: 'tables', name: 'Le tabelle', active: true },
     { id: 'ideogram', name: 'L\'ideogramma', active: true },
+    { id: 'ortogram', name: 'L\'ortogramma (a barre)', active: true },
+    { id: 'aerogram', name: 'L\'areogramma (a torta)', active: true },
     { id: 'cartesian-diagram', name: 'Il diagramma cartesiano', active: true },
-    { id: 'ortogram', name: 'L\'ortogramma', active: true },
-    { id: 'aerogram', name: 'L\'aerogramma', active: false, linkToTopicId: 'angles' },
   ],
   'set-language': [
-    { id: 'sets', name: 'Gli insiemi', active: true },
-    { id: 'particular-sets', name: 'Insiemi particolari', active: true },
-    { id: 'subsets', name: 'I sottoinsiemi', active: true },
-    { id: 'intersection-sets', name: 'L\'intersezione di insiemi', active: true },
-    { id: 'union-sets', name: 'L\'unione di insiemi', active: true },
+    { id: 'sets', name: 'Gli insiemi (Definizione e simboli)', active: true },
+    { id: 'particular-sets', name: 'Finito, Infinito, Vuoto', active: true },
+    { id: 'representations', name: 'I 3 modi per rappresentare', active: true },
+    { id: 'subsets', name: 'I sottoinsiemi (⊂)', active: true },
+    { id: 'intersection-union', name: 'Intersezione e Unione', active: true },
   ],
   'numeration-systems': [
     { id: 'our-numeration-system', name: 'Il nostro sistema di numerazione', active: true },
@@ -614,6 +620,10 @@ export default function App() {
   const [selectedSubtopicId, setSelectedSubtopicId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [flippedSubtopics, setFlippedSubtopics] = useState<Record<string, boolean>>({});
+  const [lessonInitialTab, setLessonInitialTab] = useState<'impara' | 'allena'>('impara');
+
+  const setLanguageSubtopics = ['sets', 'particular-sets', 'representations', 'subsets', 'intersection-union', 'intersection-sets', 'union-sets'];
+  const graphicSubtopics = ['tables', 'ideogram', 'ortogram', 'aerogram', 'cartesian-diagram'];
 
   const toggleFlip = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -673,7 +683,7 @@ export default function App() {
   const currentSubjectTopics = selectedSubject ? topics[selectedSubject.id] ?? [] : [];
   const quizSelectionItems = selectedSubject
     ? currentSubjectTopics.flatMap((topic) => [
-      { id: topic.id, name: topic.name, type: 'topic' as const, parent: topic.name, active: true },
+      { id: topic.id, name: topic.name, type: 'topic' as const, parent: topic.name, active: true, linkToTopicId: undefined as string | undefined },
       ...(subtopics[topic.id] ?? []).map((subtopic) => ({
         id: `${topic.id}::${subtopic.id}`,
         name: subtopic.name,
@@ -1046,7 +1056,7 @@ export default function App() {
                     const isFlipped = flippedSubtopics[subtopic.id] || false;
                     
                     const renderCardContent = (isBack: boolean) => (
-                      <div className={`rounded-3xl border p-5 w-full h-full flex flex-col transition-colors ${subtopic.active ? (isBack ? 'border-dida-orange/30 bg-orange-50/50 hover:bg-orange-50' : 'border-slate-200 bg-slate-50 hover:border-dida-blue/30 hover:bg-white cursor-pointer') : 'border-slate-200 bg-slate-100 text-slate-400 cursor-not-allowed'}`}>
+                      <div className={`rounded-3xl border p-5 w-full h-full flex flex-col transition-colors ${subtopic.active ? (isBack ? 'border-dida-orange/30 bg-[#FFF9F3] hover:bg-[#FFF4E8]' : 'border-slate-200 bg-white hover:border-dida-blue/30 cursor-pointer shadow-sm') : 'border-slate-200 bg-slate-100 text-slate-400 cursor-not-allowed'}`}>
                         <div className="flex items-center justify-between mb-4">
                           <span className={`text-sm font-semibold uppercase tracking-[0.2em] ${isBack ? 'text-dida-orange' : 'text-slate-500'}`}>
                             {subtopic.active ? (isBack ? 'Inclusione' : 'Attivo') : 'Disattivato'}
@@ -1054,7 +1064,7 @@ export default function App() {
                           {subtopic.active && (
                             <button
                               onClick={(e) => toggleFlip(subtopic.id, e)}
-                              className={`px-3 py-1 rounded-xl text-xs font-bold transition shadow-sm z-10 relative ${isBack ? 'text-white bg-dida-orange hover:bg-orange-600' : 'text-slate-500 bg-white border border-slate-200 hover:bg-slate-50 hover:text-dida-orange'}`}
+                              className={`px-3 py-1 rounded-xl text-xs font-bold transition shadow-sm z-10 relative cursor-pointer ${isBack ? 'text-white bg-dida-orange hover:bg-orange-600' : 'text-slate-500 bg-white border border-slate-200 hover:bg-slate-50 hover:text-dida-orange'}`}
                             >
                               {isBack ? 'Indietro' : 'Inclusione'}
                             </button>
@@ -1070,27 +1080,51 @@ export default function App() {
                           </button>
                         ) : subtopic.active ? (
                           <div className="mt-4 grid grid-cols-3 gap-2 z-10 relative">
-                            <button
-                              onClick={() => {
-                                const hasLesson = ['natural-numbers', 'tables'].includes(subtopic.id);
-                                if (hasLesson) {
-                                  setSelectedSubtopicId(subtopic.id);
-                                  setView(isBack ? 'learn-lesson-inclusion' : 'learn-lesson');
-                                }
-                              }}
-                              className={`flex items-center justify-center gap-2 rounded-2xl border px-3 py-2 text-sm font-semibold transition ${['natural-numbers', 'tables'].includes(subtopic.id) ? (isBack ? 'text-dida-orange hover:bg-orange-50 hover:border-dida-orange/30 cursor-pointer bg-white border-dida-orange/20' : 'text-dida-blue hover:bg-blue-50 hover:border-dida-blue/30 cursor-pointer bg-white border-slate-200') : 'text-slate-400 cursor-not-allowed bg-white/50 border-slate-200'}`}
-                            >
-                              <BookOpen size={16} />
-                              Impara
-                            </button>
-                            <button className={`flex items-center justify-center gap-2 rounded-2xl border px-3 py-2 text-sm font-semibold hover:bg-slate-50 transition cursor-pointer bg-white ${isBack ? 'border-dida-orange/20 text-slate-700' : 'border-slate-200 text-slate-700'}`}>
-                              <Zap size={16} />
-                              Allena
-                            </button>
-                            <button className={`flex items-center justify-center gap-2 rounded-2xl border px-3 py-2 text-sm font-semibold hover:bg-slate-50 transition cursor-pointer bg-white ${isBack ? 'border-dida-orange/20 text-slate-700' : 'border-slate-200 text-slate-700'}`}>
-                              <Gamepad size={16} />
-                              Gioca
-                            </button>
+                            {(() => {
+                              const hasLesson = ['natural-numbers', ...setLanguageSubtopics, ...graphicSubtopics].includes(subtopic.id);
+                              return (
+                                <>
+                                  <button
+                                    onClick={() => {
+                                      if (hasLesson) {
+                                        setSelectedSubtopicId(subtopic.id);
+                                        setLessonInitialTab('impara');
+                                        setView(isBack ? 'learn-lesson-inclusion' : 'learn-lesson');
+                                      }
+                                    }}
+                                    className={`flex items-center justify-center gap-2 rounded-2xl border px-3 py-2 text-sm font-semibold transition ${
+                                      hasLesson
+                                        ? (isBack ? 'text-dida-orange hover:bg-orange-50 hover:border-dida-orange/30 cursor-pointer bg-white border-dida-orange/20' : 'text-dida-blue hover:bg-blue-50 hover:border-dida-blue/30 cursor-pointer bg-white border-slate-200')
+                                        : 'text-slate-400 cursor-not-allowed bg-white/50 border-slate-200'
+                                    }`}
+                                  >
+                                    <BookOpen size={16} />
+                                    Impara
+                                  </button>
+                                  <button
+                                    onClick={() => {
+                                      if (hasLesson) {
+                                        setSelectedSubtopicId(subtopic.id);
+                                        setLessonInitialTab('allena');
+                                        setView(isBack ? 'learn-lesson-inclusion' : 'learn-lesson');
+                                      }
+                                    }}
+                                    className={`flex items-center justify-center gap-2 rounded-2xl border px-3 py-2 text-sm font-semibold transition ${
+                                      hasLesson
+                                        ? (isBack ? 'text-dida-orange hover:bg-orange-50 hover:border-dida-orange/30 cursor-pointer bg-white border-dida-orange/20' : 'text-amber-600 hover:bg-amber-50 hover:border-amber-400 cursor-pointer bg-white border-slate-200')
+                                        : 'text-slate-400 cursor-not-allowed bg-white/50 border-slate-200'
+                                    }`}
+                                  >
+                                    <Zap size={16} />
+                                    Allena
+                                  </button>
+                                  <button className={`flex items-center justify-center gap-2 rounded-2xl border px-3 py-2 text-sm font-semibold hover:bg-slate-50 transition cursor-pointer bg-white ${isBack ? 'border-dida-orange/20 text-slate-700' : 'border-slate-200 text-slate-700'}`}>
+                                    <Gamepad size={16} />
+                                    Gioca
+                                  </button>
+                                </>
+                              );
+                            })()}
                           </div>
                         ) : (
                           <p className="text-slate-500 text-sm">Contenuto in arrivo</p>
@@ -1100,21 +1134,40 @@ export default function App() {
 
                     return (
                       <div key={subtopic.id} style={{ perspective: 1000 }} className="relative h-[220px]">
+                        {/* Lato Frontale (Normale) */}
                         <motion.div
-                          animate={{ rotateY: isFlipped ? 180 : 0 }}
-                          transition={{ duration: 0.6, type: "spring", stiffness: 200, damping: 20 }}
-                          style={{ transformStyle: "preserve-3d" }}
-                          className="w-full h-full relative"
+                          initial={false}
+                          animate={{
+                            rotateY: isFlipped ? 180 : 0,
+                            zIndex: isFlipped ? 0 : 2,
+                          }}
+                          transition={{ duration: 0.5, ease: "easeInOut" }}
+                          style={{
+                            backfaceVisibility: "hidden",
+                            WebkitBackfaceVisibility: "hidden",
+                            transformStyle: "preserve-3d",
+                          }}
+                          className={`absolute inset-0 w-full h-full ${isFlipped ? "pointer-events-none" : "pointer-events-auto"}`}
                         >
-                          {/* Front Side */}
-                          <div style={{ backfaceVisibility: "hidden", pointerEvents: isFlipped ? "none" : "auto" }} className="absolute inset-0 w-full h-full">
-                            {renderCardContent(false)}
-                          </div>
+                          {renderCardContent(false)}
+                        </motion.div>
 
-                          {/* Back Side */}
-                          <div style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)", pointerEvents: isFlipped ? "auto" : "none" }} className="absolute inset-0 w-full h-full">
-                            {renderCardContent(true)}
-                          </div>
+                        {/* Lato Posteriore (Inclusione) */}
+                        <motion.div
+                          initial={false}
+                          animate={{
+                            rotateY: isFlipped ? 0 : -180,
+                            zIndex: isFlipped ? 2 : 0,
+                          }}
+                          transition={{ duration: 0.5, ease: "easeInOut" }}
+                          style={{
+                            backfaceVisibility: "hidden",
+                            WebkitBackfaceVisibility: "hidden",
+                            transformStyle: "preserve-3d",
+                          }}
+                          className={`absolute inset-0 w-full h-full ${isFlipped ? "pointer-events-auto" : "pointer-events-none"}`}
+                        >
+                          {renderCardContent(true)}
                         </motion.div>
                       </div>
                     );
@@ -1134,6 +1187,28 @@ export default function App() {
           />
         )}
 
+        {view === 'learn-lesson' && setLanguageSubtopics.includes(selectedSubtopicId || '') && selectedSubject && selectedTopic && (
+          <SetsLesson
+            key="learn-sets"
+            onBack={() => { setView('topic-detail'); setSelectedSubtopicId(null); }}
+            subjectName={selectedSubject.name}
+            topicName={selectedTopic.name}
+            initialSubtopicId={selectedSubtopicId || undefined}
+            initialTab={lessonInitialTab}
+          />
+        )}
+
+        {view === 'learn-lesson' && graphicSubtopics.includes(selectedSubtopicId || '') && selectedSubject && selectedTopic && (
+          <GraphicRepresentationsLesson
+            key="learn-graphics"
+            onBack={() => { setView('topic-detail'); setSelectedSubtopicId(null); }}
+            subjectName={selectedSubject.name}
+            topicName={selectedTopic.name}
+            initialSubtopicId={selectedSubtopicId || undefined}
+            initialTab={lessonInitialTab}
+          />
+        )}
+
         {view === 'learn-lesson-inclusion' && selectedSubtopicId === 'natural-numbers' && selectedSubject && selectedTopic && (
           <NumberLineLessonInclusion
             key="learn-lesson-inclusion"
@@ -1143,21 +1218,25 @@ export default function App() {
           />
         )}
 
-        {view === 'learn-lesson' && selectedSubtopicId === 'tables' && selectedSubject && selectedTopic && (
-          <TablesLesson
-            key="learn-tables"
+        {view === 'learn-lesson-inclusion' && setLanguageSubtopics.includes(selectedSubtopicId || '') && selectedSubject && selectedTopic && (
+          <SetsLessonInclusion
+            key="learn-sets-inclusion"
             onBack={() => { setView('topic-detail'); setSelectedSubtopicId(null); }}
             subjectName={selectedSubject.name}
             topicName={selectedTopic.name}
+            initialSubtopicId={selectedSubtopicId || undefined}
+            initialTab={lessonInitialTab}
           />
         )}
 
-        {view === 'learn-lesson-inclusion' && selectedSubtopicId === 'tables' && selectedSubject && selectedTopic && (
-          <TablesLessonInclusion
-            key="learn-tables-inclusion"
+        {view === 'learn-lesson-inclusion' && graphicSubtopics.includes(selectedSubtopicId || '') && selectedSubject && selectedTopic && (
+          <GraphicRepresentationsLessonInclusion
+            key="learn-graphics-inclusion"
             onBack={() => { setView('topic-detail'); setSelectedSubtopicId(null); }}
             subjectName={selectedSubject.name}
             topicName={selectedTopic.name}
+            initialSubtopicId={selectedSubtopicId || undefined}
+            initialTab={lessonInitialTab}
           />
         )}
       </AnimatePresence>
@@ -1222,10 +1301,11 @@ export default function App() {
                     transition={{ delay: i * 0.05 }}
                     disabled={!sub.active}
                     onClick={() => {
-                      const hasLesson = ['natural-numbers', 'tables'].includes(sub.id);
-                      if (modalAction === 'impara' && sub.active && hasLesson) {
+                      const hasLesson = ['natural-numbers', ...setLanguageSubtopics, ...graphicSubtopics].includes(sub.id);
+                      if ((modalAction === 'impara' || modalAction === 'allena') && sub.active && hasLesson) {
                         setSelectedTopic(modalTopic);
                         setSelectedSubtopicId(sub.id);
+                        setLessonInitialTab(modalAction === 'allena' ? 'allena' : 'impara');
                         setView('learn-lesson');
                         closeModal();
                       } else {

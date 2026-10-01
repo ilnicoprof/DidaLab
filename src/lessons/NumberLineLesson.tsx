@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   ArrowLeft, ZoomIn, ZoomOut, ChevronLeft, ChevronRight,
@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 
 interface Props {
+  key?: string;
   onBack: () => void;
   subjectName: string;
   topicName: string;
