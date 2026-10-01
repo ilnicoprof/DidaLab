@@ -374,16 +374,24 @@ export default function SetsLesson({ onBack, subjectName, topicName, initialSubt
                     <div className="p-6 rounded-3xl bg-slate-50 border-2 border-slate-200 space-y-3 text-center">
                       <div className="text-xs font-bold uppercase tracking-wider text-slate-500">3. Metodo del Disegno</div>
                       <h3 className="text-lg font-bold text-slate-900">Diagramma di Eulero-Venn</h3>
-                      <p className="text-xs text-slate-500 leading-relaxed">Tracciamo una linea chiusa che fa da 'recinto' e posizioniamo i punti con gli elementi:</p>
-                      <div className="relative h-28 rounded-2xl bg-blue-100/60 border-2 border-blue-400 p-2 flex items-center justify-center">
-                        <span className="absolute top-2 left-3 font-bold text-blue-800 text-sm">S</span>
-                        <div className="text-center font-bold text-xs text-slate-700 leading-relaxed">
-                          • primavera &nbsp; • estate<br />
-                          • autunno &nbsp; • inverno
-                        </div>
-                        <span className="absolute -bottom-5 right-2 text-xs font-bold text-red-500">
-                          • Capodanno (fuori!)
-                        </span>
+                      <p className="text-xs text-slate-500 leading-relaxed">Tracciamo una linea chiusa che fa da confine e posizioniamo i punti con gli elementi all'interno:</p>
+                      <div className="relative rounded-2xl bg-blue-50/60 border border-blue-200 p-2 flex flex-col items-center justify-center">
+                        <svg viewBox="0 0 260 130" className="w-full h-28">
+                          {/* Nome dell'insieme S ALL'ESTERNO in alto a sinistra */}
+                          <text x="18" y="24" className="font-black text-xl fill-blue-700">S</text>
+
+                          {/* Linea chiusa */}
+                          <ellipse cx="130" cy="72" rx="85" ry="46" fill="#DBEAFE" stroke="#3B82F6" strokeWidth="2.5" />
+
+                          {/* Elementi sparsi naturalmente dentro l'insieme */}
+                          <text x="75" y="65" className="font-bold text-xs fill-slate-800">• primavera</text>
+                          <text x="145" y="60" className="font-bold text-xs fill-slate-800">• estate</text>
+                          <text x="80" y="98" className="font-bold text-xs fill-slate-800">• autunno</text>
+                          <text x="140" y="96" className="font-bold text-xs fill-slate-800">• inverno</text>
+
+                          {/* Elemento all'esterno */}
+                          <text x="218" y="115" className="font-bold text-[10px] fill-rose-600">• Capodanno (fuori!)</text>
+                        </svg>
                       </div>
                     </div>
                   </div>
@@ -553,11 +561,15 @@ export default function SetsLesson({ onBack, subjectName, topicName, initialSubt
                       <svg viewBox="0 0 460 220" className="w-full h-full drop-shadow-sm">
                         {vennMode !== "disjoint" ? (
                           <>
+                            {/* Nomi insiemi ALL'ESTERNO in alto */}
+                            <text x="110" y="28" className="font-black text-xl fill-blue-700">A</text>
+                            <text x="340" y="28" className="font-black text-xl fill-orange-700">B</text>
+
                             {/* Circle A */}
                             <circle
                               cx="180"
-                              cy="110"
-                              r="85"
+                              cy="118"
+                              r="80"
                               className={`transition-colors duration-300 ${
                                 vennMode === "union"
                                   ? "fill-blue-200/90 stroke-blue-500"
@@ -570,8 +582,8 @@ export default function SetsLesson({ onBack, subjectName, topicName, initialSubt
                             {/* Circle B */}
                             <circle
                               cx="280"
-                              cy="110"
-                              r="85"
+                              cy="118"
+                              r="80"
                               className={`transition-colors duration-300 ${
                                 vennMode === "union"
                                   ? "fill-blue-200/90 stroke-orange-500"
@@ -586,13 +598,13 @@ export default function SetsLesson({ onBack, subjectName, topicName, initialSubt
                               <g>
                                 <defs>
                                   <clipPath id="circleA">
-                                    <circle cx="180" cy="110" r="85" />
+                                    <circle cx="180" cy="118" r="80" />
                                   </clipPath>
                                 </defs>
                                 <circle
                                   cx="280"
-                                  cy="110"
-                                  r="85"
+                                  cy="118"
+                                  r="80"
                                   clipPath="url(#circleA)"
                                   fill="#FDE68A"
                                   stroke="#D97706"
@@ -601,38 +613,62 @@ export default function SetsLesson({ onBack, subjectName, topicName, initialSubt
                               </g>
                             )}
 
-                            {/* Elements inside A only */}
-                            <text x="135" y="115" textAnchor="middle" className="font-mono text-sm font-black fill-slate-800">
-                              {selectedNamePair === "marco-sofia" ? "• m\n• r\n• c" : "• Davide\n• Giulia"}
-                            </text>
+                            {/* Elementi dentro A (sparsi) */}
+                            {selectedNamePair === "marco-sofia" ? (
+                              <>
+                                <text x="135" y="95" className="font-mono text-sm font-black fill-slate-800">• m</text>
+                                <text x="160" y="145" className="font-mono text-sm font-black fill-slate-800">• r</text>
+                                <text x="120" y="148" className="font-mono text-sm font-black fill-slate-800">• c</text>
+                              </>
+                            ) : (
+                              <>
+                                <text x="130" y="105" className="font-mono text-xs font-black fill-slate-800">• Davide</text>
+                                <text x="140" y="145" className="font-mono text-xs font-black fill-slate-800">• Giulia</text>
+                              </>
+                            )}
 
-                            {/* Elements in Intersection */}
-                            <text x="230" y="105" textAnchor="middle" className="font-mono text-sm font-black fill-amber-900">
-                              {selectedNamePair === "marco-sofia" ? "• a\n• o" : "• Emma\n• Pietro"}
-                            </text>
+                            {/* Elementi nell'Intersezione */}
+                            {selectedNamePair === "marco-sofia" ? (
+                              <>
+                                <text x="230" y="102" textAnchor="middle" className="font-mono text-sm font-black fill-amber-950">• a</text>
+                                <text x="230" y="145" textAnchor="middle" className="font-mono text-sm font-black fill-amber-950">• o</text>
+                              </>
+                            ) : (
+                              <>
+                                <text x="230" y="102" textAnchor="middle" className="font-mono text-xs font-black fill-amber-950">• Emma</text>
+                                <text x="230" y="145" textAnchor="middle" className="font-mono text-xs font-black fill-amber-950">• Pietro</text>
+                              </>
+                            )}
 
-                            {/* Elements inside B only */}
-                            <text x="325" y="115" textAnchor="middle" className="font-mono text-sm font-black fill-slate-800">
-                              {selectedNamePair === "marco-sofia" ? "• s\n• f\n• i" : "• Luca\n• Chiara"}
-                            </text>
-
-                            {/* Labels */}
-                            <text x="140" y="45" className="font-extrabold text-sm fill-blue-700">A</text>
-                            <text x="320" y="45" className="font-extrabold text-sm fill-orange-700">B</text>
+                            {/* Elementi dentro B (sparsi) */}
+                            {selectedNamePair === "marco-sofia" ? (
+                              <>
+                                <text x="295" y="95" className="font-mono text-sm font-black fill-slate-800">• s</text>
+                                <text x="330" y="130" className="font-mono text-sm font-black fill-slate-800">• f</text>
+                                <text x="290" y="155" className="font-mono text-sm font-black fill-slate-800">• i</text>
+                              </>
+                            ) : (
+                              <>
+                                <text x="315" y="105" className="font-mono text-xs font-black fill-slate-800">• Luca</text>
+                                <text x="325" y="145" className="font-mono text-xs font-black fill-slate-800">• Chiara</text>
+                              </>
+                            )}
                           </>
                         ) : (
                           <>
+                            {/* Nomi insiemi ALL'ESTERNO in alto */}
+                            <text x="130" y="28" textAnchor="middle" className="font-black text-sm fill-blue-700">A (Mammiferi marini)</text>
+                            <text x="330" y="28" textAnchor="middle" className="font-black text-sm fill-orange-700">B (Uccelli volatili)</text>
+
                             {/* Disjoint circles */}
-                            <circle cx="130" cy="110" r="75" fill="#DBEAFE" stroke="#3B82F6" strokeWidth="3" />
-                            <circle cx="330" cy="110" r="75" fill="#FFEDD5" stroke="#F97316" strokeWidth="3" />
-                            <text x="130" y="115" textAnchor="middle" className="font-mono text-sm font-black fill-slate-800">
-                              • balena<br />• delfino
-                            </text>
-                            <text x="330" y="115" textAnchor="middle" className="font-mono text-sm font-black fill-slate-800">
-                              • aquila<br />• rondine
-                            </text>
-                            <text x="130" y="55" textAnchor="middle" className="font-bold text-xs fill-blue-700">A (Mammiferi marini)</text>
-                            <text x="330" y="55" textAnchor="middle" className="font-bold text-xs fill-orange-700">B (Uccelli volatili)</text>
+                            <circle cx="130" cy="118" r="72" fill="#DBEAFE" stroke="#3B82F6" strokeWidth="3" />
+                            <circle cx="330" cy="118" r="72" fill="#FFEDD5" stroke="#F97316" strokeWidth="3" />
+
+                            <text x="105" y="105" className="font-mono text-xs font-black fill-slate-800">• balena</text>
+                            <text x="125" y="145" className="font-mono text-xs font-black fill-slate-800">• delfino</text>
+
+                            <text x="305" y="105" className="font-mono text-xs font-black fill-slate-800">• aquila</text>
+                            <text x="325" y="145" className="font-mono text-xs font-black fill-slate-800">• rondine</text>
                           </>
                         )}
                       </svg>
@@ -842,15 +878,25 @@ export default function SetsLesson({ onBack, subjectName, topicName, initialSubt
               {/* Graphic Diagram */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                 <div className="p-6 rounded-3xl bg-indigo-50/50 border border-indigo-100 flex flex-col items-center">
-                  <svg viewBox="0 0 380 200" className="w-full max-w-sm h-48">
-                    <circle cx="140" cy="100" r="75" fill="#DBEAFE" fillOpacity="0.8" stroke="#3B82F6" strokeWidth="2.5" />
-                    <circle cx="240" cy="100" r="75" fill="#FFEDD5" fillOpacity="0.8" stroke="#F97316" strokeWidth="2.5" />
-                    <text x="100" y="105" textAnchor="middle" className="font-black text-3xl fill-blue-800">11</text>
-                    <text x="190" y="105" textAnchor="middle" className="font-black text-3xl fill-amber-700">6</text>
-                    <text x="280" y="105" textAnchor="middle" className="font-black text-3xl fill-orange-800">5</text>
-                    <text x="80" y="20" className="font-bold text-xs fill-blue-700">Praticano Nuoto</text>
-                    <text x="230" y="20" className="font-bold text-xs fill-orange-700">Praticano Basket</text>
-                    <text x="190" y="190" textAnchor="middle" className="font-bold text-xs fill-slate-500">Nessuna delle due discipline: 2 studenti</text>
+                  <svg viewBox="0 0 380 205" className="w-full max-w-sm h-48">
+                    {/* Nomi insiemi ALL'ESTERNO in alto */}
+                    <text x="75" y="24" className="font-bold text-xs fill-blue-800">
+                      <tspan className="font-black text-base fill-blue-700">A</tspan> · Nuoto
+                    </text>
+                    <text x="245" y="24" className="font-bold text-xs fill-orange-800">
+                      <tspan className="font-black text-base fill-orange-700">B</tspan> · Basket
+                    </text>
+
+                    {/* Cerchi */}
+                    <circle cx="140" cy="110" r="70" fill="#DBEAFE" fillOpacity="0.8" stroke="#3B82F6" strokeWidth="2.5" />
+                    <circle cx="240" cy="110" r="70" fill="#FFEDD5" fillOpacity="0.8" stroke="#F97316" strokeWidth="2.5" />
+
+                    {/* Dati numerici */}
+                    <text x="95" y="116" textAnchor="middle" className="font-black text-3xl fill-blue-800">11</text>
+                    <text x="190" y="116" textAnchor="middle" className="font-black text-3xl fill-amber-700">6</text>
+                    <text x="285" y="116" textAnchor="middle" className="font-black text-3xl fill-orange-800">5</text>
+                    
+                    <text x="190" y="196" textAnchor="middle" className="font-bold text-xs fill-slate-500">Nessuna delle due discipline: 2 studenti</text>
                   </svg>
                 </div>
 

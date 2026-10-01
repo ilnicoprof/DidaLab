@@ -355,17 +355,23 @@ export default function SetsLessonInclusion({
             {/* Visual Venn Graphic */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
               <div className="p-4 rounded-3xl bg-blue-50 border border-blue-200 flex flex-col items-center justify-center">
-                <svg viewBox="0 0 180 140" className="w-44 h-36">
-                  <ellipse cx="80" cy="70" rx="65" ry="50" fill="#DBEAFE" stroke="#2563EB" strokeWidth="3" />
-                  <text x="35" y="35" className="font-black text-sm fill-blue-800">M</text>
-                  <text x="55" y="65" className="font-black text-base fill-slate-800">• L</text>
-                  <text x="105" y="65" className="font-black text-base fill-slate-800">• U</text>
-                  <text x="55" y="95" className="font-black text-base fill-slate-800">• N</text>
-                  <text x="105" y="95" className="font-black text-base fill-slate-800">• A</text>
-                  {/* Outside point */}
-                  <text x="160" y="85" className="font-black text-base fill-rose-600">• F</text>
+                <svg viewBox="0 0 200 150" className="w-52 h-40">
+                  {/* Nome dell'insieme M ALL'ESTERNO in alto a sinistra */}
+                  <text x="18" y="26" className="font-black text-2xl fill-blue-700">M</text>
+
+                  {/* Confine dell'insieme (linea chiusa) */}
+                  <ellipse cx="95" cy="85" rx="65" ry="52" fill="#DBEAFE" stroke="#2563EB" strokeWidth="3" />
+
+                  {/* Lettere sparse dentro il cerchio (non in riga) */}
+                  <text x="52" y="72" className="font-black text-base fill-slate-800">• L</text>
+                  <text x="108" y="65" className="font-black text-base fill-slate-800">• U</text>
+                  <text x="62" y="112" className="font-black text-base fill-slate-800">• N</text>
+                  <text x="116" y="108" className="font-black text-base fill-slate-800">• A</text>
+
+                  {/* Elemento all'esterno */}
+                  <text x="175" y="88" className="font-black text-base fill-rose-600">• F</text>
                 </svg>
-                <span className="text-[11px] font-bold text-slate-500 mt-1">La lettera F è FUORI!</span>
+                <span className="text-[11px] font-bold text-slate-500 mt-1">M è all'esterno · La lettera F è FUORI!</span>
               </div>
 
               <div className="md:col-span-2 space-y-3 uppercase font-extrabold text-slate-800 text-sm md:text-base leading-relaxed">
@@ -661,18 +667,30 @@ export default function SetsLessonInclusion({
                 </div>
 
                 {/* SVG Venn Circle Container */}
-                <div className="relative h-32 rounded-2xl bg-blue-50 border-2 border-dashed border-blue-400 flex items-center justify-center">
-                  <span className="absolute top-2 left-3 font-black text-xs text-blue-800">Linea Chiusa (Venn)</span>
-                  <div className="flex gap-4 font-mono font-black text-xl text-blue-900">
-                    {m4InsidePoints.map(n => (
-                      <span key={n} className="px-3 py-1 bg-white rounded-xl shadow-sm border border-blue-300">
-                        • {n}
-                      </span>
-                    ))}
-                    {m4InsidePoints.length === 0 && (
-                      <span className="text-xs text-slate-400 italic font-sans font-normal">Il cerchio è vuoto. Clicca sui pulsanti sopra per inserire i numeri!</span>
+                <div className="relative rounded-2xl bg-blue-50/50 border border-blue-200 p-4 flex flex-col items-center justify-center">
+                  <svg viewBox="0 0 240 130" className="w-56 h-36">
+                    {/* Nome insieme A all'esterno */}
+                    <text x="18" y="24" className="font-black text-xl fill-blue-700">A</text>
+
+                    {/* Cerchio chiuso */}
+                    <ellipse cx="120" cy="72" rx="80" ry="46" fill="#DBEAFE" stroke="#2563EB" strokeWidth="2.5" />
+
+                    {/* Punti inseriti sparsi naturalmente dentro il cerchio */}
+                    {m4InsidePoints.includes(1) && (
+                      <text x="75" y="65" className="font-black text-base fill-slate-800">• 1</text>
                     )}
-                  </div>
+                    {m4InsidePoints.includes(2) && (
+                      <text x="145" y="60" className="font-black text-base fill-slate-800">• 2</text>
+                    )}
+                    {m4InsidePoints.includes(3) && (
+                      <text x="110" y="98" className="font-black text-base fill-slate-800">• 3</text>
+                    )}
+                  </svg>
+                  {m4InsidePoints.length === 0 ? (
+                    <span className="text-[11px] font-bold text-slate-400 mt-1">Il cerchio è vuoto. Clicca sui tasti sopra per inserire i numeri!</span>
+                  ) : (
+                    <span className="text-[11px] font-bold text-emerald-700 mt-1">✓ I numeri sono dentro l'insieme A!</span>
+                  )}
                 </div>
               </div>
             </div>
@@ -700,21 +718,29 @@ export default function SetsLessonInclusion({
             {/* Visual Graphic */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
               <div className="p-4 rounded-3xl bg-blue-50 border border-blue-200 flex flex-col items-center justify-center">
-                <svg viewBox="0 0 200 140" className="w-48 h-36">
-                  {/* Big circle A */}
-                  <ellipse cx="100" cy="70" rx="90" ry="60" fill="#DBEAFE" stroke="#2563EB" strokeWidth="2.5" />
-                  <text x="25" y="35" className="font-black text-sm fill-blue-800">A (Grande)</text>
-                  <text x="45" y="65" className="font-bold text-sm fill-slate-700">• 3</text>
-                  <text x="60" y="105" className="font-bold text-sm fill-slate-700">• 4</text>
-                  <text x="80" y="45" className="font-bold text-sm fill-slate-700">• 5</text>
+                <svg viewBox="0 0 240 160" className="w-56 h-40">
+                  {/* Nome insieme A ALL'ESTERNO in alto a sinistra */}
+                  <text x="16" y="26" className="font-black text-xl fill-blue-700">A</text>
 
-                  {/* Small inner circle B */}
-                  <ellipse cx="140" cy="80" rx="35" ry="30" fill="#FED7AA" stroke="#EA580C" strokeWidth="2.5" />
-                  <text x="145" y="65" className="font-black text-xs fill-orange-800">B</text>
-                  <text x="125" y="90" className="font-black text-sm fill-orange-950">• 1</text>
-                  <text x="150" y="90" className="font-black text-sm fill-orange-950">• 2</text>
+                  {/* Grande cerchio A */}
+                  <ellipse cx="120" cy="92" rx="98" ry="58" fill="#DBEAFE" stroke="#2563EB" strokeWidth="2.5" />
+
+                  {/* Elementi in A sparsi naturalmente */}
+                  <text x="50" y="78" className="font-bold text-sm fill-slate-700">• 3</text>
+                  <text x="96" y="60" className="font-bold text-sm fill-slate-700">• 5</text>
+                  <text x="66" y="125" className="font-bold text-sm fill-slate-700">• 4</text>
+
+                  {/* Nome insieme B ALL'ESTERNO del cerchio piccolo */}
+                  <text x="185" y="55" className="font-black text-sm fill-orange-700">B</text>
+
+                  {/* Piccolo cerchio B interno */}
+                  <ellipse cx="165" cy="100" rx="38" ry="32" fill="#FED7AA" stroke="#EA580C" strokeWidth="2.5" />
+
+                  {/* Elementi in B sparsi */}
+                  <text x="145" y="104" className="font-black text-sm fill-orange-950">• 1</text>
+                  <text x="178" y="98" className="font-black text-sm fill-orange-950">• 2</text>
                 </svg>
-                <span className="text-[11px] font-bold text-slate-500 mt-1">B sta TUTTO DENTRO ad A!</span>
+                <span className="text-[11px] font-bold text-slate-500 mt-1">A e B all'esterno · B sta TUTTO DENTRO ad A!</span>
               </div>
 
               <div className="md:col-span-2 space-y-3 font-extrabold text-slate-800 text-sm md:text-base leading-relaxed uppercase">
@@ -804,31 +830,43 @@ export default function SetsLessonInclusion({
             {/* Visual Venn Graphic */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
               <div className="p-4 rounded-3xl bg-amber-50/50 border border-amber-200 flex flex-col items-center justify-center">
-                <svg viewBox="0 0 220 130" className="w-52 h-32">
-                  <circle cx="75" cy="65" r="50" fill="#DBEAFE" fillOpacity="0.7" stroke="#2563EB" strokeWidth="2.5" />
-                  <circle cx="145" cy="65" r="50" fill="#FFEDD5" fillOpacity="0.7" stroke="#EA580C" strokeWidth="2.5" />
-                  {/* Yellow intersection */}
+                <svg viewBox="0 0 240 160" className="w-56 h-40">
+                  {/* Cerchio A */}
+                  <circle cx="80" cy="92" r="50" fill="#DBEAFE" fillOpacity="0.7" stroke="#2563EB" strokeWidth="2.5" />
+                  {/* Cerchio B */}
+                  <circle cx="160" cy="92" r="50" fill="#FFEDD5" fillOpacity="0.7" stroke="#EA580C" strokeWidth="2.5" />
+                  
+                  {/* Intersezione gialla */}
                   <g>
                     <defs>
                       <clipPath id="cA">
-                        <circle cx="75" cy="65" r="50" />
+                        <circle cx="80" cy="92" r="50" />
                       </clipPath>
                     </defs>
-                    <circle cx="145" cy="65" r="50" clipPath="url(#cA)" fill="#FEF08A" stroke="#CA8A04" strokeWidth="2" />
+                    <circle cx="160" cy="92" r="50" clipPath="url(#cA)" fill="#FEF08A" stroke="#CA8A04" strokeWidth="2" />
                   </g>
 
-                  <text x="35" y="25" className="font-bold text-xs fill-blue-800">BALLO</text>
-                  <text x="145" y="25" className="font-bold text-xs fill-orange-800">CANTO</text>
-                  <text x="50" y="60" className="font-bold text-[10px] fill-slate-700">• IVO</text>
-                  <text x="50" y="78" className="font-bold text-[10px] fill-slate-700">• RITA</text>
-                  <text x="160" y="60" className="font-bold text-[10px] fill-slate-700">• ANNA</text>
-                  <text x="160" y="78" className="font-bold text-[10px] fill-slate-700">• UGO</text>
+                  {/* Nomi insiemi ALL'ESTERNO in alto */}
+                  <text x="38" y="26" className="font-bold text-xs fill-blue-800">
+                    <tspan className="font-black text-base fill-blue-700">A</tspan> BALLO
+                  </text>
+                  <text x="150" y="26" className="font-bold text-xs fill-orange-800">
+                    <tspan className="font-black text-base fill-orange-700">B</tspan> CANTO
+                  </text>
 
-                  {/* Inside intersection */}
-                  <text x="110" y="58" textAnchor="middle" className="font-black text-[10px] fill-amber-900">• LIVIO</text>
-                  <text x="110" y="76" textAnchor="middle" className="font-black text-[10px] fill-amber-900">• MONICA</text>
+                  {/* Elementi in A (solo ballo) sparsi */}
+                  <text x="46" y="80" className="font-bold text-[11px] fill-slate-800">• IVO</text>
+                  <text x="56" y="115" className="font-bold text-[11px] fill-slate-800">• RITA</text>
+
+                  {/* Elementi in B (solo canto) sparsi */}
+                  <text x="170" y="80" className="font-bold text-[11px] fill-slate-800">• ANNA</text>
+                  <text x="162" y="115" className="font-bold text-[11px] fill-slate-800">• UGO</text>
+
+                  {/* Elementi nell'intersezione (in comune) */}
+                  <text x="120" y="78" textAnchor="middle" className="font-black text-[11px] fill-amber-900">• LIVIO</text>
+                  <text x="120" y="110" textAnchor="middle" className="font-black text-[11px] fill-amber-900">• MONICA</text>
                 </svg>
-                <span className="text-[11px] font-black text-amber-700 mt-1">PARTE GIALLA = IN COMUNE!</span>
+                <span className="text-[11px] font-black text-amber-700 mt-1">A e B all'esterno · PARTE GIALLA = IN COMUNE!</span>
               </div>
 
               <div className="md:col-span-2 space-y-3 font-extrabold text-slate-800 text-sm md:text-base leading-relaxed uppercase">
@@ -929,18 +967,32 @@ export default function SetsLessonInclusion({
             {/* Visual Graphic */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
               <div className="p-4 rounded-3xl bg-blue-50 border border-blue-200 flex flex-col items-center justify-center">
-                <svg viewBox="0 0 200 120" className="w-48 h-28">
-                  <circle cx="70" cy="60" r="45" fill="#BFDBFE" stroke="#2563EB" strokeWidth="2" />
-                  <circle cx="130" cy="60" r="45" fill="#BFDBFE" stroke="#2563EB" strokeWidth="2" />
-                  <text x="35" y="25" className="font-bold text-[10px] fill-blue-900">LUCA</text>
-                  <text x="135" y="25" className="font-bold text-[10px] fill-blue-900">SARA</text>
-                  <text x="45" y="55" className="font-bold text-[10px] fill-slate-800">ALE</text>
-                  <text x="45" y="75" className="font-bold text-[10px] fill-slate-800">BEA</text>
-                  <text x="100" y="65" textAnchor="middle" className="font-black text-[11px] fill-blue-900">DANI</text>
-                  <text x="145" y="55" className="font-bold text-[10px] fill-slate-800">ENZO</text>
-                  <text x="145" y="75" className="font-bold text-[10px] fill-slate-800">FEDE</text>
+                <svg viewBox="0 0 240 160" className="w-56 h-40">
+                  {/* Cerchio A */}
+                  <circle cx="80" cy="92" r="50" fill="#BFDBFE" stroke="#2563EB" strokeWidth="2.5" />
+                  {/* Cerchio B */}
+                  <circle cx="160" cy="92" r="50" fill="#BFDBFE" stroke="#2563EB" strokeWidth="2.5" />
+
+                  {/* Nomi insiemi ALL'ESTERNO in alto */}
+                  <text x="38" y="26" className="font-bold text-xs fill-blue-900">
+                    <tspan className="font-black text-base fill-blue-700">A</tspan> LUCA
+                  </text>
+                  <text x="150" y="26" className="font-bold text-xs fill-blue-900">
+                    <tspan className="font-black text-base fill-blue-700">B</tspan> SARA
+                  </text>
+
+                  {/* Elementi in A sparsi */}
+                  <text x="44" y="80" className="font-bold text-[11px] fill-slate-800">• ALE</text>
+                  <text x="54" y="115" className="font-bold text-[11px] fill-slate-800">• BEA</text>
+
+                  {/* Elemento comune al centro */}
+                  <text x="120" y="96" textAnchor="middle" className="font-black text-[12px] fill-blue-950">• DANI</text>
+
+                  {/* Elementi in B sparsi */}
+                  <text x="172" y="80" className="font-bold text-[11px] fill-slate-800">• ENZO</text>
+                  <text x="162" y="115" className="font-bold text-[11px] fill-slate-800">• FEDE</text>
                 </svg>
-                <span className="text-[11px] font-bold text-slate-500 mt-1">Festa insieme = Unica lista!</span>
+                <span className="text-[11px] font-bold text-slate-500 mt-1">A e B all'esterno · Festa insieme = Unica lista!</span>
               </div>
 
               <div className="md:col-span-2 space-y-3 font-extrabold text-slate-800 text-sm md:text-base leading-relaxed uppercase">
@@ -1031,17 +1083,29 @@ export default function SetsLessonInclusion({
             {/* Visual Graphic */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
               <div className="p-4 rounded-3xl bg-slate-100 border border-slate-200 flex flex-col items-center justify-center">
-                <svg viewBox="0 0 200 100" className="w-48 h-24">
-                  <circle cx="50" cy="50" r="40" fill="#DBEAFE" stroke="#3B82F6" strokeWidth="2.5" />
-                  <circle cx="150" cy="50" r="40" fill="#FFEDD5" stroke="#F97316" strokeWidth="2.5" />
-                  <text x="50" y="25" textAnchor="middle" className="font-black text-[9px] fill-blue-800">DISPARI</text>
-                  <text x="150" y="25" textAnchor="middle" className="font-black text-[9px] fill-orange-800">PARI</text>
-                  <text x="50" y="55" textAnchor="middle" className="font-bold text-[10px] fill-slate-800">1 · 3</text>
-                  <text x="50" y="70" textAnchor="middle" className="font-bold text-[10px] fill-slate-800">5 · 7</text>
-                  <text x="150" y="55" textAnchor="middle" className="font-bold text-[10px] fill-slate-800">2 · 4</text>
-                  <text x="150" y="70" textAnchor="middle" className="font-bold text-[10px] fill-slate-800">6 · 8</text>
+                <svg viewBox="0 0 240 145" className="w-56 h-36">
+                  {/* Cerchio DISPARI */}
+                  <circle cx="65" cy="82" r="44" fill="#DBEAFE" stroke="#3B82F6" strokeWidth="2.5" />
+                  {/* Cerchio PARI */}
+                  <circle cx="175" cy="82" r="44" fill="#FFEDD5" stroke="#F97316" strokeWidth="2.5" />
+
+                  {/* Nomi ALL'ESTERNO in alto */}
+                  <text x="65" y="24" textAnchor="middle" className="font-black text-xs fill-blue-800">DISPARI</text>
+                  <text x="175" y="24" textAnchor="middle" className="font-black text-xs fill-orange-800">PARI</text>
+
+                  {/* Elementi DISPARI sparsi con puntino */}
+                  <text x="44" y="70" className="font-bold text-[11px] fill-slate-800">• 1</text>
+                  <text x="76" y="66" className="font-bold text-[11px] fill-slate-800">• 3</text>
+                  <text x="46" y="104" className="font-bold text-[11px] fill-slate-800">• 5</text>
+                  <text x="78" y="102" className="font-bold text-[11px] fill-slate-800">• 7</text>
+
+                  {/* Elementi PARI sparsi con puntino */}
+                  <text x="154" y="70" className="font-bold text-[11px] fill-slate-800">• 2</text>
+                  <text x="186" y="66" className="font-bold text-[11px] fill-slate-800">• 4</text>
+                  <text x="156" y="104" className="font-bold text-[11px] fill-slate-800">• 6</text>
+                  <text x="188" y="102" className="font-bold text-[11px] fill-slate-800">• 8</text>
                 </svg>
-                <span className="text-[11px] font-bold text-slate-500 mt-1">Separati = Nessun elemento comune!</span>
+                <span className="text-[11px] font-bold text-slate-500 mt-1">DISPARI e PARI all'esterno · Separati = Disgiunti!</span>
               </div>
 
               <div className="md:col-span-2 space-y-3 font-extrabold text-slate-800 text-sm md:text-base leading-relaxed uppercase">
