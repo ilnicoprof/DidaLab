@@ -20,7 +20,7 @@
 
 *   **React** + **TypeScript**
 *   **Vite** (Build tool)
-*   **Framer Motion** (Animazioni)
+*   **Motion** (Animazioni)
 *   **Lucide React** (Icone)
 *   **Tailwind CSS** (Styling)
 
@@ -32,4 +32,4 @@
     `npm install`
 2.  Avvia l'app in modalità sviluppo:
     `npm run dev`
-3.  Apri l'indirizzo mostrato nel terminale (solitamente `http://localhost:5173`).
+3.  Apri l'indirizzo mostrato nel terminale (solitamente `http://localhost:3000`).
