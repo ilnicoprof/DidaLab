@@ -1,9 +1,10 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   ArrowLeft, ChevronLeft, ChevronRight,
   Lightbulb, BookOpen, Volume2, VolumeX, Hand
 } from "lucide-react";
+import { useSpeech } from "../hooks/useSpeech";
 
 interface Props {
   key?: string;
@@ -51,8 +52,7 @@ const slides = [
 
 export default function NumberLineLessonInclusion({ onBack, subjectName, topicName }: Props) {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [ttsEnabled, setTtsEnabled] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
+  const { ttsEnabled, isSpeaking, speak, stop, toggleTts } = useSpeech();
   const [selectedNumber, setSelectedNumber] = useState<number | null>(null);
   const [showNumberLine, setShowNumberLine] = useState(false);
 
@@ -64,62 +64,14 @@ export default function NumberLineLessonInclusion({ onBack, subjectName, topicNa
   const spacing = (SVG_W - 2 * PAD) / 10;
   const getX = (n: number) => PAD + n * spacing;
 
-  // Load available voices (they may load asynchronously)
-  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
-  useEffect(() => {
-    const loadVoices = () => setVoices(window.speechSynthesis.getVoices());
-    loadVoices();
-    window.speechSynthesis.addEventListener("voiceschanged", loadVoices);
-    return () => window.speechSynthesis.removeEventListener("voiceschanged", loadVoices);
-  }, []);
-
-  // Pick the best Italian voice available
-  const getBestVoice = useCallback((): SpeechSynthesisVoice | null => {
-    const italianVoices = voices.filter(v => v.lang.startsWith("it"));
-    if (italianVoices.length === 0) return null;
-
-    // Prefer natural/online voices (Google, Microsoft Online Natural, etc.)
-    const priority = [
-      (v: SpeechSynthesisVoice) => /google/i.test(v.name),
-      (v: SpeechSynthesisVoice) => /natural/i.test(v.name),
-      (v: SpeechSynthesisVoice) => /online/i.test(v.name),
-      (v: SpeechSynthesisVoice) => /microsoft.*elsa/i.test(v.name),
-      (v: SpeechSynthesisVoice) => /microsoft.*cosimo/i.test(v.name),
-      (v: SpeechSynthesisVoice) => /microsoft/i.test(v.name),
-    ];
-    for (const test of priority) {
-      const match = italianVoices.find(test);
-      if (match) return match;
-    }
-    return italianVoices[0];
-  }, [voices]);
-
-  // Text-to-Speech
-  const speak = useCallback((text: string) => {
-    if (!ttsEnabled) return;
-    window.speechSynthesis.cancel();
-    const utt = new SpeechSynthesisUtterance(text);
-    utt.lang = "it-IT";
-    const bestVoice = getBestVoice();
-    if (bestVoice) utt.voice = bestVoice;
-    utt.rate = 0.9;
-    utt.pitch = 1.05;
-    utt.onstart = () => setIsSpeaking(true);
-    utt.onend = () => setIsSpeaking(false);
-    window.speechSynthesis.speak(utt);
-  }, [ttsEnabled, getBestVoice]);
-
   // Speak the current slide when TTS is enabled or slide changes
   useEffect(() => {
     if (ttsEnabled && !showNumberLine) {
       const slide = slides[currentSlide];
       speak(`${slide.title}. ${slide.body}`);
     }
-    return () => {
-      window.speechSynthesis.cancel();
-      setIsSpeaking(false);
-    };
-  }, [currentSlide, ttsEnabled, showNumberLine, speak]);
+    return stop;
+  }, [currentSlide, ttsEnabled, showNumberLine, speak, stop]);
 
   const nextSlide = () => {
     if (currentSlide < slides.length - 1) {
@@ -173,10 +125,7 @@ export default function NumberLineLessonInclusion({ onBack, subjectName, topicNa
         <div className="flex items-center gap-3">
           {/* TTS toggle */}
           <button
-            onClick={() => {
-              if (ttsEnabled) window.speechSynthesis.cancel();
-              setTtsEnabled(!ttsEnabled);
-            }}
+            onClick={toggleTts}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition shadow-sm cursor-pointer ${
               ttsEnabled
                 ? "bg-dida-orange text-white shadow-orange-200"
