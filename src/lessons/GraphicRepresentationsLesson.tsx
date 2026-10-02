@@ -24,6 +24,37 @@ const GRAPH_SUBTOPICS = [
   { id: "cartesian-diagram", title: "Diagramma Cartesiano", desc: "Monitorare l'andamento di una misura nel corso del tempo" },
 ];
 
+// Spicchi di un areogramma calcolati dai dati: ogni settore è proporzionale al valore
+// (si parte dall'alto e si procede in senso orario)
+const pieSlices = (values: number[], cx: number, cy: number, r: number) => {
+  const total = values.reduce((acc, v) => acc + v, 0);
+  const point = (frac: number, radius: number) => {
+    const angle = frac * 2 * Math.PI;
+    return [cx + radius * Math.sin(angle), cy - radius * Math.cos(angle)];
+  };
+  let start = 0;
+  return values.map((value) => {
+    const frac = value / total;
+    const end = start + frac;
+    const [x1, y1] = point(start, r);
+    const [x2, y2] = point(end, r);
+    const [lx, ly] = point(start + frac / 2, r * 0.6);
+    const largeArc = frac > 0.5 ? 1 : 0;
+    const path = frac >= 1
+      ? `M ${cx} ${cy - r} A ${r} ${r} 0 1 1 ${cx} ${cy + r} A ${r} ${r} 0 1 1 ${cx} ${cy - r} Z`
+      : `M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2} Z`;
+    start = end;
+    return { path, labelX: lx, labelY: ly, percent: Math.round(frac * 100) };
+  });
+};
+
+const PET_PIE = [
+  { label: "Cani", value: 40, color: "#2563EB" },
+  { label: "Gatti", value: 30, color: "#EA580C" },
+  { label: "Pesci", value: 20, color: "#10B981" },
+  { label: "Uccelli", value: 10, color: "#F59E0B" },
+];
+
 export default function GraphicRepresentationsLesson({
   onBack,
   subjectName,
@@ -196,6 +227,7 @@ export default function GraphicRepresentationsLesson({
 
   const activeData = datasets[labDataset];
   const totalValue = activeData.data.reduce((acc, d) => acc + d.value, 0);
+  const maxValue = Math.max(...activeData.data.map((d) => d.value));
 
   // --- ALLENA EXERCISES STATES ---
   const [ex1Answers, setEx1Answers] = useState<Record<string, string>>({});
@@ -957,15 +989,14 @@ export default function GraphicRepresentationsLesson({
                   {/* Pie Visualization */}
                   <div className="flex flex-col items-center justify-center p-6 bg-slate-50 rounded-3xl border border-slate-200">
                     <svg viewBox="0 0 200 200" className="w-48 h-48 drop-shadow-md">
-                      <path d="M 100 100 L 100 10 A 90 90 0 0 1 172 153 Z" fill="#2563EB" />
-                      <path d="M 100 100 L 172 153 A 90 90 0 0 1 72 185 Z" fill="#EA580C" />
-                      <path d="M 100 100 L 72 185 A 90 90 0 0 1 27 63 Z" fill="#10B981" />
-                      <path d="M 100 100 L 27 63 A 90 90 0 0 1 100 10 Z" fill="#F59E0B" />
-
-                      <text x="135" y="85" className="text-[12px] font-black fill-white">Cani: 40%</text>
-                      <text x="110" y="165" className="text-[11px] font-black fill-white">Gatti: 30%</text>
-                      <text x="40" y="135" className="text-[10px] font-black fill-white">Pesci: 20%</text>
-                      <text x="50" y="45" className="text-[9px] font-black fill-white">Uccelli: 10%</text>
+                      {pieSlices(PET_PIE.map(d => d.value), 100, 100, 90).map((slice, i) => (
+                        <g key={PET_PIE[i].label}>
+                          <path d={slice.path} fill={PET_PIE[i].color} stroke="#FFFFFF" strokeWidth="1.5" />
+                          <text x={slice.labelX} y={slice.labelY} textAnchor="middle" dominantBaseline="middle" className="text-[10px] font-black fill-white">
+                            {PET_PIE[i].label}: {slice.percent}%
+                          </text>
+                        </g>
+                      ))}
                     </svg>
                   </div>
                 </div>
@@ -1201,8 +1232,7 @@ export default function GraphicRepresentationsLesson({
                 {labGraphicType === "bar" && (
                   <div className="bg-white p-6 rounded-xl border border-slate-200 space-y-3">
                     {activeData.data.map((d, i) => {
-                      const maxVal = Math.max(...activeData.data.map((x) => x.value));
-                      const pct = (d.value / maxVal) * 100;
+                      const pct = (d.value / maxValue) * 100;
                       return (
                         <div key={i} className="space-y-1">
                           <div className="flex justify-between text-xs font-bold text-slate-700">
@@ -1236,8 +1266,18 @@ export default function GraphicRepresentationsLesson({
                         </div>
                       ))}
                     </div>
-                    <div className="w-44 h-44 rounded-full border-4 border-slate-100 relative flex items-center justify-center bg-gradient-to-tr from-blue-500 via-orange-400 to-emerald-400 shadow-md text-white font-bold text-xs text-center p-4">
-                      Ripartizione Totale<br />{totalValue} {activeData.unitLabel}
+                    <div className="flex flex-col items-center gap-2">
+                      <svg viewBox="0 0 200 200" className="w-44 h-44 drop-shadow-md">
+                        {pieSlices(activeData.data.map(d => d.value), 100, 100, 95).map((slice, i) => (
+                          <g key={activeData.data[i].label}>
+                            <path d={slice.path} fill={activeData.data[i].color} stroke="#FFFFFF" strokeWidth="2" />
+                            <text x={slice.labelX} y={slice.labelY} textAnchor="middle" dominantBaseline="middle" className="text-[13px] font-black fill-white">
+                              {slice.percent}%
+                            </text>
+                          </g>
+                        ))}
+                      </svg>
+                      <span className="text-xs font-bold text-slate-500">Totale: {totalValue} {activeData.unitLabel}</span>
                     </div>
                   </div>
                 )}
@@ -1251,8 +1291,7 @@ export default function GraphicRepresentationsLesson({
                       {activeData.data.map((d, i) => {
                         const stepX = 320 / (activeData.data.length - 1 || 1);
                         const posX = 40 + i * stepX;
-                        const maxVal = Math.max(...activeData.data.map((x) => x.value));
-                        const posY = 150 - (d.value / maxVal) * 110;
+                        const posY = 150 - (d.value / maxValue) * 110;
                         return (
                           <g key={i}>
                             <circle cx={posX} cy={posY} r="5" fill="#EF4444" stroke="#FFF" strokeWidth="2" />

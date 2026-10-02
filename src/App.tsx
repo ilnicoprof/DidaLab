@@ -3,22 +3,51 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import React, { useState, lazy, Suspense, type ComponentType } from "react";
+import { motion, AnimatePresence, MotionConfig } from "motion/react";
 import {
   Rocket, Search, Settings, GraduationCap, School, ArrowLeft,
   Calculator, Triangle, Beaker, BookText, History, Globe,
   Languages, Music, Palette, Monitor, Dumbbell, Sparkles, DollarSign,
   BookOpen, Zap, Gamepad
 } from "lucide-react";
-import NumberLineLesson from "./lessons/NumberLineLesson";
-import NumberLineLessonInclusion from "./lessons/NumberLineLessonInclusion";
-import TablesLesson from "./lessons/TablesLesson";
-import TablesLessonInclusion from "./lessons/TablesLessonInclusion";
-import SetsLesson from "./lessons/SetsLesson";
-import SetsLessonInclusion from "./lessons/SetsLessonInclusion";
-import GraphicRepresentationsLesson from "./lessons/GraphicRepresentationsLesson";
-import GraphicRepresentationsLessonInclusion from "./lessons/GraphicRepresentationsLessonInclusion";
+
+interface LessonProps {
+  onBack: () => void;
+  subjectName: string;
+  topicName: string;
+  initialSubtopicId?: string;
+  initialTab?: "impara" | "allena";
+}
+
+/**
+ * Lezioni disponibili, indicizzate per sottoargomento.
+ * Ogni lezione viene scaricata solo quando lo studente la apre (lazy).
+ */
+const LESSONS: { subtopicIds: string[]; standard: ComponentType<LessonProps>; inclusion: ComponentType<LessonProps> }[] = [
+  {
+    subtopicIds: ['natural-numbers'],
+    standard: lazy(() => import("./lessons/NumberLineLesson")),
+    inclusion: lazy(() => import("./lessons/NumberLineLessonInclusion")),
+  },
+  {
+    subtopicIds: ['sets', 'particular-sets', 'representations', 'subsets', 'intersection-union'],
+    standard: lazy(() => import("./lessons/SetsLesson")),
+    inclusion: lazy(() => import("./lessons/SetsLessonInclusion")),
+  },
+  {
+    subtopicIds: ['tables', 'ideogram', 'ortogram', 'aerogram', 'cartesian-diagram'],
+    standard: lazy(() => import("./lessons/GraphicRepresentationsLesson")),
+    inclusion: lazy(() => import("./lessons/GraphicRepresentationsLessonInclusion")),
+  },
+];
+
+const findLesson = (subtopicId: string | null) =>
+  subtopicId ? LESSONS.find(l => l.subtopicIds.includes(subtopicId)) : undefined;
+
+const LessonLoading = () => (
+  <div className="py-24 text-slate-400 font-bold animate-pulse">Caricamento lezione…</div>
+);
 
 /**
  * Animated Background Illustrations
@@ -622,9 +651,6 @@ export default function App() {
   const [flippedSubtopics, setFlippedSubtopics] = useState<Record<string, boolean>>({});
   const [lessonInitialTab, setLessonInitialTab] = useState<'impara' | 'allena'>('impara');
 
-  const setLanguageSubtopics = ['sets', 'particular-sets', 'representations', 'subsets', 'intersection-union', 'intersection-sets', 'union-sets'];
-  const graphicSubtopics = ['tables', 'ideogram', 'ortogram', 'aerogram', 'cartesian-diagram'];
-
   const toggleFlip = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     setFlippedSubtopics(prev => ({ ...prev, [id]: !prev[id] }));
@@ -632,11 +658,6 @@ export default function App() {
   const [modalTopic, setModalTopic] = useState<Topic | null>(null);
   const [modalAction, setModalAction] = useState<'impara' | 'allena' | 'gioca' | null>(null);
 
-  const openActionModal = (topic: Topic, action: 'impara' | 'allena' | 'gioca', e: React.MouseEvent) => {
-    e.stopPropagation();
-    setModalTopic(topic);
-    setModalAction(action);
-  };
   const closeModal = () => { setModalTopic(null); setModalAction(null); };
 
   const openTopicDetail = (topic: Topic) => {
@@ -696,6 +717,7 @@ export default function App() {
     : [];
 
   return (
+    <MotionConfig reducedMotion="user">
     <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
       <BackgroundIllustrations />
 
@@ -1081,7 +1103,7 @@ export default function App() {
                         ) : subtopic.active ? (
                           <div className="mt-4 grid grid-cols-3 gap-2 z-10 relative">
                             {(() => {
-                              const hasLesson = ['natural-numbers', ...setLanguageSubtopics, ...graphicSubtopics].includes(subtopic.id);
+                              const hasLesson = !!findLesson(subtopic.id);
                               return (
                                 <>
                                   <button
@@ -1178,67 +1200,23 @@ export default function App() {
           </motion.div>
         )}
 
-        {view === 'learn-lesson' && selectedSubtopicId === 'natural-numbers' && selectedSubject && selectedTopic && (
-          <NumberLineLesson
-            key="learn-lesson"
-            onBack={() => { setView('topic-detail'); setSelectedSubtopicId(null); }}
-            subjectName={selectedSubject.name}
-            topicName={selectedTopic.name}
-          />
-        )}
-
-        {view === 'learn-lesson' && setLanguageSubtopics.includes(selectedSubtopicId || '') && selectedSubject && selectedTopic && (
-          <SetsLesson
-            key="learn-sets"
-            onBack={() => { setView('topic-detail'); setSelectedSubtopicId(null); }}
-            subjectName={selectedSubject.name}
-            topicName={selectedTopic.name}
-            initialSubtopicId={selectedSubtopicId || undefined}
-            initialTab={lessonInitialTab}
-          />
-        )}
-
-        {view === 'learn-lesson' && graphicSubtopics.includes(selectedSubtopicId || '') && selectedSubject && selectedTopic && (
-          <GraphicRepresentationsLesson
-            key="learn-graphics"
-            onBack={() => { setView('topic-detail'); setSelectedSubtopicId(null); }}
-            subjectName={selectedSubject.name}
-            topicName={selectedTopic.name}
-            initialSubtopicId={selectedSubtopicId || undefined}
-            initialTab={lessonInitialTab}
-          />
-        )}
-
-        {view === 'learn-lesson-inclusion' && selectedSubtopicId === 'natural-numbers' && selectedSubject && selectedTopic && (
-          <NumberLineLessonInclusion
-            key="learn-lesson-inclusion"
-            onBack={() => { setView('topic-detail'); setSelectedSubtopicId(null); }}
-            subjectName={selectedSubject.name}
-            topicName={selectedTopic.name}
-          />
-        )}
-
-        {view === 'learn-lesson-inclusion' && setLanguageSubtopics.includes(selectedSubtopicId || '') && selectedSubject && selectedTopic && (
-          <SetsLessonInclusion
-            key="learn-sets-inclusion"
-            onBack={() => { setView('topic-detail'); setSelectedSubtopicId(null); }}
-            subjectName={selectedSubject.name}
-            topicName={selectedTopic.name}
-            initialSubtopicId={selectedSubtopicId || undefined}
-            initialTab={lessonInitialTab}
-          />
-        )}
-
-        {view === 'learn-lesson-inclusion' && graphicSubtopics.includes(selectedSubtopicId || '') && selectedSubject && selectedTopic && (
-          <GraphicRepresentationsLessonInclusion
-            key="learn-graphics-inclusion"
-            onBack={() => { setView('topic-detail'); setSelectedSubtopicId(null); }}
-            subjectName={selectedSubject.name}
-            topicName={selectedTopic.name}
-            initialSubtopicId={selectedSubtopicId || undefined}
-            initialTab={lessonInitialTab}
-          />
-        )}
+        {(view === 'learn-lesson' || view === 'learn-lesson-inclusion') && selectedSubject && selectedTopic && (() => {
+          const lesson = findLesson(selectedSubtopicId);
+          if (!lesson) return null;
+          const isInclusion = view === 'learn-lesson-inclusion';
+          const Lesson = isInclusion ? lesson.inclusion : lesson.standard;
+          return (
+            <Suspense key={`${view}-${lesson.subtopicIds[0]}`} fallback={<LessonLoading />}>
+              <Lesson
+                onBack={() => { setView('topic-detail'); setSelectedSubtopicId(null); }}
+                subjectName={selectedSubject.name}
+                topicName={selectedTopic.name}
+                initialSubtopicId={selectedSubtopicId ?? undefined}
+                initialTab={lessonInitialTab}
+              />
+            </Suspense>
+          );
+        })()}
       </AnimatePresence>
 
       {/* Action Modal */}
@@ -1301,7 +1279,7 @@ export default function App() {
                     transition={{ delay: i * 0.05 }}
                     disabled={!sub.active}
                     onClick={() => {
-                      const hasLesson = ['natural-numbers', ...setLanguageSubtopics, ...graphicSubtopics].includes(sub.id);
+                      const hasLesson = !!findLesson(sub.id);
                       if ((modalAction === 'impara' || modalAction === 'allena') && sub.active && hasLesson) {
                         setSelectedTopic(modalTopic);
                         setSelectedSubtopicId(sub.id);
@@ -1363,5 +1341,6 @@ export default function App() {
         </div>
       </div>
     </div>
+    </MotionConfig>
   );
 }

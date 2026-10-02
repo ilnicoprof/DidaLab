@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   ArrowLeft, Volume2, VolumeX, Sparkles, CheckCircle2, XCircle,
   HelpCircle, ChevronRight, ChevronLeft, Award, RotateCcw,
   BookOpen, Zap, FileText, Check, X, BarChart3, PieChart, LineChart, Table as TableIcon
 } from "lucide-react";
+import { useSpeech } from "../hooks/useSpeech";
 
 interface Props {
   key?: string;
@@ -45,47 +46,7 @@ export default function GraphicRepresentationsLessonInclusion({
   const [showPeiModal, setShowPeiModal] = useState<boolean>(false);
 
   // --- TTS (Sintesi Vocale) ---
-  const [ttsEnabled, setTtsEnabled] = useState<boolean>(false);
-  const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
-  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
-
-  useEffect(() => {
-    const loadVoices = () => {
-      if (typeof window !== "undefined" && "speechSynthesis" in window) {
-        setVoices(window.speechSynthesis.getVoices());
-      }
-    };
-    loadVoices();
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.addEventListener("voiceschanged", loadVoices);
-      return () => window.speechSynthesis.removeEventListener("voiceschanged", loadVoices);
-    }
-  }, []);
-
-  const speak = useCallback((text: string) => {
-    if (!ttsEnabled || typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
-    const utt = new SpeechSynthesisUtterance(text);
-    utt.lang = "it-IT";
-    const italianVoice = voices.find(v => v.lang.startsWith("it"));
-    if (italianVoice) utt.voice = italianVoice;
-    utt.rate = 0.88;
-    utt.pitch = 1.05;
-    utt.onstart = () => setIsSpeaking(true);
-    utt.onend = () => setIsSpeaking(false);
-    utt.onerror = () => setIsSpeaking(false);
-    window.speechSynthesis.speak(utt);
-  }, [ttsEnabled, voices]);
-
-  const toggleTts = () => {
-    if (ttsEnabled) {
-      window.speechSynthesis.cancel();
-      setIsSpeaking(false);
-      setTtsEnabled(false);
-    } else {
-      setTtsEnabled(true);
-    }
-  };
+  const { ttsEnabled, isSpeaking, speak, toggleTts } = useSpeech();
 
   // --- EXERCISE STATES (Pages 5 to 8) ---
   // Mod 9: Ordina 1-4 & V/F
