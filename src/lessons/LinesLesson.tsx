@@ -120,7 +120,7 @@ export default function LinesLesson({
   const distPA = Math.round(Math.sqrt(halfSegment * halfSegment + axisPointY * axisPointY));
 
   return (
-    <div className="w-full max-w-6xl mx-auto space-y-6 pb-20 px-3 md:px-6">
+    <div className="w-full max-w-7xl mx-auto space-y-6 pb-20 px-3 md:px-6">
       {/* Top Header Bar */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-200/80 pb-4">
         <div className="flex items-center gap-4">
@@ -175,25 +175,27 @@ export default function LinesLesson({
 
       {/* SCHEDA 1: IMPARA */}
       {activeTab === "impara" && (
-        <div className="space-y-6">
-          {/* Subtopics Tabs */}
-          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Menu Laterale Sottoargomenti */}
+          <div className="lg:col-span-3 space-y-2">
             {SUBTOPICS.map((sub) => (
               <button
                 key={sub.id}
                 onClick={() => setSelectedSubtopic(sub.id)}
-                className={`px-4 py-2.5 rounded-2xl text-xs md:text-sm font-bold whitespace-nowrap transition cursor-pointer border ${
+                className={`w-full text-left p-4 rounded-2xl transition cursor-pointer border ${
                   selectedSubtopic === sub.id
-                    ? "bg-dida-blue text-white border-dida-blue shadow-md scale-105"
-                    : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+                    ? "bg-dida-blue text-white border-dida-blue shadow-md"
+                    : "bg-white text-slate-600 border-slate-200 hover:border-blue-300 hover:bg-blue-50/50"
                 }`}
               >
-                {sub.short}
+                <div className="font-bold text-sm leading-tight">{sub.title}</div>
               </button>
             ))}
           </div>
 
-          <AnimatePresence mode="wait">
+          {/* Area Contenuto */}
+          <div className="lg:col-span-9 min-w-0">
+            <AnimatePresence mode="wait">
             {/* ======================================================== */}
             {/* MODULO 1: POSIZIONI RECIPROCHE & PIEGHE ORIGAMI */}
             {/* ======================================================== */}
@@ -839,6 +841,7 @@ export default function LinesLesson({
               </div>
             )}
           </AnimatePresence>
+          </div>
         </div>
       )}
 

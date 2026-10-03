@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import {
   ArrowLeft, Volume2, VolumeX, Sparkles, CheckCircle2, XCircle,
   ChevronRight, ChevronLeft, Award, RotateCcw, BookOpen, Zap,
-  Check, X, PlusMinus, Calculator, Target
+  Check, X, Calculator, Target
 } from "lucide-react";
 import { useSpeech } from "../hooks/useSpeech";
 

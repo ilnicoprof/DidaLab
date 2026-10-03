@@ -88,7 +88,7 @@ export default function PowersLesson({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
-      className="w-full max-w-6xl mx-auto space-y-8 pb-16"
+      className="w-full max-w-7xl mx-auto space-y-8 pb-16"
     >
       {/* Top Header Bar */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 px-4">
@@ -150,24 +150,27 @@ export default function PowersLesson({
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
-            className="space-y-8 px-4"
+            className="grid grid-cols-1 lg:grid-cols-12 gap-6 px-4"
           >
-            {/* Pillole Sottoargomenti */}
-            <div className="flex justify-center flex-wrap gap-2 pb-1">
+            {/* Menu Laterale Sottoargomenti */}
+            <div className="lg:col-span-3 space-y-2">
               {SUBTOPICS.map((sub) => (
                 <button
                   key={sub.id}
                   onClick={() => setSelectedSubtopic(sub.id)}
-                  className={`px-4 py-2.5 rounded-2xl font-bold text-sm transition cursor-pointer border ${
+                  className={`w-full text-left p-4 rounded-2xl transition cursor-pointer border ${
                     selectedSubtopic === sub.id
-                      ? "bg-dida-blue text-white border-dida-blue shadow-lg shadow-blue-500/20 scale-[1.02]"
-                      : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                      ? "bg-dida-blue text-white border-dida-blue shadow-md"
+                      : "bg-white text-slate-600 border-slate-200 hover:border-blue-300 hover:bg-blue-50/50"
                   }`}
                 >
-                  {sub.short}
+                  <div className="font-bold text-sm leading-tight">{sub.title}</div>
                 </button>
               ))}
             </div>
+
+            {/* Area Contenuto */}
+            <div className="lg:col-span-9 min-w-0 space-y-8">
 
             {/* ======================================================== */}
             {/* MODULO 1: COS'È UNA POTENZA E CASI SPECIALI */}
@@ -727,6 +730,7 @@ export default function PowersLesson({
                 </div>
               </div>
             )}
+            </div>
           </motion.div>
         ) : (
           /* ======================================================== */
