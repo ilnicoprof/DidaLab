@@ -263,13 +263,15 @@ export default function DivisibilityLesson({
                   </div>
 
                   {/* WIDGET INTERATTIVO: Esploratore di Divisori e Multipli */}
-                  <div className="p-6 rounded-3xl bg-slate-900 text-white space-y-6">
-                    <div className="text-center space-y-1">
-                      <span className="text-xs font-black text-amber-400 uppercase tracking-wider">
-                        Laboratorio Interattivo · La Carta d'Identità del Numero
+                  <div className="p-6 md:p-8 rounded-3xl bg-slate-50 border-2 border-slate-200 space-y-6">
+                    <div className="text-center max-w-2xl mx-auto flex flex-col items-center justify-center gap-2 border-b border-slate-200 pb-5 mb-2 w-full">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-dida-orange bg-orange-100 px-4 py-1.5 rounded-full border border-orange-200 shadow-xs">
+                        Laboratorio Interattivo · Carta d'Identità del Numero
                       </span>
-                      <h3 className="text-xl font-black">Esplora Divisori e Multipli</h3>
-                      <p className="text-xs text-slate-400">
+                      <h3 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight">
+                        Esplora Divisori e Multipli
+                      </h3>
+                      <p className="text-xs text-slate-500 max-w-xl mx-auto">
                         Digita un numero per visualizzare l'elenco completo dei suoi divisori e i primi multipli:
                       </p>
                     </div>
@@ -281,42 +283,42 @@ export default function DivisibilityLesson({
                         max="200"
                         value={activeNum}
                         onChange={(e) => setActiveNum(Math.max(1, parseInt(e.target.value) || 1))}
-                        className="w-36 text-center text-3xl font-mono font-black bg-slate-800 border-2 border-amber-400 rounded-2xl py-2 text-white focus:outline-none"
+                        className="w-36 text-center text-3xl font-mono font-black bg-white border-2 border-orange-300 rounded-2xl py-2 text-slate-800 focus:outline-none focus:border-dida-orange shadow-xs"
                       />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
                       {/* Divisori */}
-                      <div className="p-5 rounded-2xl bg-slate-800 border border-slate-700 space-y-3">
-                        <span className="text-xs text-amber-400 font-bold uppercase tracking-wider block">
+                      <div className="p-5 rounded-2xl bg-white border-2 border-slate-200 space-y-3 shadow-xs">
+                        <span className="text-xs text-dida-orange font-bold uppercase tracking-wider block text-center">
                           Tutti i Divisori D({activeNum}) — Totale: {divisoriList.length}
                         </span>
                         <div className="flex flex-wrap gap-1.5 justify-center">
                           {divisoriList.map((d) => (
-                            <span key={d} className="px-2.5 py-1 bg-amber-500/20 border border-amber-400 text-amber-300 font-mono font-bold text-sm rounded-lg">
+                            <span key={d} className="px-2.5 py-1 bg-orange-50 border border-orange-200 text-orange-800 font-mono font-bold text-sm rounded-lg">
                               {d}
                             </span>
                           ))}
                         </div>
-                        <p className="text-[11px] text-slate-400 text-center">
+                        <p className="text-[11px] text-slate-500 text-center font-medium">
                           {divisoriList.length === 2 ? "⭐ È un NUMERO PRIMO (ha solo 1 e se stesso)!" : "È un NUMERO COMPOSTO."}
                         </p>
                       </div>
 
                       {/* Multipli */}
-                      <div className="p-5 rounded-2xl bg-slate-800 border border-slate-700 space-y-3">
-                        <span className="text-xs text-sky-400 font-bold uppercase tracking-wider block">
+                      <div className="p-5 rounded-2xl bg-white border-2 border-slate-200 space-y-3 shadow-xs">
+                        <span className="text-xs text-dida-blue font-bold uppercase tracking-wider block text-center">
                           Primi Multipli M({activeNum})
                         </span>
                         <div className="flex flex-wrap gap-1.5 justify-center">
                           {multipliList.map((m) => (
-                            <span key={m} className="px-2.5 py-1 bg-sky-500/20 border border-sky-400 text-sky-300 font-mono font-bold text-sm rounded-lg">
+                            <span key={m} className="px-2.5 py-1 bg-blue-50 border border-blue-200 text-blue-800 font-mono font-bold text-sm rounded-lg">
                               {m}
                             </span>
                           ))}
-                          <span className="px-2 py-1 text-slate-500 text-sm font-bold">…</span>
+                          <span className="px-2 py-1 text-slate-400 text-sm font-bold">…</span>
                         </div>
-                        <p className="text-[11px] text-slate-400 text-center">
+                        <p className="text-[11px] text-slate-500 text-center font-medium">
                           I multipli continuano all'infinito aggiungendo sempre +{activeNum}!
                         </p>
                       </div>
@@ -381,13 +383,15 @@ export default function DivisibilityLesson({
                   </div>
 
                   {/* WIDGET INTERATTIVO: Tester dei Criteri */}
-                  <div className="p-6 rounded-3xl bg-slate-900 text-white space-y-6">
-                    <div className="text-center space-y-1">
-                      <span className="text-xs font-black text-emerald-400 uppercase tracking-wider">
+                  <div className="p-6 md:p-8 rounded-3xl bg-slate-50 border-2 border-slate-200 space-y-6">
+                    <div className="text-center max-w-2xl mx-auto flex flex-col items-center justify-center gap-2 border-b border-slate-200 pb-5 mb-2 w-full">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-dida-orange bg-orange-100 px-4 py-1.5 rounded-full border border-orange-200 shadow-xs">
                         Scanner Automatico dei Criteri
                       </span>
-                      <h3 className="text-xl font-black">Collauda Qualsiasi Numero</h3>
-                      <p className="text-xs text-slate-400">
+                      <h3 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight">
+                        Collauda Qualsiasi Numero
+                      </h3>
+                      <p className="text-xs text-slate-500 max-w-xl mx-auto">
                         Digita un numero per vedere quali criteri di divisibilità supera al volo:
                       </p>
                     </div>
@@ -397,7 +401,7 @@ export default function DivisibilityLesson({
                         type="number"
                         value={testCriteriaNum}
                         onChange={(e) => setTestCriteriaNum(Math.max(1, parseInt(e.target.value) || 1))}
-                        className="w-44 text-center text-3xl font-mono font-black bg-slate-800 border-2 border-emerald-400 rounded-2xl py-2 text-white focus:outline-none"
+                        className="w-44 text-center text-3xl font-mono font-black bg-white border-2 border-orange-300 rounded-2xl py-2 text-slate-800 focus:outline-none focus:border-dida-orange shadow-xs"
                       />
                     </div>
 
@@ -415,15 +419,15 @@ export default function DivisibilityLesson({
                       ].map((item) => (
                         <div
                           key={item.div}
-                          className={`p-3 rounded-xl border flex items-center justify-between ${
+                          className={`p-3 rounded-xl border-2 flex items-center justify-between shadow-xs ${
                             item.test
-                              ? "bg-emerald-950/60 border-emerald-500 text-emerald-300"
-                              : "bg-slate-800 border-slate-700 text-slate-400"
+                              ? "bg-emerald-50 border-emerald-300 text-emerald-800"
+                              : "bg-white border-slate-200 text-slate-400"
                           }`}
                         >
                           <div>
-                            <span className="text-sm font-mono block">Divisibile per {item.div}</span>
-                            <span className="text-[10px] font-normal text-slate-400">{item.rule}</span>
+                            <span className="text-sm font-mono font-black block">Divisibile per {item.div}</span>
+                            <span className="text-[10px] font-normal text-slate-500">{item.rule}</span>
                           </div>
                           <span className="text-lg">{item.test ? "✅" : "❌"}</span>
                         </div>

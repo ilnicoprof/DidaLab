@@ -397,50 +397,58 @@ export default function NaturalDecimalLesson({
                   </div>
 
                   {/* WIDGET 1: La Semiretta Orientata Graduata */}
-                  <div className="space-y-4 pt-6 border-t border-slate-100">
-                    <div className="text-center max-w-xl mx-auto">
-                      <span className="text-xs font-black uppercase tracking-wider text-dida-blue bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
+                  <div className="p-6 md:p-8 rounded-3xl bg-orange-50/40 border-2 border-orange-200/80 space-y-6">
+                    {/* Header Laboratorio perfettamente centrato */}
+                    <div className="text-center max-w-2xl mx-auto flex flex-col items-center justify-center gap-2 border-b border-orange-200/60 pb-5 mb-2 w-full">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-dida-orange bg-orange-100 px-4 py-1.5 rounded-full border border-orange-200 shadow-xs">
                         Laboratorio Visivo
                       </span>
-                      <h3 className="text-xl font-black text-slate-800 mt-2">La Semiretta Orientata Graduata</h3>
-                      <p className="text-xs text-slate-500 mt-1">
+                      <h3 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight">
+                        La Semiretta Orientata Graduata
+                      </h3>
+                      <p className="text-xs text-slate-600 max-w-xl mx-auto">
                         Un posto preciso per ogni numero. Il punto <strong>O</strong> corrisponde allo <strong>0</strong> (origine). Il valore di un punto si chiama <strong>ascissa</strong>.
                       </p>
                     </div>
 
-                    <div className="p-6 rounded-3xl bg-slate-900 text-white space-y-6">
-                      <div className="flex flex-wrap items-center justify-between gap-4 text-xs font-semibold text-slate-300">
-                        <div>
-                          Origine: <strong className="text-amber-400">O (0)</strong> · Unità campione: <strong className="text-sky-400">u</strong>
+                    <div className="bg-white p-5 rounded-2xl border-2 border-slate-200 shadow-xs space-y-4">
+                      <div className="flex flex-wrap items-center justify-between gap-4 text-xs font-semibold text-slate-600">
+                        <div className="flex items-center gap-2">
+                          <span className="bg-orange-100 text-dida-orange px-2.5 py-1 rounded-lg border border-orange-200 font-bold">
+                            Origine: <strong>O (0)</strong>
+                          </span>
+                          <span className="bg-blue-100 text-dida-blue px-2.5 py-1 rounded-lg border border-blue-200 font-bold">
+                            Unità campione: <strong>u</strong>
+                          </span>
                         </div>
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => setLineStart(Math.max(0, lineStart - 5))}
                             disabled={lineStart === 0}
-                            className="px-3 py-1 bg-slate-800 hover:bg-slate-700 disabled:opacity-40 rounded-lg cursor-pointer"
+                            className="px-3.5 py-1.5 bg-slate-100 hover:bg-orange-50 hover:border-orange-200 text-slate-700 disabled:opacity-40 rounded-xl border border-slate-200 cursor-pointer font-bold transition text-xs"
                           >
                             ◀ Scorri a sinistra
                           </button>
                           <button
                             onClick={() => setLineStart(lineStart + 5)}
-                            className="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg cursor-pointer"
+                            className="px-3.5 py-1.5 bg-slate-100 hover:bg-orange-50 hover:border-orange-200 text-slate-700 rounded-xl border border-slate-200 cursor-pointer font-bold transition text-xs"
                           >
                             Scorri a destra ▶
                           </button>
                         </div>
                       </div>
 
-                      {/* SVG Semiretta */}
-                      <div className="overflow-x-auto py-4">
+                      {/* SVG Semiretta su fondo chiaro */}
+                      <div className="overflow-x-auto py-2 bg-slate-50/70 rounded-xl border border-slate-200">
                         <svg viewBox="0 0 850 140" className="w-full min-w-[700px] h-32 select-none">
                           <defs>
                             <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                              <path d="M 0 0 L 10 5 L 0 10 z" fill="#38BDF8" />
+                              <path d="M 0 0 L 10 5 L 0 10 z" fill="#0284C7" />
                             </marker>
                           </defs>
 
-                          {/* Linea principale */}
-                          <line x1="40" y1="70" x2="800" y2="70" stroke="#38BDF8" strokeWidth="4" markerEnd="url(#arrow)" />
+                          {/* Linea principale in dida-blue */}
+                          <line x1="40" y1="70" x2="800" y2="70" stroke="#0284C7" strokeWidth="4" markerEnd="url(#arrow)" />
 
                           {/* Tacche e numeri */}
                           {Array.from({ length: 11 }).map((_, idx) => {
@@ -460,26 +468,26 @@ export default function NaturalDecimalLesson({
                                   y1={isZero ? "45" : "55"}
                                   x2={x}
                                   y2={isZero ? "95" : "85"}
-                                  stroke={isSelected ? "#F59E0B" : "#94A3B8"}
+                                  stroke={isSelected ? "#EA580C" : isZero ? "#0284C7" : "#CBD5E1"}
                                   strokeWidth={isSelected ? 4 : isZero ? 3 : 2}
                                 />
                                 {isZero && (
-                                  <text x={x} y="38" textAnchor="middle" className="text-xs font-black fill-amber-400">
+                                  <text x={x} y="38" textAnchor="middle" className="text-xs font-black fill-sky-700">
                                     O (Origine)
                                   </text>
                                 )}
                                 <circle
                                   cx={x}
                                   cy="70"
-                                  r={isSelected ? 7 : 4}
-                                  fill={isSelected ? "#F59E0B" : "#38BDF8"}
+                                  r={isSelected ? 8 : 5}
+                                  fill={isSelected ? "#EA580C" : "#0284C7"}
                                 />
                                 <text
                                   x={x}
-                                  y="108"
+                                  y="112"
                                   textAnchor="middle"
-                                  className={`font-mono text-sm font-black ${
-                                    isSelected ? "fill-amber-400 text-base" : "fill-slate-300 group-hover:fill-white"
+                                  className={`font-mono text-sm font-black transition-all ${
+                                    isSelected ? "fill-orange-600 text-base" : "fill-slate-600 group-hover:fill-slate-900"
                                   }`}
                                 >
                                   {val}
@@ -490,11 +498,11 @@ export default function NaturalDecimalLesson({
                         </svg>
                       </div>
 
-                      <div className="flex flex-col md:flex-row items-center justify-between text-xs text-slate-400 pt-2 border-t border-slate-800 gap-2">
+                      <div className="flex flex-col md:flex-row items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-100 gap-2">
                         <p>
                           💡 Clicca su un numero sulla semiretta per selezionarlo e calcolarne l'ascissa.
                         </p>
-                        <p className="text-amber-400 font-bold">
+                        <p className="text-dida-orange font-bold bg-orange-50 px-3 py-1 rounded-lg border border-orange-200">
                           Numero selezionato: {activeNatural} (Ascissa del punto = {activeNatural})
                         </p>
                       </div>
@@ -711,48 +719,57 @@ export default function NaturalDecimalLesson({
                   </div>
 
                   {/* Laboratorio Interattivo di Confronto */}
-                  <div className="p-6 rounded-3xl bg-slate-900 text-white space-y-6">
-                    <h3 className="text-lg font-black text-center text-amber-400">
-                      Laboratorio Interattivo di Confronto Cifra per Cifra
-                    </h3>
+                  <div className="p-6 md:p-8 rounded-3xl bg-slate-50 border-2 border-slate-200 space-y-6">
+                    <div className="text-center max-w-2xl mx-auto flex flex-col items-center justify-center gap-2 border-b border-slate-200 pb-5 mb-2 w-full">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-dida-orange bg-orange-100 px-4 py-1.5 rounded-full border border-orange-200 shadow-xs">
+                        Laboratorio Interattivo
+                      </span>
+                      <h3 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight">
+                        Laboratorio di Confronto Cifra per Cifra
+                      </h3>
+                      <p className="text-xs text-slate-500 max-w-xl mx-auto">
+                        Inserisci due numeri per confrontarli automaticamente con la regola posizionale:
+                      </p>
+                    </div>
+
                     <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-                      <div className="text-center space-y-2">
-                        <label className="text-xs text-slate-400 block">Primo Numero</label>
+                      <div className="text-center space-y-2 bg-white p-4 rounded-2xl border-2 border-slate-200 shadow-xs">
+                        <label className="text-xs font-bold text-slate-500 block uppercase tracking-wider">Primo Numero</label>
                         <input
                           type="number"
                           value={compNum1}
                           onChange={(e) => setCompNum1(parseInt(e.target.value) || 0)}
-                          className="w-36 text-center text-2xl font-mono font-black bg-slate-800 border border-slate-700 rounded-2xl py-2 text-white focus:outline-none focus:border-amber-400"
+                          className="w-36 text-center text-2xl font-mono font-black bg-orange-50/40 border-2 border-orange-200 rounded-xl py-2 text-slate-800 focus:outline-none focus:border-dida-orange"
                         />
                       </div>
 
                       <div className="text-center">
-                        <span className="text-3xl font-black font-mono text-amber-400 bg-slate-800 px-5 py-3 rounded-2xl border border-slate-700 block">
+                        <span className="text-3xl font-black font-mono text-dida-orange bg-white px-6 py-3 rounded-2xl border-2 border-orange-200 shadow-sm block">
                           {compNum1 > compNum2 ? ">" : compNum1 < compNum2 ? "<" : "="}
                         </span>
                       </div>
 
-                      <div className="text-center space-y-2">
-                        <label className="text-xs text-slate-400 block">Secondo Numero</label>
+                      <div className="text-center space-y-2 bg-white p-4 rounded-2xl border-2 border-slate-200 shadow-xs">
+                        <label className="text-xs font-bold text-slate-500 block uppercase tracking-wider">Secondo Numero</label>
                         <input
                           type="number"
                           value={compNum2}
                           onChange={(e) => setCompNum2(parseInt(e.target.value) || 0)}
-                          className="w-36 text-center text-2xl font-mono font-black bg-slate-800 border border-slate-700 rounded-2xl py-2 text-white focus:outline-none focus:border-amber-400"
+                          className="w-36 text-center text-2xl font-mono font-black bg-blue-50/40 border-2 border-blue-200 rounded-xl py-2 text-slate-800 focus:outline-none focus:border-dida-blue"
                         />
                       </div>
                     </div>
 
-                    <div className="p-4 rounded-2xl bg-slate-800 border border-slate-700 text-center text-xs text-slate-300">
+                    <div className="p-4 rounded-2xl bg-white border-2 border-slate-200 text-center text-xs text-slate-600 max-w-xl mx-auto shadow-xs">
                       {compNum1.toString().length !== compNum2.toString().length ? (
                         <p>
-                          Regola 1 applicata: <strong>{compNum1 > compNum2 ? compNum1 : compNum2}</strong> ha più cifre ({Math.max(compNum1.toString().length, compNum2.toString().length)} contro {Math.min(compNum1.toString().length, compNum2.toString().length)}), quindi è maggiore!
+                          Regola 1 applicata: <strong className="text-slate-800">{compNum1 > compNum2 ? compNum1 : compNum2}</strong> ha più cifre ({Math.max(compNum1.toString().length, compNum2.toString().length)} contro {Math.min(compNum1.toString().length, compNum2.toString().length)}), quindi è maggiore!
                         </p>
                       ) : compNum1 === compNum2 ? (
-                        <p>Tutte le cifre coincidono esattamente: i due numeri sono perfettamente uguali.</p>
+                        <p className="text-emerald-700 font-bold">Tutte le cifre coincidono esattamente: i due numeri sono perfettamente uguali.</p>
                       ) : (
                         <p>
-                          Stesso numero di cifre ({compNum1.toString().length}): procedendo da sinistra, la prima cifra disuguale determina che <strong>{compNum1 > compNum2 ? compNum1 : compNum2}</strong> è più grande!
+                          Stesso numero di cifre ({compNum1.toString().length}): procedendo da sinistra, la prima cifra disuguale determina che <strong className="text-slate-800">{compNum1 > compNum2 ? compNum1 : compNum2}</strong> è più grande!
                         </p>
                       )}
                     </div>
@@ -991,18 +1008,27 @@ export default function NaturalDecimalLesson({
                   </div>
 
                   {/* Scanner Interattivo Decimali */}
-                  <div className="p-6 rounded-3xl bg-slate-900 text-white space-y-6">
-                    <h3 className="text-lg font-black text-center text-sky-400">
-                      Scanner Interattivo con Pareggiamento degli Zeri
-                    </h3>
+                  <div className="p-6 md:p-8 rounded-3xl bg-slate-50 border-2 border-slate-200 space-y-6">
+                    <div className="text-center max-w-2xl mx-auto flex flex-col items-center justify-center gap-2 border-b border-slate-200 pb-5 mb-2 w-full">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-dida-blue bg-blue-100 px-4 py-1.5 rounded-full border border-blue-200 shadow-xs">
+                        Laboratorio Interattivo
+                      </span>
+                      <h3 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight">
+                        Scanner Interattivo con Pareggiamento degli Zeri
+                      </h3>
+                      <p className="text-xs text-slate-500 max-w-xl mx-auto">
+                        Confronta due numeri con la virgola pareggiando le cifre decimali:
+                      </p>
+                    </div>
+
                     <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-                      <div className="text-center space-y-1">
-                        <label className="text-xs text-slate-400">Primo decimale</label>
+                      <div className="text-center space-y-2 bg-white p-4 rounded-2xl border-2 border-slate-200 shadow-xs">
+                        <label className="text-xs font-bold text-slate-500 block uppercase tracking-wider">Primo decimale</label>
                         <input
                           type="text"
                           value={decA}
                           onChange={(e) => setDecA(e.target.value)}
-                          className="w-36 text-center text-2xl font-mono font-black bg-slate-800 border border-slate-700 rounded-2xl py-2 text-white focus:outline-none"
+                          className="w-36 text-center text-2xl font-mono font-black bg-orange-50/40 border-2 border-orange-200 rounded-xl py-2 text-slate-800 focus:outline-none focus:border-dida-orange"
                         />
                       </div>
 
@@ -1013,20 +1039,20 @@ export default function NaturalDecimalLesson({
                         const sym = isNaN(valA) || isNaN(valB) ? "?" : valA > valB ? ">" : valA < valB ? "<" : "=";
                         return (
                           <div className="text-center">
-                            <span className="text-3xl font-black font-mono text-sky-400 bg-slate-800 px-5 py-3 rounded-2xl border border-slate-700 block">
+                            <span className="text-3xl font-black font-mono text-dida-blue bg-white px-6 py-3 rounded-2xl border-2 border-blue-200 shadow-sm block">
                               {sym}
                             </span>
                           </div>
                         );
                       })()}
 
-                      <div className="text-center space-y-1">
-                        <label className="text-xs text-slate-400">Secondo decimale</label>
+                      <div className="text-center space-y-2 bg-white p-4 rounded-2xl border-2 border-slate-200 shadow-xs">
+                        <label className="text-xs font-bold text-slate-500 block uppercase tracking-wider">Secondo decimale</label>
                         <input
                           type="text"
                           value={decB}
                           onChange={(e) => setDecB(e.target.value)}
-                          className="w-36 text-center text-2xl font-mono font-black bg-slate-800 border border-slate-700 rounded-2xl py-2 text-white focus:outline-none"
+                          className="w-36 text-center text-2xl font-mono font-black bg-blue-50/40 border-2 border-blue-200 rounded-xl py-2 text-slate-800 focus:outline-none focus:border-dida-blue"
                         />
                       </div>
                     </div>
@@ -1042,16 +1068,16 @@ export default function NaturalDecimalLesson({
                       const padB = (cleanB.split(".")[0] || "0") + "," + pB.padEnd(maxDec, "0");
 
                       return (
-                        <div className="p-4 rounded-2xl bg-slate-800 border border-slate-700 text-center space-y-2">
-                          <span className="text-xs text-amber-400 font-bold uppercase tracking-wider">
-                            Pareggiando le cifre decimali:
+                        <div className="p-4 rounded-2xl bg-white border-2 border-slate-200 text-center space-y-2 max-w-lg mx-auto shadow-xs">
+                          <span className="text-xs text-dida-orange font-bold uppercase tracking-wider block">
+                            Pareggiando le cifre decimali con gli zeri:
                           </span>
-                          <div className="font-mono text-lg font-bold text-white flex justify-center gap-6">
-                            <span>{padA}</span>
-                            <span className="text-slate-500">vs</span>
-                            <span>{padB}</span>
+                          <div className="font-mono text-xl font-black text-slate-800 flex justify-center gap-6">
+                            <span className="text-orange-600 bg-orange-50 px-3 py-1 rounded-xl border border-orange-200">{padA}</span>
+                            <span className="text-slate-400 self-center">vs</span>
+                            <span className="text-blue-600 bg-blue-50 px-3 py-1 rounded-xl border border-blue-200">{padB}</span>
                           </div>
-                          <p className="text-xs text-slate-400">
+                          <p className="text-xs text-slate-500 pt-1">
                             Ora è immediato: il confronto è evidente cifra per cifra!
                           </p>
                         </div>
@@ -1123,13 +1149,15 @@ export default function NaturalDecimalLesson({
                   </div>
 
                   {/* WIDGET INTERATTIVO: Generatore Polinomiale */}
-                  <div className="p-6 rounded-3xl bg-slate-900 text-white space-y-6">
-                    <div className="text-center space-y-2">
-                      <span className="text-xs font-black text-purple-400 uppercase tracking-wider">
+                  <div className="p-6 md:p-8 rounded-3xl bg-slate-50 border-2 border-slate-200 space-y-6">
+                    <div className="text-center max-w-2xl mx-auto flex flex-col items-center justify-center gap-2 border-b border-slate-200 pb-5 mb-2 w-full">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-dida-orange bg-orange-100 px-4 py-1.5 rounded-full border border-orange-200 shadow-xs">
                         Laboratorio Interattivo
                       </span>
-                      <h3 className="text-xl font-black">Costruisci la Scomposizione di Qualunque Numero</h3>
-                      <p className="text-xs text-slate-400">
+                      <h3 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight">
+                        Costruisci la Scomposizione di Qualunque Numero
+                      </h3>
+                      <p className="text-xs text-slate-500 max-w-xl mx-auto">
                         Digita un numero (naturale o con la virgola) per vedere la scomposizione in tempo reale:
                       </p>
                     </div>
@@ -1140,17 +1168,17 @@ export default function NaturalDecimalLesson({
                         value={polyInput}
                         onChange={(e) => setPolyInput(e.target.value)}
                         placeholder="Es. 2354 oppure 67,425"
-                        className="text-center text-2xl font-mono font-black bg-slate-800 border-2 border-purple-500 rounded-2xl px-6 py-3 text-white focus:outline-none w-64 shadow-lg"
+                        className="text-center text-2xl font-mono font-black bg-white border-2 border-orange-300 rounded-2xl px-6 py-3 text-slate-800 focus:outline-none focus:border-dida-orange w-72 shadow-xs"
                       />
                     </div>
 
                     {parsedPoly && parsedPoly.terms.length > 0 && (
-                      <div className="space-y-4">
+                      <div className="space-y-4 max-w-2xl mx-auto">
                         <div className="flex flex-wrap items-center justify-center gap-2">
                           {parsedPoly.terms.map((t, idx) => (
                             <div
                               key={idx}
-                              className={`px-3 py-2 rounded-xl border text-xs font-mono font-bold ${t.color}`}
+                              className={`px-3 py-2 rounded-xl border-2 text-xs font-mono font-bold shadow-xs ${t.color}`}
                             >
                               {t.valueLabel}
                               <span className="block text-[9px] font-sans font-semibold opacity-70">
@@ -1160,8 +1188,8 @@ export default function NaturalDecimalLesson({
                           ))}
                         </div>
 
-                        <div className="p-4 rounded-2xl bg-slate-800 border border-slate-700 text-center font-mono text-sm text-purple-300">
-                          {parsedPoly.raw} = {parsedPoly.terms.map(t => `(${t.valueLabel})`).join(" + ")}
+                        <div className="p-4 rounded-2xl bg-white border-2 border-slate-200 text-center font-mono text-sm text-slate-800 shadow-xs">
+                          <strong className="text-dida-orange">{parsedPoly.raw}</strong> = {parsedPoly.terms.map(t => `(${t.valueLabel})`).join(" + ")}
                         </div>
                       </div>
                     )}
@@ -1242,40 +1270,42 @@ export default function NaturalDecimalLesson({
                   </div>
 
                   {/* WIDGET INTERATTIVO: Simulatore di Arrotondamento */}
-                  <div className="p-6 rounded-3xl bg-slate-900 text-white space-y-6">
-                    <div className="text-center space-y-1">
-                      <span className="text-xs font-black text-emerald-400 uppercase tracking-wider">
+                  <div className="p-6 md:p-8 rounded-3xl bg-slate-50 border-2 border-slate-200 space-y-6">
+                    <div className="text-center max-w-2xl mx-auto flex flex-col items-center justify-center gap-2 border-b border-slate-200 pb-5 mb-2 w-full">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-dida-orange bg-orange-100 px-4 py-1.5 rounded-full border border-orange-200 shadow-xs">
                         Laboratorio di Approssimazione
                       </span>
-                      <h3 className="text-xl font-black">Simulatore della Regola del 5</h3>
-                      <p className="text-xs text-slate-400">
+                      <h3 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight">
+                        Simulatore della Regola del 5
+                      </h3>
+                      <p className="text-xs text-slate-500 max-w-xl mx-auto">
                         Scegli l'ordine di arrotondamento e guarda l'analisi automatica:
                       </p>
                     </div>
 
-                    <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-                      <div>
-                        <label className="text-xs text-slate-400 block mb-1">Numero da arrotondare:</label>
+                    <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+                      <div className="bg-white p-4 rounded-2xl border-2 border-slate-200 shadow-xs text-center">
+                        <label className="text-xs font-bold text-slate-500 block mb-1 uppercase tracking-wider">Numero da arrotondare</label>
                         <input
                           type="number"
                           step="0.001"
                           value={roundNumber}
                           onChange={(e) => setRoundNumber(parseFloat(e.target.value) || 0)}
-                          className="w-48 text-center text-xl font-mono font-black bg-slate-800 border border-slate-700 rounded-xl py-2 text-white focus:outline-none"
+                          className="w-44 text-center text-xl font-mono font-black bg-orange-50/40 border-2 border-orange-200 rounded-xl py-2 text-slate-800 focus:outline-none focus:border-dida-orange"
                         />
                       </div>
 
-                      <div>
-                        <label className="text-xs text-slate-400 block mb-1">Arrotonda a:</label>
-                        <div className="flex flex-wrap gap-1">
+                      <div className="bg-white p-4 rounded-2xl border-2 border-slate-200 shadow-xs text-center">
+                        <label className="text-xs font-bold text-slate-500 block mb-2 uppercase tracking-wider">Arrotonda a</label>
+                        <div className="flex flex-wrap gap-1.5 justify-center">
                           {(["k", "da", "u", "decimi", "centesimi"] as const).map((t) => (
                             <button
                               key={t}
                               onClick={() => setRoundTarget(t)}
-                              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
+                              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer border ${
                                 roundTarget === t
-                                  ? "bg-emerald-500 text-slate-950 font-black shadow-md"
-                                  : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                                  ? "bg-dida-orange text-white border-orange-600 font-black shadow-md scale-105"
+                                  : "bg-slate-100 text-slate-700 border-slate-200 hover:bg-orange-50 hover:border-orange-200"
                               }`}
                             >
                               {t === "k" ? "Migliaia" : t === "da" ? "Decine" : t === "u" ? "Unità" : t === "decimi" ? "Decimi" : "Centesimi"}
@@ -1286,16 +1316,16 @@ export default function NaturalDecimalLesson({
                     </div>
 
                     {/* Scheda Esito Simulatore */}
-                    <div className="p-5 rounded-2xl bg-slate-800 border border-slate-700 max-w-lg mx-auto text-center space-y-3">
-                      <div className="text-xs text-slate-400">
+                    <div className="p-6 rounded-2xl bg-white border-2 border-slate-200 max-w-lg mx-auto text-center space-y-3 shadow-sm">
+                      <div className="text-xs text-slate-500 font-bold uppercase tracking-wider">
                         Arrotondamento <strong>{roundInfo.desc}</strong>:
                       </div>
-                      <div className="text-3xl font-mono font-black text-emerald-400">
+                      <div className="text-3xl font-mono font-black text-dida-orange">
                         ≈ {roundInfo.rounded.toLocaleString("it-IT", { maximumFractionDigits: 3 })}
                       </div>
-                      <div className="p-3 bg-slate-900 rounded-xl text-xs text-slate-300">
-                        La cifra a destra è <strong>{roundInfo.nextDigit}</strong> ({roundInfo.nextDigit >= 5 ? "≥ 5" : "< 5"}): arrotondamento per{" "}
-                        <strong className={roundInfo.isEccesso ? "text-emerald-400" : "text-sky-400"}>
+                      <div className="p-3 bg-orange-50/70 border border-orange-200 rounded-xl text-xs text-slate-700">
+                        La cifra a destra è <strong className="font-mono text-sm">{roundInfo.nextDigit}</strong> ({roundInfo.nextDigit >= 5 ? "≥ 5" : "< 5"}): arrotondamento per{" "}
+                        <strong className={roundInfo.isEccesso ? "text-emerald-700 font-bold" : "text-blue-700 font-bold"}>
                           {roundInfo.isEccesso ? "ECCESSO (+1)" : "DIFETTO"}
                         </strong>.
                       </div>

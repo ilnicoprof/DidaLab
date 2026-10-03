@@ -275,55 +275,57 @@ export default function OperationsLesson({
                   </div>
 
                   {/* WIDGET INTERATTIVO: Il Cassiere più Veloce */}
-                  <div className="p-6 rounded-3xl bg-slate-900 text-white space-y-6">
-                    <div className="text-center space-y-1">
-                      <span className="text-xs font-black text-amber-400 uppercase tracking-wider">
+                  <div className="p-6 md:p-8 rounded-3xl bg-slate-50 border-2 border-slate-200 space-y-6">
+                    <div className="text-center max-w-2xl mx-auto flex flex-col items-center justify-center gap-2 border-b border-slate-200 pb-5 mb-2 w-full">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-dida-orange bg-orange-100 px-4 py-1.5 rounded-full border border-orange-200 shadow-xs">
                         Laboratorio Interattivo · Scorciatoie del Calcolo Mentale
                       </span>
-                      <h3 className="text-xl font-black">Il Cassiere più Veloce: Trova le Coppie del 10 o 100</h3>
-                      <p className="text-xs text-slate-400 max-w-xl mx-auto">
+                      <h3 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight">
+                        Il Cassiere più Veloce: Trova le Coppie del 10 o 100
+                      </h3>
+                      <p className="text-xs text-slate-500 max-w-xl mx-auto">
                         Invece di sommare in ordine, sfrutta le proprietà <strong>commutativa</strong> e <strong>associativa</strong> per unire numeri amici!
                       </p>
                     </div>
 
                     {/* Esempio scontrino a passi */}
-                    <div className="p-6 rounded-2xl bg-slate-800 border border-slate-700 max-w-lg mx-auto space-y-4">
-                      <div className="flex items-center justify-between text-xs text-slate-400 border-b border-slate-700 pb-2">
+                    <div className="p-6 rounded-2xl bg-white border-2 border-slate-200 max-w-lg mx-auto space-y-4 shadow-sm">
+                      <div className="flex items-center justify-between text-xs text-slate-500 border-b border-slate-100 pb-2 font-bold">
                         <span>Scontrino spesa:</span>
-                        <span className="text-amber-400 font-bold">4 articoli da sommare a mente</span>
+                        <span className="text-dida-orange font-bold">4 articoli da sommare a mente</span>
                       </div>
 
                       <div className="flex justify-center items-center gap-2 font-mono text-lg font-bold">
-                        <span className={`px-2.5 py-1 rounded-lg border ${scontrinoStep >= 1 ? "bg-amber-500/20 text-amber-300 border-amber-400" : "bg-slate-700 text-white border-slate-600"}`}>
+                        <span className={`px-2.5 py-1 rounded-lg border-2 ${scontrinoStep >= 1 ? "bg-orange-100 text-orange-800 border-orange-300 font-black" : "bg-slate-100 text-slate-700 border-slate-200"}`}>
                           7 €
                         </span>
-                        <span>+</span>
-                        <span className={`px-2.5 py-1 rounded-lg border ${scontrinoStep >= 1 ? "bg-sky-500/20 text-sky-300 border-sky-400" : "bg-slate-700 text-white border-slate-600"}`}>
+                        <span className="text-slate-400 font-bold">+</span>
+                        <span className={`px-2.5 py-1 rounded-lg border-2 ${scontrinoStep >= 1 ? "bg-blue-100 text-blue-800 border-blue-300 font-black" : "bg-slate-100 text-slate-700 border-slate-200"}`}>
                           18 €
                         </span>
-                        <span>+</span>
-                        <span className={`px-2.5 py-1 rounded-lg border ${scontrinoStep >= 1 ? "bg-amber-500/20 text-amber-300 border-amber-400" : "bg-slate-700 text-white border-slate-600"}`}>
+                        <span className="text-slate-400 font-bold">+</span>
+                        <span className={`px-2.5 py-1 rounded-lg border-2 ${scontrinoStep >= 1 ? "bg-orange-100 text-orange-800 border-orange-300 font-black" : "bg-slate-100 text-slate-700 border-slate-200"}`}>
                           3 €
                         </span>
-                        <span>+</span>
-                        <span className={`px-2.5 py-1 rounded-lg border ${scontrinoStep >= 1 ? "bg-sky-500/20 text-sky-300 border-sky-400" : "bg-slate-700 text-white border-slate-600"}`}>
+                        <span className="text-slate-400 font-bold">+</span>
+                        <span className={`px-2.5 py-1 rounded-lg border-2 ${scontrinoStep >= 1 ? "bg-blue-100 text-blue-800 border-blue-300 font-black" : "bg-slate-100 text-slate-700 border-slate-200"}`}>
                           12 €
                         </span>
                       </div>
 
                       {scontrinoStep >= 1 && (
-                        <div className="p-3 rounded-xl bg-slate-900 border border-slate-700 text-center font-mono text-sm space-y-1">
-                          <p className="text-amber-300 font-bold">
+                        <div className="p-3 rounded-xl bg-orange-50 border border-orange-200 text-center font-mono text-sm space-y-1">
+                          <p className="text-orange-950 font-bold">
                             = (7 + 3) + (18 + 12)
                           </p>
-                          <p className="text-xs text-slate-400 font-sans">
+                          <p className="text-xs text-orange-700 font-sans">
                             Proprietà commutativa (sposto gli addendi) + associativa (raggruppo)!
                           </p>
                         </div>
                       )}
 
                       {scontrinoStep >= 2 && (
-                        <div className="p-3 rounded-xl bg-emerald-950/60 border border-emerald-500 text-center font-mono text-base font-black text-emerald-300">
+                        <div className="p-3 rounded-xl bg-emerald-50 border-2 border-emerald-300 text-center font-mono text-base font-black text-emerald-800">
                           = 10 € + 30 € = 40 € !
                         </div>
                       )}
@@ -331,7 +333,7 @@ export default function OperationsLesson({
                       <div className="flex justify-center gap-2 pt-2">
                         <button
                           onClick={() => setScontrinoStep((scontrinoStep + 1) % 3)}
-                          className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl text-xs cursor-pointer shadow-md"
+                          className="px-5 py-2.5 bg-dida-orange hover:bg-orange-600 text-white font-black rounded-xl text-xs cursor-pointer shadow-md transition"
                         >
                           {scontrinoStep === 0 ? "1. Raggruppa i numeri amici" : scontrinoStep === 1 ? "2. Calcola a mente!" : "Ricomincia"}
                         </button>
@@ -339,14 +341,14 @@ export default function OperationsLesson({
                     </div>
 
                     {/* Attenzione alla virgola nell'incolonnamento */}
-                    <div className="p-4 rounded-2xl bg-slate-800 border border-slate-700 text-center text-xs text-slate-300 space-y-1">
-                      <span className="text-amber-400 font-bold uppercase tracking-wider block">
+                    <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-center text-xs text-amber-900 space-y-1 max-w-lg mx-auto">
+                      <span className="text-amber-800 font-bold uppercase tracking-wider block">
                         ⚠️ Regola Fondamentale per i Decimali in Colonna
                       </span>
                       <p>
                         Incolonna <strong>sempre la virgola sotto la virgola</strong>, e aggiungi gli zeri per pareggiare le cifre decimali:
                         <br />
-                        <span className="font-mono text-white text-sm">39,60 + 78,00 + 17,09 = 134,69 €</span>
+                        <span className="font-mono text-slate-900 font-bold text-sm">39,60 + 78,00 + 17,09 = 134,69 €</span>
                       </p>
                     </div>
                   </div>
@@ -423,26 +425,28 @@ export default function OperationsLesson({
                   </div>
 
                   {/* WIDGET INTERATTIVO: La Differenza d'Età Non Cambia Mai */}
-                  <div className="p-6 rounded-3xl bg-slate-900 text-white space-y-6">
-                    <div className="text-center space-y-1">
-                      <span className="text-xs font-black text-amber-400 uppercase tracking-wider">
+                  <div className="p-6 md:p-8 rounded-3xl bg-slate-50 border-2 border-slate-200 space-y-6">
+                    <div className="text-center max-w-2xl mx-auto flex flex-col items-center justify-center gap-2 border-b border-slate-200 pb-5 mb-2 w-full">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-dida-orange bg-orange-100 px-4 py-1.5 rounded-full border border-orange-200 shadow-xs">
                         Laboratorio Interattivo · La Differenza nel Tempo
                       </span>
-                      <h3 className="text-xl font-black">La Differenza d'Età Non Cambia Mai</h3>
-                      <p className="text-xs text-slate-400 max-w-xl mx-auto">
+                      <h3 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight">
+                        La Differenza d'Età Non Cambia Mai
+                      </h3>
+                      <p className="text-xs text-slate-500 max-w-xl mx-auto">
                         Agnese ha 12 anni e Camilla ha 5 anni. Quanti anni di differenza ci sono? Cambia gli anni per vedere l'invariantiva in azione:
                       </p>
                     </div>
 
-                    <div className="flex justify-center gap-2">
+                    <div className="flex justify-center gap-2 flex-wrap">
                       {[-3, 0, 4, 10].map((shift) => (
                         <button
                           key={shift}
                           onClick={() => setEtaAnni(shift)}
-                          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer border ${
+                          className={`px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer border ${
                             etaAnni === shift
-                              ? "bg-amber-500 text-slate-950 border-amber-400 font-black shadow-md"
-                              : "bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700"
+                              ? "bg-dida-orange text-white border-orange-600 font-black shadow-md scale-105"
+                              : "bg-white text-slate-700 border-slate-200 hover:bg-orange-50 hover:border-orange-200"
                           }`}
                         >
                           {shift === 0 ? "Oggi" : shift > 0 ? `Tra ${shift} anni` : `${Math.abs(shift)} anni fa`}
@@ -451,30 +455,30 @@ export default function OperationsLesson({
                     </div>
 
                     <div className="grid grid-cols-3 gap-3 max-w-lg mx-auto text-center font-mono">
-                      <div className="p-3 bg-slate-800 rounded-xl border border-slate-700">
-                        <span className="text-[10px] text-slate-400 block font-sans">Età Agnese</span>
-                        <span className="text-2xl font-black text-sky-400">{12 + etaAnni}</span>
+                      <div className="p-4 bg-white rounded-2xl border-2 border-slate-200 shadow-xs">
+                        <span className="text-[10px] text-slate-400 block font-sans font-bold uppercase tracking-wider">Età Agnese</span>
+                        <span className="text-2xl font-black text-dida-blue">{12 + etaAnni}</span>
                       </div>
-                      <div className="p-3 bg-slate-800 rounded-xl border border-slate-700">
-                        <span className="text-[10px] text-slate-400 block font-sans">Età Camilla</span>
-                        <span className="text-2xl font-black text-rose-400">{5 + etaAnni}</span>
+                      <div className="p-4 bg-white rounded-2xl border-2 border-slate-200 shadow-xs">
+                        <span className="text-[10px] text-slate-400 block font-sans font-bold uppercase tracking-wider">Età Camilla</span>
+                        <span className="text-2xl font-black text-rose-500">{5 + etaAnni}</span>
                       </div>
-                      <div className="p-3 bg-emerald-950/80 rounded-xl border border-emerald-500">
-                        <span className="text-[10px] text-emerald-300 block font-sans">Differenza</span>
-                        <span className="text-2xl font-black text-emerald-400">
+                      <div className="p-4 bg-orange-50 rounded-2xl border-2 border-orange-200 shadow-xs">
+                        <span className="text-[10px] text-orange-700 block font-sans font-bold uppercase tracking-wider">Differenza</span>
+                        <span className="text-2xl font-black text-dida-orange">
                           {(12 + etaAnni) - (5 + etaAnni)} anni!
                         </span>
                       </div>
                     </div>
 
                     {/* Trucco calcolo a mente */}
-                    <div className="p-4 rounded-2xl bg-slate-800 border border-slate-700 text-center text-xs space-y-1">
-                      <span className="text-amber-400 font-bold uppercase tracking-wider block">
+                    <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-center text-xs space-y-1 max-w-lg mx-auto">
+                      <span className="text-amber-800 font-bold uppercase tracking-wider block">
                         💡 Trucco di Calcolo Mentale con l'Invariantiva
                       </span>
-                      <p className="text-slate-300">
-                        Per calcolare <span className="font-mono text-white font-bold">41 − 19</span>: aggiungi 1 a entrambi! <br />
-                        <span className="font-mono text-emerald-400 font-bold text-sm">42 − 20 = 22</span> (immediato e senza prestito!).
+                      <p className="text-slate-700">
+                        Per calcolare <span className="font-mono text-slate-900 font-bold">41 − 19</span>: aggiungi 1 a entrambi! <br />
+                        <span className="font-mono text-emerald-700 font-bold text-sm">42 − 20 = 22</span> (immediato e senza prestito!).
                       </p>
                     </div>
                   </div>
@@ -549,44 +553,46 @@ export default function OperationsLesson({
                   </div>
 
                   {/* WIDGET INTERATTIVO: Il Rettangolo Distributivo */}
-                  <div className="p-6 rounded-3xl bg-slate-900 text-white space-y-6">
-                    <div className="text-center space-y-1">
-                      <span className="text-xs font-black text-emerald-400 uppercase tracking-wider">
+                  <div className="p-6 md:p-8 rounded-3xl bg-slate-50 border-2 border-slate-200 space-y-6">
+                    <div className="text-center max-w-2xl mx-auto flex flex-col items-center justify-center gap-2 border-b border-slate-200 pb-5 mb-2 w-full">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-dida-orange bg-orange-100 px-4 py-1.5 rounded-full border border-orange-200 shadow-xs">
                         Geometria del Calcolo Mentale
                       </span>
-                      <h3 className="text-xl font-black">La Proprietà Distributiva: Spezza il Numero Difficile!</h3>
-                      <p className="text-xs text-slate-400 max-w-xl mx-auto">
-                        Come calcolare a mente <span className="font-mono text-amber-400 font-bold">{distribAltezza} × {distribBaseDecine + distribBaseUnita}</span>? Spezza la base in decine e unità:
+                      <h3 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight">
+                        La Proprietà Distributiva: Spezza il Numero Difficile!
+                      </h3>
+                      <p className="text-xs text-slate-500 max-w-xl mx-auto">
+                        Come calcolare a mente <span className="font-mono text-dida-orange font-bold">{distribAltezza} × {distribBaseDecine + distribBaseUnita}</span>? Spezza la base in decine e unità:
                       </p>
                     </div>
 
                     {/* Rappresentazione Rettangolo Spezzato */}
-                    <div className="max-w-md mx-auto p-4 rounded-2xl bg-slate-800 border border-slate-700 space-y-4">
-                      <div className="flex h-24 rounded-xl overflow-hidden border-2 border-slate-600 text-center font-mono font-black text-sm">
-                        <div className="bg-sky-600 flex flex-col items-center justify-center transition-all" style={{ width: "70%" }}>
-                          <span className="text-xs text-sky-200 font-sans">Base {distribBaseDecine}</span>
+                    <div className="max-w-md mx-auto p-5 rounded-2xl bg-white border-2 border-slate-200 shadow-xs space-y-4">
+                      <div className="flex h-24 rounded-xl overflow-hidden border-2 border-slate-200 text-center font-mono font-black text-sm shadow-inner">
+                        <div className="bg-sky-500 flex flex-col items-center justify-center transition-all text-white" style={{ width: "70%" }}>
+                          <span className="text-xs text-sky-100 font-sans">Base {distribBaseDecine}</span>
                           <span>{distribAltezza} × {distribBaseDecine} = {distribAltezza * distribBaseDecine}</span>
                         </div>
-                        <div className="bg-amber-600 flex flex-col items-center justify-center transition-all" style={{ width: "30%" }}>
-                          <span className="text-xs text-amber-200 font-sans">Base {distribBaseUnita}</span>
+                        <div className="bg-amber-500 flex flex-col items-center justify-center transition-all text-white" style={{ width: "30%" }}>
+                          <span className="text-xs text-amber-100 font-sans">Base {distribBaseUnita}</span>
                           <span>{distribAltezza} × {distribBaseUnita} = {distribAltezza * distribBaseUnita}</span>
                         </div>
                       </div>
 
-                      <div className="p-3 bg-slate-900 rounded-xl text-center font-mono text-base font-bold text-emerald-400">
-                        {distribAltezza} × ({distribBaseDecine} + {distribBaseUnita}) = {distribAltezza * distribBaseDecine} + {distribAltezza * distribBaseUnita} = {distribAltezza * (distribBaseDecine + distribBaseUnita)} !
+                      <div className="p-3 bg-orange-50 border border-orange-200 rounded-xl text-center font-mono text-base font-bold text-slate-800">
+                        {distribAltezza} × ({distribBaseDecine} + {distribBaseUnita}) = {distribAltezza * distribBaseDecine} + {distribAltezza * distribBaseUnita} = <strong className="text-dida-orange">{distribAltezza * (distribBaseDecine + distribBaseUnita)}</strong> !
                       </div>
 
                       <div className="flex justify-center gap-4 text-xs">
                         <button
                           onClick={() => { setDistribBaseDecine(20); setDistribBaseUnita(7); setDistribAltezza(3); }}
-                          className="px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 cursor-pointer"
+                          className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-orange-50 hover:border-orange-200 border border-slate-200 text-slate-700 font-bold cursor-pointer transition"
                         >
                           Esempio: 3 × 27
                         </button>
                         <button
                           onClick={() => { setDistribBaseDecine(40); setDistribBaseUnita(4); setDistribAltezza(5); }}
-                          className="px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 cursor-pointer"
+                          className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-orange-50 hover:border-orange-200 border border-slate-200 text-slate-700 font-bold cursor-pointer transition"
                         >
                           Esempio: 5 × 44
                         </button>
@@ -656,37 +662,39 @@ export default function OperationsLesson({
                   </div>
 
                   {/* WIDGET INTERATTIVO: Il Resto Conta */}
-                  <div className="p-6 rounded-3xl bg-slate-900 text-white space-y-6">
-                    <div className="text-center space-y-1">
-                      <span className="text-xs font-black text-purple-400 uppercase tracking-wider">
+                  <div className="p-6 md:p-8 rounded-3xl bg-slate-50 border-2 border-slate-200 space-y-6">
+                    <div className="text-center max-w-2xl mx-auto flex flex-col items-center justify-center gap-2 border-b border-slate-200 pb-5 mb-2 w-full">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-dida-orange bg-orange-100 px-4 py-1.5 rounded-full border border-orange-200 shadow-xs">
                         Laboratorio Interattivo · La Divisione nella Realtà
                       </span>
-                      <h3 className="text-xl font-black">Il Resto Conta: Dividiamo le Caramelle</h3>
-                      <p className="text-xs text-slate-400">
+                      <h3 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight">
+                        Il Resto Conta: Dividiamo le Caramelle
+                      </h3>
+                      <p className="text-xs text-slate-500 max-w-xl mx-auto">
                         Imposta caramelle e amici per osservare quoziente, resto e la verifica automatica:
                       </p>
                     </div>
 
                     <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-                      <div className="text-center space-y-1">
-                        <label className="text-xs text-slate-400">Caramelle (Dividendo)</label>
+                      <div className="text-center space-y-1.5 bg-white p-4 rounded-2xl border-2 border-slate-200 shadow-xs">
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block">Caramelle (Dividendo)</label>
                         <input
                           type="number"
                           value={divCaramelle}
                           onChange={(e) => setDivCaramelle(Math.max(1, parseInt(e.target.value) || 1))}
-                          className="w-32 text-center text-xl font-mono font-black bg-slate-800 border border-slate-700 rounded-xl py-2 text-white focus:outline-none"
+                          className="w-32 text-center text-xl font-mono font-black bg-orange-50/50 border-2 border-orange-200 rounded-xl py-2 text-slate-800 focus:outline-none focus:border-dida-orange"
                         />
                       </div>
 
-                      <span className="text-2xl font-black text-purple-400">:</span>
+                      <span className="text-3xl font-black text-dida-blue">:</span>
 
-                      <div className="text-center space-y-1">
-                        <label className="text-xs text-slate-400">Amici (Divisore)</label>
+                      <div className="text-center space-y-1.5 bg-white p-4 rounded-2xl border-2 border-slate-200 shadow-xs">
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block">Amici (Divisore)</label>
                         <input
                           type="number"
                           value={divAmici}
                           onChange={(e) => setDivAmici(Math.max(1, parseInt(e.target.value) || 1))}
-                          className="w-32 text-center text-xl font-mono font-black bg-slate-800 border border-slate-700 rounded-xl py-2 text-white focus:outline-none"
+                          className="w-32 text-center text-xl font-mono font-black bg-blue-50/50 border-2 border-blue-200 rounded-xl py-2 text-slate-800 focus:outline-none focus:border-dida-blue"
                         />
                       </div>
                     </div>
@@ -696,14 +704,14 @@ export default function OperationsLesson({
                       const q = Math.floor(divCaramelle / divAmici);
                       const r = divCaramelle % divAmici;
                       return (
-                        <div className="p-4 rounded-2xl bg-slate-800 border border-slate-700 max-w-lg mx-auto text-center space-y-2">
-                          <div className="text-2xl font-mono font-black text-purple-300">
+                        <div className="p-5 rounded-2xl bg-white border-2 border-slate-200 max-w-lg mx-auto text-center space-y-2 shadow-sm">
+                          <div className="text-2xl font-mono font-black text-dida-orange">
                             {divCaramelle} : {divAmici} = {q} con resto {r}
                           </div>
-                          <div className="text-xs text-slate-300 font-mono">
+                          <div className="text-xs text-slate-600 font-mono bg-slate-50 p-2 rounded-lg border border-slate-200">
                             Verifica: ({divAmici} × {q}) + {r} = {divAmici * q + r} ✓
                           </div>
-                          <div className="text-[11px] text-amber-400 pt-1 font-sans">
+                          <div className="text-xs font-bold text-amber-700 pt-1 font-sans">
                             {r > 0 ? `Avanzano ${r} caramelle non distribuite!` : "Divisione esatta: nessuna caramella avanzata!"}
                           </div>
                         </div>
@@ -711,11 +719,11 @@ export default function OperationsLesson({
                     })()}
 
                     {/* Trucco Invariantiva per eliminare la virgola */}
-                    <div className="p-4 rounded-2xl bg-slate-800 border border-slate-700 text-center text-xs text-slate-300">
-                      <span className="text-amber-400 font-bold block mb-1">
+                    <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-center text-xs text-amber-900 max-w-lg mx-auto">
+                      <span className="text-amber-800 font-bold block mb-1">
                         💡 Proprietà Invariantiva per le Divisioni con la Virgola
                       </span>
-                      Moltiplica entrambi per 10: <span className="font-mono text-white font-bold">4,5 : 0,9 = 45 : 9 = 5</span>!
+                      Moltiplica entrambi per 10: <span className="font-mono text-slate-900 font-bold">4,5 : 0,9 = 45 : 9 = 5</span>!
                     </div>
                   </div>
                 </div>
@@ -788,26 +796,28 @@ export default function OperationsLesson({
                   </div>
 
                   {/* WIDGET INTERATTIVO: La Sfida dei Quattro 4 */}
-                  <div className="p-6 rounded-3xl bg-slate-900 text-white space-y-6">
-                    <div className="text-center space-y-1">
-                      <span className="text-xs font-black text-amber-400 uppercase tracking-wider">
+                  <div className="p-6 md:p-8 rounded-3xl bg-slate-50 border-2 border-slate-200 space-y-6">
+                    <div className="text-center max-w-2xl mx-auto flex flex-col items-center justify-center gap-2 border-b border-slate-200 pb-5 mb-2 w-full">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-dida-orange bg-orange-100 px-4 py-1.5 rounded-full border border-orange-200 shadow-xs">
                         La Sfida Storica della Matematica
                       </span>
-                      <h3 className="text-xl font-black">Il Gioco dei Quattro 4</h3>
-                      <p className="text-xs text-slate-400 max-w-xl mx-auto">
+                      <h3 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight">
+                        Il Gioco dei Quattro 4
+                      </h3>
+                      <p className="text-xs text-slate-500 max-w-xl mx-auto">
                         Usando esattamente quattro 4, le parentesi e le quattro operazioni (+, −, ×, :), riesci a ottenere tutti i numeri da 0 a 9? Scegli un numero:
                       </p>
                     </div>
 
-                    <div className="flex justify-center gap-1.5 flex-wrap">
+                    <div className="flex justify-center gap-2 flex-wrap">
                       {Array.from({ length: 10 }).map((_, n) => (
                         <button
                           key={n}
                           onClick={() => setFourResultChoice(n)}
-                          className={`w-10 h-10 rounded-xl font-mono font-black text-sm transition cursor-pointer border ${
+                          className={`w-11 h-11 rounded-xl font-mono font-black text-base transition cursor-pointer border-2 ${
                             fourResultChoice === n
-                              ? "bg-amber-500 text-slate-950 border-amber-400 scale-110 shadow-lg"
-                              : "bg-slate-800 text-white border-slate-700 hover:bg-slate-700"
+                              ? "bg-dida-orange text-white border-orange-600 scale-110 shadow-md"
+                              : "bg-white text-slate-700 border-slate-200 hover:bg-orange-50 hover:border-orange-200"
                           }`}
                         >
                           {n}
@@ -816,14 +826,14 @@ export default function OperationsLesson({
                     </div>
 
                     {fourFourSolutions[fourResultChoice] && (
-                      <div className="p-5 rounded-2xl bg-slate-800 border border-slate-700 max-w-lg mx-auto text-center space-y-2">
-                        <span className="text-xs text-amber-400 font-bold uppercase tracking-wider block">
+                      <div className="p-5 rounded-2xl bg-white border-2 border-orange-200 max-w-lg mx-auto text-center space-y-2 shadow-sm">
+                        <span className="text-xs text-dida-orange font-bold uppercase tracking-wider block">
                           Soluzione per ottenere {fourResultChoice}:
                         </span>
-                        <div className="font-mono text-xl font-black text-white">
+                        <div className="font-mono text-2xl font-black text-slate-800">
                           {fourFourSolutions[fourResultChoice].expr}
                         </div>
-                        <p className="text-xs text-slate-300 font-sans">
+                        <p className="text-xs text-slate-600 font-sans">
                           {fourFourSolutions[fourResultChoice].explain}
                         </p>
                       </div>
@@ -876,56 +886,59 @@ export default function OperationsLesson({
                   </div>
 
                   {/* WIDGET INTERATTIVO: Disegno dei Segmenti (Somma e Differenza) */}
-                  <div className="p-6 rounded-3xl bg-slate-900 text-white space-y-6">
-                    <div className="text-center space-y-1">
-                      <span className="text-xs font-black text-emerald-400 uppercase tracking-wider">
+                  <div className="p-6 md:p-8 rounded-3xl bg-orange-50/40 border-2 border-orange-200/80 space-y-6">
+                    {/* Header Laboratorio perfettamente centrato */}
+                    <div className="text-center max-w-2xl mx-auto flex flex-col items-center justify-center gap-2 border-b border-orange-200/60 pb-5 mb-2 w-full">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-dida-orange bg-orange-100 px-4 py-1.5 rounded-full border border-orange-200 shadow-xs">
                         Laboratorio Visivo · Somma e Differenza
                       </span>
-                      <h3 className="text-xl font-black">Problemi con Somma e Differenza Noti</h3>
-                      <p className="text-xs text-slate-400 max-w-xl mx-auto">
+                      <h3 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight">
+                        Problemi con Somma e Differenza Noti
+                      </h3>
+                      <p className="text-xs text-slate-600 max-w-xl mx-auto">
                         In una scatola ci sono caramelle alla fragola e al limone. Imposta la somma totale e la differenza tra le due quantità:
                       </p>
                     </div>
 
                     <div className="flex flex-col md:flex-row justify-center items-center gap-6">
-                      <div className="text-center space-y-1">
-                        <label className="text-xs text-slate-400">Somma Totale</label>
+                      <div className="text-center space-y-1.5 bg-white p-4 rounded-2xl border-2 border-slate-200 shadow-xs">
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block">Somma Totale</label>
                         <input
                           type="number"
                           value={segSomma}
                           onChange={(e) => setSegSomma(parseInt(e.target.value) || 0)}
-                          className="w-32 text-center text-xl font-mono font-black bg-slate-800 border border-slate-700 rounded-xl py-2 text-white focus:outline-none"
+                          className="w-32 text-center text-xl font-mono font-black bg-orange-50/50 border-2 border-orange-200 rounded-xl py-2 text-slate-800 focus:outline-none focus:border-dida-orange"
                         />
                       </div>
 
-                      <div className="text-center space-y-1">
-                        <label className="text-xs text-slate-400">Differenza (in più)</label>
+                      <div className="text-center space-y-1.5 bg-white p-4 rounded-2xl border-2 border-slate-200 shadow-xs">
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block">Differenza (in più)</label>
                         <input
                           type="number"
                           value={segDiff}
                           onChange={(e) => setSegDiff(parseInt(e.target.value) || 0)}
-                          className="w-32 text-center text-xl font-mono font-black bg-slate-800 border border-slate-700 rounded-xl py-2 text-white focus:outline-none"
+                          className="w-32 text-center text-xl font-mono font-black bg-blue-50/50 border-2 border-blue-200 rounded-xl py-2 text-slate-800 focus:outline-none focus:border-dida-blue"
                         />
                       </div>
                     </div>
 
                     {segmentiCalc.valido && (
-                      <div className="p-6 rounded-2xl bg-slate-800 border border-slate-700 max-w-lg mx-auto space-y-4">
+                      <div className="p-6 rounded-2xl bg-white border-2 border-orange-200 max-w-xl mx-auto space-y-4 shadow-sm">
                         {/* Schema Grafico a Segmenti */}
-                        <div className="space-y-2 text-xs font-bold">
+                        <div className="space-y-3 text-xs font-bold">
                           <div className="flex items-center gap-3">
-                            <span className="w-16 text-right text-rose-300">Minore:</span>
-                            <div className="h-7 bg-rose-500 rounded-lg flex items-center justify-center text-white font-mono px-3" style={{ width: "45%" }}>
+                            <span className="w-20 text-right text-slate-600 font-bold">Minore:</span>
+                            <div className="h-9 bg-dida-blue rounded-xl flex items-center justify-center text-white font-mono px-3 shadow-xs font-black" style={{ width: "45%" }}>
                               {segmentiCalc.minore}
                             </div>
                           </div>
                           <div className="flex items-center gap-3">
-                            <span className="w-16 text-right text-amber-300">Maggiore:</span>
-                            <div className="h-7 flex rounded-lg overflow-hidden" style={{ width: "65%" }}>
-                              <div className="bg-rose-500 h-full flex items-center justify-center text-white font-mono px-3" style={{ width: "70%" }}>
+                            <span className="w-20 text-right text-slate-600 font-bold">Maggiore:</span>
+                            <div className="h-9 flex rounded-xl overflow-hidden shadow-xs font-black" style={{ width: "70%" }}>
+                              <div className="bg-dida-blue h-full flex items-center justify-center text-white font-mono px-3" style={{ width: "65%" }}>
                                 {segmentiCalc.minore}
                               </div>
-                              <div className="bg-amber-500 h-full flex items-center justify-center text-slate-950 font-mono px-2" style={{ width: "30%" }}>
+                              <div className="bg-dida-orange h-full flex items-center justify-center text-white font-mono px-2" style={{ width: "35%" }}>
                                 +{segDiff}
                               </div>
                             </div>
@@ -933,15 +946,15 @@ export default function OperationsLesson({
                         </div>
 
                         {/* Formule Risolutive */}
-                        <div className="p-3 bg-slate-900 rounded-xl space-y-1 text-center font-mono text-xs">
-                          <p className="text-amber-300">
-                            Quantità Minore = (Somma − Differenza) : 2 = ({segSomma} − {segDiff}) : 2 = <strong>{segmentiCalc.minore}</strong>
+                        <div className="p-4 bg-orange-50/70 border border-orange-200 rounded-xl space-y-2 text-center font-mono text-xs">
+                          <p className="text-slate-800">
+                            Quantità Minore = (Somma − Differenza) : 2 = ({segSomma} − {segDiff}) : 2 = <strong className="text-dida-blue text-sm font-black">{segmentiCalc.minore}</strong>
                           </p>
-                          <p className="text-emerald-300">
-                            Quantità Maggiore = Minore + Differenza = {segmentiCalc.minore} + {segDiff} = <strong>{segmentiCalc.maggiore}</strong>
+                          <p className="text-slate-800">
+                            Quantità Maggiore = Minore + Differenza = {segmentiCalc.minore} + {segDiff} = <strong className="text-dida-orange text-sm font-black">{segmentiCalc.maggiore}</strong>
                           </p>
                         </div>
-                        <div className="text-center text-[11px] text-slate-400 font-sans">
+                        <div className="text-center text-xs font-bold text-emerald-700 bg-emerald-50 py-2 px-3 rounded-lg border border-emerald-200">
                           Verifica: {segmentiCalc.minore} + {segmentiCalc.maggiore} = {segSomma} ✓
                         </div>
                       </div>

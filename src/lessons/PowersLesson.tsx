@@ -256,21 +256,23 @@ export default function PowersLesson({
                   </div>
 
                   {/* WIDGET INTERATTIVO: La Piegatura del Foglio */}
-                  <div className="p-6 rounded-3xl bg-slate-900 text-white space-y-6">
-                    <div className="text-center space-y-1">
-                      <span className="text-xs font-black text-amber-400 uppercase tracking-wider">
+                  <div className="p-6 md:p-8 rounded-3xl bg-slate-50 border-2 border-slate-200 space-y-6">
+                    <div className="text-center max-w-2xl mx-auto flex flex-col items-center justify-center gap-2 border-b border-slate-200 pb-5 mb-2 w-full">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-dida-orange bg-orange-100 px-4 py-1.5 rounded-full border border-orange-200 shadow-xs">
                         Esperimento Scientifico · La Crescita Esponenziale
                       </span>
-                      <h3 className="text-xl font-black">Quante Volte Puoi Piegare un Foglio?</h3>
-                      <p className="text-xs text-slate-400 max-w-xl mx-auto">
+                      <h3 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight">
+                        Quante Volte Puoi Piegare un Foglio?
+                      </h3>
+                      <p className="text-xs text-slate-500 max-w-xl mx-auto">
                         Ad ogni piegatura a metà, il numero di strati <strong>raddoppia</strong>: scopri come un semplice foglio cresce a dismisura con le potenze di 2!
                       </p>
                     </div>
 
                     <div className="flex flex-col md:flex-row items-center justify-center gap-8">
-                      <div className="space-y-3 text-center">
-                        <label className="text-xs text-slate-400 font-bold block">
-                          Numero di pieghe: <strong className="text-xl text-amber-400 font-mono">{pieghe}</strong>
+                      <div className="space-y-3 text-center bg-white p-5 rounded-2xl border-2 border-slate-200 shadow-xs">
+                        <label className="text-xs text-slate-500 font-bold block uppercase tracking-wider">
+                          Numero di pieghe: <strong className="text-xl text-dida-orange font-mono">{pieghe}</strong>
                         </label>
                         <input
                           type="range"
@@ -278,26 +280,26 @@ export default function PowersLesson({
                           max="10"
                           value={pieghe}
                           onChange={(e) => setPieghe(parseInt(e.target.value))}
-                          className="w-56 h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                          className="w-56 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-orange-500"
                         />
-                        <div className="flex justify-between text-[10px] text-slate-500 w-56 mx-auto">
+                        <div className="flex justify-between text-[10px] text-slate-400 w-56 mx-auto">
                           <span>0 pieghe</span>
                           <span>5 pieghe</span>
                           <span>10 pieghe</span>
                         </div>
                       </div>
 
-                      <div className="p-6 rounded-2xl bg-slate-800 border border-slate-700 text-center space-y-2 w-64 shadow-md">
-                        <span className="text-xs text-amber-400 uppercase font-bold tracking-wider block">
+                      <div className="p-6 rounded-2xl bg-white border-2 border-orange-200 text-center space-y-2 w-72 shadow-sm">
+                        <span className="text-xs text-dida-orange uppercase font-bold tracking-wider block">
                           Formula Potenza di 2:
                         </span>
-                        <div className="font-mono text-3xl font-black text-white">
-                          2^{pieghe} = <span className="text-emerald-400">{Math.pow(2, pieghe)}</span>
+                        <div className="font-mono text-3xl font-black text-slate-800">
+                          2^{pieghe} = <span className="text-dida-blue">{Math.pow(2, pieghe)}</span>
                         </div>
-                        <span className="text-xs text-slate-300 block font-semibold">
+                        <span className="text-xs text-slate-600 block font-bold">
                           strati di carta sovrapposti!
                         </span>
-                        <p className="text-[11px] text-slate-400 pt-1">
+                        <p className="text-[11px] text-slate-500 pt-1">
                           {pieghe === 0 && "Foglio intero: 1 strato iniziale."}
                           {pieghe >= 1 && pieghe <= 3 && "Piegatura facile: strati sottili."}
                           {pieghe >= 4 && pieghe <= 6 && "Inizia a diventare rigido come un cartoncino!"}
@@ -483,65 +485,67 @@ export default function PowersLesson({
                   </div>
 
                   {/* WIDGET INTERATTIVO: Calcolatore Guidato Stessa Base */}
-                  <div className="p-6 rounded-3xl bg-slate-900 text-white space-y-6">
-                    <div className="text-center space-y-1">
-                      <span className="text-xs font-black text-amber-400 uppercase tracking-wider">
+                  <div className="p-6 md:p-8 rounded-3xl bg-slate-50 border-2 border-slate-200 space-y-6">
+                    <div className="text-center max-w-2xl mx-auto flex flex-col items-center justify-center gap-2 border-b border-slate-200 pb-5 mb-2 w-full">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-dida-orange bg-orange-100 px-4 py-1.5 rounded-full border border-orange-200 shadow-xs">
                         Laboratorio Interattivo · Verifica le Regole
                       </span>
-                      <h3 className="text-xl font-black">Costruisci e Verifica la Scorciatoia</h3>
-                      <p className="text-xs text-slate-400">
+                      <h3 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight">
+                        Costruisci e Verifica la Scorciatoia
+                      </h3>
+                      <p className="text-xs text-slate-500 max-w-xl mx-auto">
                         Scegli la base e gli esponenti per visualizzare lo svolgimento:
                       </p>
                     </div>
 
                     <div className="flex flex-wrap items-center justify-center gap-4 text-center">
-                      <div>
-                        <span className="text-[10px] text-slate-400 block">Base comune (a)</span>
+                      <div className="bg-white p-3 rounded-2xl border-2 border-slate-200 shadow-xs">
+                        <span className="text-[10px] text-slate-500 font-bold uppercase block mb-1">Base comune (a)</span>
                         <input
                           type="number"
                           value={propA}
                           onChange={(e) => setPropA(Math.max(2, parseInt(e.target.value) || 2))}
-                          className="w-20 text-center text-lg font-mono font-bold bg-slate-800 border border-slate-700 rounded-xl py-1.5 text-white"
+                          className="w-20 text-center text-lg font-mono font-bold bg-orange-50/40 border-2 border-orange-200 rounded-xl py-1.5 text-slate-800 focus:outline-none focus:border-dida-orange"
                         />
                       </div>
-                      <div>
-                        <span className="text-[10px] text-slate-400 block">Esponente m</span>
+                      <div className="bg-white p-3 rounded-2xl border-2 border-slate-200 shadow-xs">
+                        <span className="text-[10px] text-slate-500 font-bold uppercase block mb-1">Esponente m</span>
                         <input
                           type="number"
                           value={propM}
                           onChange={(e) => setPropM(Math.max(1, parseInt(e.target.value) || 1))}
-                          className="w-20 text-center text-lg font-mono font-bold bg-slate-800 border border-slate-700 rounded-xl py-1.5 text-white"
+                          className="w-20 text-center text-lg font-mono font-bold bg-blue-50/40 border-2 border-blue-200 rounded-xl py-1.5 text-slate-800 focus:outline-none focus:border-dida-blue"
                         />
                       </div>
-                      <div>
-                        <span className="text-[10px] text-slate-400 block">Esponente n</span>
+                      <div className="bg-white p-3 rounded-2xl border-2 border-slate-200 shadow-xs">
+                        <span className="text-[10px] text-slate-500 font-bold uppercase block mb-1">Esponente n</span>
                         <input
                           type="number"
                           value={propN}
                           onChange={(e) => setPropN(Math.max(1, parseInt(e.target.value) || 1))}
-                          className="w-20 text-center text-lg font-mono font-bold bg-slate-800 border border-slate-700 rounded-xl py-1.5 text-white"
+                          className="w-20 text-center text-lg font-mono font-bold bg-blue-50/40 border-2 border-blue-200 rounded-xl py-1.5 text-slate-800 focus:outline-none focus:border-dida-blue"
                         />
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-xl mx-auto text-center font-mono">
-                      <div className="p-4 bg-slate-800 rounded-2xl border border-slate-700 space-y-1">
-                        <span className="text-xs text-sky-400 font-sans block">Prodotto:</span>
-                        <div className="text-xl font-black text-white">
-                          {propA}^{propM} × {propA}^{propN} = {propA}^{propM + propN}
+                      <div className="p-5 bg-white rounded-2xl border-2 border-slate-200 space-y-1 shadow-xs">
+                        <span className="text-xs text-dida-blue font-sans font-bold block uppercase tracking-wider">Prodotto:</span>
+                        <div className="text-xl font-black text-slate-800">
+                          {propA}^{propM} × {propA}^{propN} = <span className="text-dida-orange">{propA}^{propM + propN}</span>
                         </div>
-                        <span className="text-[11px] text-slate-400 font-sans">
+                        <span className="text-[11px] text-slate-500 font-sans">
                           Somma esponenti: {propM} + {propN} = {propM + propN}
                         </span>
                       </div>
 
-                      <div className="p-4 bg-slate-800 rounded-2xl border border-slate-700 space-y-1">
-                        <span className="text-xs text-emerald-400 font-sans block">Quoziente:</span>
-                        <div className="text-xl font-black text-white">
-                          {propA}^{propM} : {propA}^{propN} = {propM >= propN ? `${propA}^${propM - propN}` : "m deve essere ≥ n"}
+                      <div className="p-5 bg-white rounded-2xl border-2 border-slate-200 space-y-1 shadow-xs">
+                        <span className="text-xs text-emerald-700 font-sans font-bold block uppercase tracking-wider">Quoziente:</span>
+                        <div className="text-xl font-black text-slate-800">
+                          {propA}^{propM} : {propA}^{propN} = <span className="text-emerald-700">{propM >= propN ? `${propA}^${propM - propN}` : "m deve essere ≥ n"}</span>
                         </div>
                         {propM >= propN && (
-                          <span className="text-[11px] text-slate-400 font-sans">
+                          <span className="text-[11px] text-slate-500 font-sans">
                             Sottrazione: {propM} − {propN} = {propM - propN}
                           </span>
                         )}
@@ -664,13 +668,15 @@ export default function PowersLesson({
                   </div>
 
                   {/* WIDGET INTERATTIVO: Scanner Numeri Giganti */}
-                  <div className="p-6 rounded-3xl bg-slate-900 text-white space-y-6">
-                    <div className="text-center space-y-1">
-                      <span className="text-xs font-black text-sky-400 uppercase tracking-wider">
-                        Laboratorio Astronomico · Dalla Notazione Estesa alla Scientifica
+                  <div className="p-6 md:p-8 rounded-3xl bg-slate-50 border-2 border-slate-200 space-y-6">
+                    <div className="text-center max-w-2xl mx-auto flex flex-col items-center justify-center gap-2 border-b border-slate-200 pb-5 mb-2 w-full">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-dida-orange bg-orange-100 px-4 py-1.5 rounded-full border border-orange-200 shadow-xs">
+                        Laboratorio Astronomico · Notazione Scientifica
                       </span>
-                      <h3 className="text-xl font-black">Scanner di Numeri Giganti</h3>
-                      <p className="text-xs text-slate-400">
+                      <h3 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight">
+                        Scanner di Numeri Giganti
+                      </h3>
+                      <p className="text-xs text-slate-500 max-w-xl mx-auto">
                         Scegli una grandezza reale o digita un numero per calcolarne notazione e ordine di grandezza:
                       </p>
                     </div>
@@ -685,10 +691,10 @@ export default function PowersLesson({
                         <button
                           key={item.label}
                           onClick={() => setGiantNumber(item.val)}
-                          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer border ${
+                          className={`px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer border ${
                             giantNumber === item.val
-                              ? "bg-sky-500 text-slate-950 border-sky-400 font-black shadow-md"
-                              : "bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700"
+                              ? "bg-dida-orange text-white border-orange-600 font-black shadow-md scale-105"
+                              : "bg-white text-slate-700 border-slate-200 hover:bg-orange-50 hover:border-orange-200"
                           }`}
                         >
                           {item.label}
@@ -696,22 +702,22 @@ export default function PowersLesson({
                       ))}
                     </div>
 
-                    <div className="p-6 rounded-2xl bg-slate-800 border border-slate-700 max-w-lg mx-auto text-center space-y-4">
-                      <div className="text-xs text-slate-400">Numero in forma normale:</div>
-                      <div className="font-mono text-2xl font-black text-white">
+                    <div className="p-6 rounded-2xl bg-white border-2 border-slate-200 max-w-lg mx-auto text-center space-y-4 shadow-sm">
+                      <div className="text-xs text-slate-500 font-bold uppercase tracking-wider">Numero in forma normale:</div>
+                      <div className="font-mono text-2xl font-black text-slate-800">
                         {giantNumber.toLocaleString("it-IT")}
                       </div>
 
-                      <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-700">
-                        <div className="p-3 bg-slate-900 rounded-xl">
-                          <span className="text-[10px] text-sky-400 font-bold block">Notazione Scientifica</span>
-                          <span className="font-mono text-lg font-black text-white">
+                      <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-100">
+                        <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl">
+                          <span className="text-[10px] text-dida-blue font-bold uppercase tracking-wider block">Notazione Scientifica</span>
+                          <span className="font-mono text-lg font-black text-slate-800">
                             {sciInfo.k} × 10^{sciInfo.exp}
                           </span>
                         </div>
-                        <div className="p-3 bg-slate-900 rounded-xl">
-                          <span className="text-[10px] text-amber-400 font-bold block">Ordine di Grandezza</span>
-                          <span className="font-mono text-lg font-black text-amber-300">
+                        <div className="p-3 bg-orange-50 border border-orange-200 rounded-xl">
+                          <span className="text-[10px] text-dida-orange font-bold uppercase tracking-wider block">Ordine di Grandezza</span>
+                          <span className="font-mono text-lg font-black text-slate-800">
                             10^{sciInfo.orderExp}
                           </span>
                         </div>
