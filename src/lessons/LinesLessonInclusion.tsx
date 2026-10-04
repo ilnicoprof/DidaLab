@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import {
-  ArrowLeft, Volume2, VolumeX, Sparkles, CheckCircle2, XCircle,
-  HelpCircle, ChevronRight, ChevronLeft, Award, RotateCcw,
-  BookOpen, Zap, Check, X, Compass, Train, Scissors
+  ArrowLeft, Volume2, VolumeX, Sparkles, ChevronRight, ChevronLeft, Award, RotateCcw,
+  BookOpen, Zap, Check, X, Train, Scissors
 } from "lucide-react";
 import { useSpeech } from "../hooks/useSpeech";
 
@@ -24,6 +23,15 @@ const INCLUSION_MODULES = [
   { id: "mod5", title: "5. Gli 8 Angoli della Trasversale", short: "5. Solo due misure!" },
 ];
 
+// Sottoargomento scelto nell'indice → scheda da aprire
+const SUBTOPIC_TO_MODULE: Record<string, string> = {
+  "lines-positions-plane": "mod1",
+  "perpendicular-lines": "mod2",
+  "distance-point-line-segment-bisector": "mod3",
+  "parallel-lines": "mod4",
+  "transversal-lines": "mod5",
+};
+
 export default function LinesLessonInclusion({
   onBack,
   subjectName,
@@ -32,7 +40,9 @@ export default function LinesLessonInclusion({
   initialTab = "impara",
 }: Props) {
   const [activeTab, setActiveTab] = useState<"impara" | "allena">(initialTab);
-  const [activeModuleId, setActiveModuleId] = useState<string>("mod1");
+  const [activeModuleId, setActiveModuleId] = useState<string>(
+    () => SUBTOPIC_TO_MODULE[initialSubtopicId ?? ""] ?? "mod1"
+  );
 
   // TTS
   const { ttsEnabled, speak, toggleTts } = useSpeech();

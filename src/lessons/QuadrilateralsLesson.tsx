@@ -1,10 +1,7 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { AnimatePresence } from "motion/react";
 import {
-  ArrowLeft, Volume2, Sparkles, CheckCircle2, XCircle,
-  HelpCircle, ChevronRight, ChevronLeft, Award, RotateCcw,
-  BookOpen, Zap, Info, Check, X, AlertCircle, Grid, Sliders,
-  Shapes, LayoutGrid, Ruler, Move, Compass, Split
+  ArrowLeft, BookOpen, Zap, AlertCircle
 } from "lucide-react";
 
 interface Props {
@@ -79,7 +76,6 @@ export default function QuadrilateralsLesson({
   const [lab1SideLengths, setLab1SideLengths] = useState<[number, number, number, number]>([13, 8, 4, 2]); // dalla slide 5
 
   // LAB 2: Trapezio (Basi, Proiezioni, Isoscele)
-  const [trapType, setTrapType] = useState<"isoscele" | "rettangolo" | "scaleno">("isoscele");
   const [trapBaseBig, setTrapBaseBig] = useState<number>(14);
   const [trapBaseSmall, setTrapBaseSmall] = useState<number>(8);
   const [trapHeight, setTrapHeight] = useState<number>(4);
@@ -102,10 +98,6 @@ export default function QuadrilateralsLesson({
   // INVALSI 1: Perimetro Trapezio (con altezza-trabocchetto)
   const [inv1Choice, setInv1Choice] = useState<string | null>(null);
 
-  // INVALSI 2: Piano Cartesiano A(5;0), B(9;4), D(1;4) -> C?
-  const [inv2Coords, setInv2Coords] = useState<string>("");
-  const [inv2Submitted, setInv2Submitted] = useState<boolean>(false);
-
   // INVALSI 3: Cornice 22x15 con 3cm bordo
   const [inv3Choice, setInv3Choice] = useState<string | null>(null);
 
@@ -124,6 +116,11 @@ export default function QuadrilateralsLesson({
 
   // Calcoli Lab 3 Parallelogramma
   const paraPerimeter = (paraBase + paraSide) * 2;
+
+  // Calcoli Lab 1: un quadrilatero si chiude solo se ogni lato è minore della somma degli altri tre
+  const lab1Longest = Math.max(...lab1SideLengths);
+  const lab1OthersSum = lab1SideLengths.reduce((acc, l) => acc + l, 0) - lab1Longest;
+  const lab1Closes = lab1Longest < lab1OthersSum;
 
   return (
     <div className="w-full max-w-7xl mx-auto space-y-6 pb-20 px-3 md:px-6">
@@ -251,6 +248,31 @@ export default function QuadrilateralsLesson({
                       <p className="text-xs text-slate-600">
                         Es. con 17 cm &gt; 5 + 7 + 2 = 14 cm la figura NON si chiude! Con 13 cm &lt; 8 + 4 + 2 = 14 cm SI chiude!
                       </p>
+                      <div className="pt-2 space-y-2">
+                        <p className="text-[11px] font-bold uppercase text-emerald-800">Prova tu: scegli i 4 listelli (cm)</p>
+                        <div className="flex justify-center gap-2">
+                          {lab1SideLengths.map((len, i) => (
+                            <input
+                              key={i}
+                              type="number"
+                              min={1}
+                              max={30}
+                              value={len}
+                              onChange={(e) => {
+                                const next = [...lab1SideLengths] as [number, number, number, number];
+                                next[i] = Math.min(30, Math.max(1, parseInt(e.target.value) || 1));
+                                setLab1SideLengths(next);
+                              }}
+                              className="w-14 text-center font-mono font-black bg-white border-2 border-emerald-300 rounded-xl py-1 focus:outline-none focus:border-emerald-600"
+                              aria-label={`Listello ${i + 1}`}
+                            />
+                          ))}
+                        </div>
+                        <p className={`text-xs font-bold ${lab1Closes ? "text-emerald-700" : "text-rose-700"}`}>
+                          Lato più lungo {lab1Longest} cm {lab1Closes ? "<" : "≥"} somma degli altri {lab1OthersSum} cm:{" "}
+                          {lab1Closes ? "il quadrilatero SI chiude ✓" : "il quadrilatero NON si chiude ✗"}
+                        </p>
+                      </div>
                     </div>
                   </div>
 
@@ -375,7 +397,7 @@ export default function QuadrilateralsLesson({
                       </span>
                       <h4 className="text-lg font-black text-slate-800">2 Angoli Retti (90°)</h4>
                       <p className="text-xs text-slate-600">
-                        Un lato obliquo è perpendicolare alle due basi: coincide esattamente con l'altezza $h$ del trapezio!
+                        Un lato obliquo è perpendicolare alle due basi: coincide esattamente con l'altezza h del trapezio!
                       </p>
                     </div>
 
@@ -523,7 +545,7 @@ export default function QuadrilateralsLesson({
                         <div>
                           <strong>TRABOCCHETTO INVALSI (Slide 25):</strong>
                           <br />
-                          L'altezza $h$ ({trapHeight} cm) <strong>NON È UN LATO</strong>! Non deve mai essere sommata per calcolare il perimetro! Inoltre il perimetro si misura in <strong>cm</strong>, non in cm²!
+                          L'altezza h ({trapHeight} cm) <strong>NON È UN LATO</strong>! Non deve mai essere sommata per calcolare il perimetro! Inoltre il perimetro si misura in <strong>cm</strong>, non in cm²!
                         </div>
                       </div>
                     </div>
@@ -599,6 +621,17 @@ export default function QuadrilateralsLesson({
                       </p>
                     </div>
 
+                    <div className="max-w-md mx-auto grid grid-cols-2 gap-4">
+                      <label className="text-xs font-bold text-slate-600 space-y-1">
+                        <span className="flex justify-between">Lato a (base): <span className="font-mono text-dida-blue">{paraBase} cm</span></span>
+                        <input type="range" min={3} max={10} value={paraBase} onChange={(e) => setParaBase(Number(e.target.value))} className="w-full accent-dida-blue" />
+                      </label>
+                      <label className="text-xs font-bold text-slate-600 space-y-1">
+                        <span className="flex justify-between">Lato b (obliquo): <span className="font-mono text-dida-blue">{paraSide} cm</span></span>
+                        <input type="range" min={2} max={8} value={paraSide} onChange={(e) => setParaSide(Number(e.target.value))} className="w-full accent-dida-blue" />
+                      </label>
+                    </div>
+
                     <div className="max-w-md mx-auto space-y-2">
                       <div className="flex justify-between text-xs font-bold text-slate-600">
                         <span>Angolo Â:</span>
@@ -620,11 +653,13 @@ export default function QuadrilateralsLesson({
                     <div className="h-64 bg-white rounded-3xl border border-slate-200 flex items-center justify-center p-4 relative shadow-inner">
                       <svg width="340" height="200" viewBox="0 0 340 200">
                         {(() => {
-                          const w = 170;
-                          const h = 85;
-                          const dx = h / Math.tan((paraAngle * Math.PI) / 180);
-                          const x0 = 70;
-                          const y0 = 150;
+                          // 16 px per cm: i lati restano lunghi a e b qualunque sia l'angolo
+                          const w = paraBase * 16;
+                          const side = paraSide * 16;
+                          const dx = side * Math.cos((paraAngle * Math.PI) / 180);
+                          const h = side * Math.sin((paraAngle * Math.PI) / 180);
+                          const x0 = 20;
+                          const y0 = 180;
 
                           const pA = { x: x0, y: y0 };
                           const pB = { x: x0 + w, y: y0 };
@@ -737,9 +772,9 @@ export default function QuadrilateralsLesson({
                             </span>
                             <h3 className="text-2xl font-black text-slate-800">4 Angoli Retti (90°)</h3>
                             <ul className="space-y-2 text-xs">
-                              <li>• <strong>Lati:</strong> lati opposti uguali a due a due ($b$ e $h$).</li>
-                              <li>• <strong>Diagonali:</strong> le due diagonali sono <strong>perfettamente CONGRUENTI</strong> ($AC \equiv BD$).</li>
-                              <li>• <strong>Perimetro:</strong> $2p = (b + h) \times 2$.</li>
+                              <li>• <strong>Lati:</strong> lati opposti uguali a due a due (b e h).</li>
+                              <li>• <strong>Diagonali:</strong> le due diagonali sono <strong>perfettamente CONGRUENTI</strong> (AC ≡ BD).</li>
+                              <li>• <strong>Perimetro:</strong> 2p = (b + h) × 2.</li>
                             </ul>
                           </div>
 
@@ -764,9 +799,9 @@ export default function QuadrilateralsLesson({
                             </span>
                             <h3 className="text-2xl font-black text-slate-800">4 Lati Congruenti</h3>
                             <ul className="space-y-2 text-xs">
-                              <li>• <strong>Lati:</strong> tutti e 4 i lati sono perfettamente uguali ($l$).</li>
+                              <li>• <strong>Lati:</strong> tutti e 4 i lati sono perfettamente uguali (l).</li>
                               <li>• <strong>Diagonali:</strong> sono <strong>PERPENDICOLARI (a 90°)</strong> e sono bisettrici degli angoli!</li>
-                              <li>• <strong>Perimetro:</strong> $2p = l \times 4$. Formula inversa: $l = 2p : 4$.</li>
+                              <li>• <strong>Perimetro:</strong> 2p = l × 4. Formula inversa: l = 2p : 4.</li>
                             </ul>
                           </div>
 
@@ -794,7 +829,7 @@ export default function QuadrilateralsLesson({
                             <ul className="space-y-2 text-xs">
                               <li>• Ha sia <strong>4 lati uguali</strong> (come il rombo) sia <strong>4 angoli retti</strong> (come il rettangolo)!</li>
                               <li>• Le sue diagonali sono sia <strong>CONGRUENTI</strong> sia <strong>PERPENDICOLARI</strong>!</li>
-                              <li>• <strong>Perimetro:</strong> $2p = l \times 4$. Lato: $l = 2p : 4$.</li>
+                              <li>• <strong>Perimetro:</strong> 2p = l × 4. Lato: l = 2p : 4.</li>
                             </ul>
                           </div>
 
@@ -881,17 +916,39 @@ export default function QuadrilateralsLesson({
                         { id: "quad", label: "1 Quadrato", color: "bg-amber-100 border-amber-300 text-amber-800" },
                         { id: "para", label: "1 Parallelogramma", color: "bg-emerald-100 border-emerald-300 text-emerald-800" },
                       ].map((item) => (
-                        <div
+                        <button
                           key={item.id}
-                          className={`p-3 rounded-2xl border font-bold text-xs ${item.color} shadow-xs`}
+                          onClick={() => setTangramSelectedPiece(tangramSelectedPiece === item.id ? null : item.id)}
+                          className={`p-3 rounded-2xl border font-bold text-xs ${item.color} shadow-xs cursor-pointer transition ${
+                            tangramSelectedPiece === item.id ? "ring-4 ring-slate-300 scale-[1.03]" : "hover:scale-[1.02]"
+                          }`}
                         >
                           {item.label}
-                        </div>
+                        </button>
                       ))}
                     </div>
 
+                    {tangramSelectedPiece && (() => {
+                      const pieces: Record<string, { points: string; fill: string; text: string }> = {
+                        tri_big: { points: "10,90 90,90 50,50", fill: "#FCA5A5", text: "Triangolo rettangolo isoscele: è 1/4 del quadrato del Tangram. I due triangoli grandi insieme ne formano metà!" },
+                        tri_med: { points: "22,85 78,85 50,57", fill: "#93C5FD", text: "Triangolo rettangolo isoscele medio: ha la stessa area di 2 triangoli piccoli, del quadratino e del parallelogramma." },
+                        tri_small: { points: "30,80 70,80 50,60", fill: "#D8B4FE", text: "Triangolo rettangolo isoscele piccolo: è il «mattoncino» del Tangram, 1/16 del quadrato intero." },
+                        quad: { points: "50,40 78,68 50,96 22,68", fill: "#FCD34D", text: "Quadrato: 4 lati uguali e 4 angoli retti. È formato da 2 triangoli piccoli." },
+                        para: { points: "15,85 55,85 85,55 45,55", fill: "#6EE7B7", text: "Parallelogramma: lati opposti paralleli e uguali, ma angoli NON retti (45° e 135°). Anche lui vale 2 triangoli piccoli." },
+                      };
+                      const piece = pieces[tangramSelectedPiece];
+                      return (
+                        <div className="flex flex-col sm:flex-row items-center gap-4 p-4 bg-white rounded-2xl border border-slate-200">
+                          <svg viewBox="0 0 100 100" className="w-24 h-24 shrink-0">
+                            <polygon points={piece.points} fill={piece.fill} stroke="#334155" strokeWidth="2" strokeLinejoin="round" />
+                          </svg>
+                          <p className="text-xs text-slate-700 font-medium">{piece.text}</p>
+                        </div>
+                      );
+                    })()}
+
                     <div className="p-4 bg-white rounded-2xl border border-slate-200 text-center text-xs font-medium text-slate-700">
-                      💡 <strong>SFIDA DEL TANGRAM (Slide 23):</strong> Unendo i 2 triangolini piccoli puoi formare: un quadrato, un triangolo grande oppure un parallelogramma!
+                      💡 <strong>SFIDA DEL TANGRAM (Slide 23):</strong> Unendo i 2 triangolini piccoli puoi formare: un quadrato, il triangolo medio oppure un parallelogramma!
                     </div>
                   </div>
                 </div>
@@ -916,8 +973,8 @@ export default function QuadrilateralsLesson({
               «L'altezza va sommata nel perimetro?»
             </h3>
             <p className="text-sm text-rose-900 leading-relaxed">
-              <strong>ATTENZIONE:</strong> Nel trapezio e nel parallelogramma l'altezza $h$ è un segmento interno utile per l'area, ma <strong>NON è un lato del contorno</strong>!
-              Nel perimetro si sommano SOLO i lati esterni ($B + b + 2l$).
+              <strong>ATTENZIONE:</strong> Nel trapezio e nel parallelogramma l'altezza h è un segmento interno utile per l'area, ma <strong>NON è un lato del contorno</strong>!
+              Nel perimetro si sommano SOLO i lati esterni (B + b + 2l).
             </p>
           </div>
 
@@ -948,7 +1005,7 @@ export default function QuadrilateralsLesson({
                   { id: "a", label: "A) 36 cm²" },
                   { id: "b", label: "B) 31 cm" },
                   { id: "c", label: "C) 44 cm²" },
-                  { id: "d", label: "D) 32 cm (Corretto)" },
+                  { id: "d", label: "D) 32 cm" },
                 ].map((opt) => (
                   <button
                     key={opt.id}
@@ -987,7 +1044,7 @@ export default function QuadrilateralsLesson({
               </p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {[
-                  { id: "a", label: "A) 28 × 21 cm (Corretto)" },
+                  { id: "a", label: "A) 28 × 21 cm" },
                   { id: "b", label: "B) 25 × 21 cm" },
                   { id: "c", label: "C) 28 × 18 cm" },
                   { id: "d", label: "D) 25 × 18 cm" },

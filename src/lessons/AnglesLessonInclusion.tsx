@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import {
-  ArrowLeft, Volume2, VolumeX, Sparkles, CheckCircle2, XCircle,
-  HelpCircle, ChevronRight, ChevronLeft, Award, RotateCcw,
-  BookOpen, Zap, Check, X, Compass, Scissors, Eye
+  ArrowLeft, Volume2, VolumeX, ChevronRight, ChevronLeft, BookOpen, Zap
 } from "lucide-react";
 import { useSpeech } from "../hooks/useSpeech";
 
@@ -52,6 +50,15 @@ const INCLUSION_MODULES = [
   { id: "mod5", title: "5. Il Trucco C-S-E", short: "5. Coppie Speciali" },
 ];
 
+// Sottoargomento scelto nell'indice → scheda da aprire
+const SUBTOPIC_TO_MODULE: Record<string, string> = {
+  "angle-def": "mod1",
+  "angles-comparison-vertical": "mod3",
+  "angles-consecutive-adjacent-operations": "mod3",
+  "bisector-angle-types": "mod4",
+  "complementary-supplementary-explementary": "mod5",
+};
+
 export default function AnglesLessonInclusion({
   onBack,
   subjectName,
@@ -60,7 +67,9 @@ export default function AnglesLessonInclusion({
   initialTab = "impara",
 }: Props) {
   const [activeTab, setActiveTab] = useState<"impara" | "allena">(initialTab);
-  const [activeModuleId, setActiveModuleId] = useState<string>("mod1");
+  const [activeModuleId, setActiveModuleId] = useState<string>(
+    () => SUBTOPIC_TO_MODULE[initialSubtopicId ?? ""] ?? "mod1"
+  );
 
   // Sintesi Vocale
   const { ttsEnabled, speak, toggleTts } = useSpeech();

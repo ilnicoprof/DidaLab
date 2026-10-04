@@ -1,10 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  ArrowLeft, BookOpen, Zap, CheckCircle2, XCircle, Sparkles,
-  ChevronRight, RotateCcw, AlertCircle, Info, Award, HelpCircle,
-  Hash, Scissors, RefreshCw, Check, X, Star, Users, Search,
-  Music, Grid, Split, Calculator, ArrowRight, Play, CheckCircle
+  ArrowLeft, BookOpen, Zap, CheckCircle2, RotateCcw, Award, Play
 } from "lucide-react";
 
 interface Props {
@@ -57,7 +54,6 @@ const SUBTOPICS = [
 export default function FractionOperationsLesson({
   onBack,
   subjectName,
-  topicName,
   initialSubtopicId,
   initialTab = "impara",
 }: Props) {
@@ -1023,7 +1019,7 @@ export default function FractionOperationsLesson({
                               <div className="relative">
                                 <input
                                   type="number" min="1" max="50" value={multNumA}
-                                  onChange={(e) => setMultNumA(Math.max(1, parseInt(e.target.value) || 1))}
+                                  onChange={(e) => setMultNumA(Math.min(50, Math.max(1, parseInt(e.target.value) || 1)))}
                                   className="w-16 p-1.5 text-center rounded-xl border border-blue-300 font-mono font-bold text-lg bg-blue-50/50 text-blue-900"
                                 />
                                 {multResult.crossGcd1 > 1 && (
@@ -1035,8 +1031,8 @@ export default function FractionOperationsLesson({
                               <div className="w-16 h-1 bg-slate-800 rounded-full my-0.5"></div>
                               <div className="relative">
                                 <input
-                                  type="number" min="1" max="50" value={multDenA}
-                                  onChange={(e) => setMultDenA(Math.max(1, parseInt(e.target.value) || 1))}
+                                  type="number" min="1" max="12" value={multDenA}
+                                  onChange={(e) => setMultDenA(Math.min(12, Math.max(1, parseInt(e.target.value) || 1)))}
                                   className="w-16 p-1.5 text-center rounded-xl border border-blue-300 font-mono font-bold text-lg bg-blue-50/50 text-blue-900"
                                 />
                                 {multResult.crossGcd2 > 1 && (
@@ -1056,7 +1052,7 @@ export default function FractionOperationsLesson({
                               <div className="relative">
                                 <input
                                   type="number" min="1" max="50" value={multNumB}
-                                  onChange={(e) => setMultNumB(Math.max(1, parseInt(e.target.value) || 1))}
+                                  onChange={(e) => setMultNumB(Math.min(50, Math.max(1, parseInt(e.target.value) || 1)))}
                                   className="w-16 p-1.5 text-center rounded-xl border border-orange-300 font-mono font-bold text-lg bg-orange-50/50 text-orange-900"
                                 />
                                 {multResult.crossGcd2 > 1 && (
@@ -1068,8 +1064,8 @@ export default function FractionOperationsLesson({
                               <div className="w-16 h-1 bg-slate-800 rounded-full my-0.5"></div>
                               <div className="relative">
                                 <input
-                                  type="number" min="1" max="50" value={multDenB}
-                                  onChange={(e) => setMultDenB(Math.max(1, parseInt(e.target.value) || 1))}
+                                  type="number" min="1" max="12" value={multDenB}
+                                  onChange={(e) => setMultDenB(Math.min(12, Math.max(1, parseInt(e.target.value) || 1)))}
                                   className="w-16 p-1.5 text-center rounded-xl border border-orange-300 font-mono font-bold text-lg bg-orange-50/50 text-orange-900"
                                 />
                                 {multResult.crossGcd1 > 1 && (

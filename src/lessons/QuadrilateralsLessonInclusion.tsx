@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import {
-  ArrowLeft, Volume2, VolumeX, Sparkles, CheckCircle2, XCircle,
-  HelpCircle, ChevronRight, ChevronLeft, Award, RotateCcw,
-  BookOpen, Zap, Check, X, Shapes, Grid
+  ArrowLeft, Volume2, VolumeX, ChevronRight, ChevronLeft, BookOpen, Zap
 } from "lucide-react";
 import { useSpeech } from "../hooks/useSpeech";
 
@@ -24,6 +22,15 @@ const INCLUSION_MODULES = [
   { id: "mod5", title: "5. Il Tangram Magico", short: "5. Il Tangram" },
 ];
 
+// Sottoargomento scelto nell'indice → scheda da aprire
+const SUBTOPIC_TO_MODULE: Record<string, string> = {
+  "quadrilateral-sides-angles": "mod1",
+  "trapezoids": "mod2",
+  "parallelograms": "mod3",
+  "special-parallelograms": "mod4",
+  "tangram-euler": "mod5",
+};
+
 export default function QuadrilateralsLessonInclusion({
   onBack,
   subjectName,
@@ -32,13 +39,12 @@ export default function QuadrilateralsLessonInclusion({
   initialTab = "impara",
 }: Props) {
   const [activeTab, setActiveTab] = useState<"impara" | "allena">(initialTab);
-  const [activeModuleId, setActiveModuleId] = useState<string>("mod1");
+  const [activeModuleId, setActiveModuleId] = useState<string>(
+    () => SUBTOPIC_TO_MODULE[initialSubtopicId ?? ""] ?? "mod1"
+  );
 
   // TTS
   const { ttsEnabled, speak, toggleTts } = useSpeech();
-
-  // Stati Interattivi
-  const [quadChoice, setQuadChoice] = useState<"rect" | "rhomb" | "square">("square");
 
   // Stati Allena
   const [q1, setQ1] = useState<string | null>(null);

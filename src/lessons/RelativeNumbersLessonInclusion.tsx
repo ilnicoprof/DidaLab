@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import {
-  ArrowLeft, Volume2, VolumeX, Sparkles, CheckCircle2, XCircle,
-  ChevronRight, ChevronLeft, Award, RotateCcw, BookOpen, Zap,
-  Check, X, ThermometerSnowflake, Ruler, ArrowRightLeft, Target
+  ArrowLeft, Volume2, VolumeX, ChevronRight, ChevronLeft, Award, RotateCcw, BookOpen,
+  Zap, Check, X, ArrowRightLeft, Target
 } from "lucide-react";
 import { useSpeech } from "../hooks/useSpeech";
 
@@ -24,15 +23,24 @@ const INCLUSION_MODULES = [
   { id: "mod5", title: "5. Chi Vince? Il Confronto", short: "5. Chi è più grande?" },
 ];
 
+// Sottoargomento scelto nell'indice → scheda da aprire
+const SUBTOPIC_TO_MODULE: Record<string, string> = {
+  "relative-intro-signs": "mod1",
+  "relative-sets-n-z-q-r": "mod2",
+  "relative-number-line": "mod3",
+  "relative-concord-discord-opposite": "mod4",
+  "relative-comparison": "mod5",
+};
+
 export default function RelativeNumbersLessonInclusion({
   onBack,
-  subjectName,
-  topicName,
   initialSubtopicId,
   initialTab = "impara",
 }: Props) {
   const [activeTab, setActiveTab] = useState<"impara" | "allena">(initialTab);
-  const [activeModuleId, setActiveModuleId] = useState<string>("mod1");
+  const [activeModuleId, setActiveModuleId] = useState<string>(
+    () => SUBTOPIC_TO_MODULE[initialSubtopicId ?? ""] ?? "mod1"
+  );
 
   // TTS
   const { ttsEnabled, speak, toggleTts } = useSpeech();

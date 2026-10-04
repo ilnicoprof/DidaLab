@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  ArrowLeft, Volume2, VolumeX, Sparkles, CheckCircle2, XCircle,
-  HelpCircle, ChevronRight, ChevronLeft, Award, RotateCcw,
-  BookOpen, Zap, FileText, Check, X, BarChart3, PieChart, LineChart, Table as TableIcon
+  ArrowLeft, Volume2, VolumeX, ChevronRight, ChevronLeft, BookOpen, Zap, FileText
 } from "lucide-react";
 import { useSpeech } from "../hooks/useSpeech";
+import TapOrder from "../components/TapOrder";
 
 interface Props {
   key?: string;
@@ -30,7 +29,6 @@ const INCLUSION_GRAPH_MODULES = [
 export default function GraphicRepresentationsLessonInclusion({
   onBack,
   subjectName,
-  topicName,
   initialSubtopicId,
   initialTab = "impara"
 }: Props) {
@@ -50,7 +48,6 @@ export default function GraphicRepresentationsLessonInclusion({
 
   // --- EXERCISE STATES (Pages 5 to 8) ---
   // Mod 9: Ordina 1-4 & V/F
-  const [m9Order, setM9Order] = useState<number[]>([1, 2, 3, 4]);
   const [m9Vf, setM9Vf] = useState<boolean | null>(null);
 
   // Mod 10: Tabella stanghette & Cerchia frutto più votato
@@ -80,9 +77,6 @@ export default function GraphicRepresentationsLessonInclusion({
   const [m14Vf, setM14Vf] = useState<boolean | null>(null);
 
   // Mod 15: Grafico al computer (Ordina 1-3 & V/F)
-  const [m15Step1, setM15Step1] = useState<number>(1);
-  const [m15Step2, setM15Step2] = useState<number>(2);
-  const [m15Step3, setM15Step3] = useState<number>(3);
   const [m15Vf, setM15Vf] = useState<boolean | null>(null);
 
   const currentModIndex = INCLUSION_GRAPH_MODULES.findIndex(m => m.id === activeModuleId);
@@ -254,21 +248,11 @@ export default function GraphicRepresentationsLessonInclusion({
                 ORDINA · METTI IN ORDINE: SCRIVI 1, 2, 3, 4
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {[
-                  { text: "FACCIO UNA DOMANDA", step: 1 },
-                  { text: "RACCOLGO LE RISPOSTE", step: 2 },
-                  { text: "SCRIVO LA TABELLA", step: 3 },
-                  { text: "FACCIO IL GRAFICO", step: 4 },
-                ].map((item, idx) => (
-                  <div key={idx} className="p-3.5 bg-white rounded-2xl border border-slate-200 flex items-center justify-between">
-                    <span className="font-extrabold text-xs text-slate-800 uppercase">{item.text}</span>
-                    <span className="w-8 h-8 rounded-xl bg-orange-500 text-white font-black text-sm flex items-center justify-center shadow-sm">
-                      {item.step}
-                    </span>
-                  </div>
-                ))}
-              </div>
+              <TapOrder
+                steps={["FACCIO UNA DOMANDA", "RACCOLGO LE RISPOSTE", "SCRIVO LA TABELLA", "FACCIO IL GRAFICO"]}
+                display={[2, 0, 3, 1]}
+                accent="bg-orange-500"
+              />
 
               {/* V/F */}
               <div className="p-4 rounded-2xl bg-white border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3">
@@ -370,7 +354,6 @@ export default function GraphicRepresentationsLessonInclusion({
                 ].map((row) => {
                   const key = row.fruit.slice(2).trim().toLowerCase();
                   const selectedVal = m10Counts[key];
-                  const isCorrect = selectedVal === row.correct;
 
                   return (
                     <div key={row.fruit} className="p-4 rounded-2xl bg-white border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -918,21 +901,11 @@ export default function GraphicRepresentationsLessonInclusion({
                 ORDINA · I 3 PASSAGGI AL COMPUTER (1, 2, 3)
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="p-3.5 bg-white rounded-2xl border border-slate-200 text-center space-y-2">
-                  <span className="font-extrabold text-xs text-slate-800 uppercase block">SCRIVO LA TABELLA</span>
-                  <span className="w-8 h-8 mx-auto rounded-xl bg-indigo-600 text-white font-black text-sm flex items-center justify-center">1</span>
-                </div>
-                <div className="p-3.5 bg-white rounded-2xl border border-slate-200 text-center space-y-2">
-                  <span className="font-extrabold text-xs text-slate-800 uppercase block">LA COLORO CON IL MOUSE</span>
-                  <span className="w-8 h-8 mx-auto rounded-xl bg-indigo-600 text-white font-black text-sm flex items-center justify-center">2</span>
-                </div>
-                <div className="p-3.5 bg-white rounded-2xl border border-slate-200 text-center space-y-2">
-                  <span className="font-extrabold text-xs text-slate-800 uppercase block">CLICCO INSERISCI ➔ GRAFICO</span>
-                  <span className="w-8 h-8 mx-auto rounded-xl bg-indigo-600 text-white font-black text-sm flex items-center justify-center">3</span>
-                </div>
-              </div>
-
+              <TapOrder
+                steps={["SCRIVO LA TABELLA", "LA COLORO CON IL MOUSE", "CLICCO INSERISCI ➔ GRAFICO"]}
+                display={[1, 2, 0]}
+                accent="bg-indigo-600"
+              />
               {/* V/F */}
               <div className="p-4 rounded-2xl bg-white border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
                 <span className="font-black text-xs uppercase text-slate-800">

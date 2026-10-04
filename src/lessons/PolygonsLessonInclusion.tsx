@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import {
-  ArrowLeft, Volume2, VolumeX, Sparkles, CheckCircle2, XCircle,
-  HelpCircle, ChevronRight, ChevronLeft, Award, RotateCcw,
-  BookOpen, Zap, Check, X, Shapes, Ruler
+  ArrowLeft, Volume2, VolumeX, ChevronRight, ChevronLeft, BookOpen, Zap
 } from "lucide-react";
 import { useSpeech } from "../hooks/useSpeech";
 
@@ -24,6 +22,13 @@ const INCLUSION_MODULES = [
   { id: "mod5", title: "5. L'Esagono delle Api", short: "5. Le Api & Esagoni" },
 ];
 
+// Sottoargomento scelto nell'indice → scheda da aprire
+const SUBTOPIC_TO_MODULE: Record<string, string> = {
+  "polygon-characteristics": "mod1",
+  "polygon-perimeter": "mod3",
+  "regular-polygons-properties": "mod5",
+};
+
 export default function PolygonsLessonInclusion({
   onBack,
   subjectName,
@@ -32,7 +37,9 @@ export default function PolygonsLessonInclusion({
   initialTab = "impara",
 }: Props) {
   const [activeTab, setActiveTab] = useState<"impara" | "allena">(initialTab);
-  const [activeModuleId, setActiveModuleId] = useState<string>("mod1");
+  const [activeModuleId, setActiveModuleId] = useState<string>(
+    () => SUBTOPIC_TO_MODULE[initialSubtopicId ?? ""] ?? "mod1"
+  );
 
   // TTS
   const { ttsEnabled, speak, toggleTts } = useSpeech();

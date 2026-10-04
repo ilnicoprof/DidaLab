@@ -1,10 +1,9 @@
 import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  ArrowLeft, BookOpen, Zap, CheckCircle2, XCircle, Sparkles,
-  ChevronRight, RotateCcw, AlertCircle, Info, Award, HelpCircle,
-  Hash, Layers, Check, X, Star, Box, Grid, Globe, Trophy
+  ArrowLeft, BookOpen, Zap, AlertCircle, Box, Grid, Trophy
 } from "lucide-react";
+import { superscript } from "../lib/math";
 
 interface Props {
   key?: string;
@@ -26,7 +25,6 @@ const SUBTOPICS = [
 export default function PowersLesson({
   onBack,
   subjectName,
-  topicName,
   initialSubtopicId,
   initialTab = "impara",
 }: Props) {
@@ -49,10 +47,14 @@ export default function PowersLesson({
   const [geoLato, setGeoLato] = useState<number>(3);
 
   // Modulo 3 & 4: Laboratorio Proprietà
-  const [propRule, setPropRule] = useState<"prodBase" | "quotBase" | "powPow" | "prodExp" | "quotExp">("prodBase");
   const [propA, setPropA] = useState<number>(4);
   const [propM, setPropM] = useState<number>(3);
   const [propN, setPropN] = useState<number>(2);
+
+  // Modulo 4: Laboratorio Stesso Esponente
+  const [expBaseA, setExpBaseA] = useState<number>(12);
+  const [expBaseB, setExpBaseB] = useState<number>(3);
+  const [expN, setExpN] = useState<number>(3);
 
   // Modulo 5: Notazione Scientifica
   const [giantNumber, setGiantNumber] = useState<number>(85000000000);
@@ -62,19 +64,16 @@ export default function PowersLesson({
   // ==========================================
   const [exBaseAnswers, setExBaseAnswers] = useState<Record<number, string | null>>({});
   const [exPropAnswers, setExPropAnswers] = useState<Record<number, string | null>>({});
-  const [exSciAnswers, setExSciAnswers] = useState<Record<number, string | null>>({});
   const [invalsiAnswers, setInvalsiAnswers] = useState<Record<string, any>>({});
   const [vfAnswers, setVfAnswers] = useState<Record<number, boolean | null>>({});
 
   // Calcolo notazione scientifica di giantNumber
   const sciInfo = useMemo(() => {
-    if (giantNumber <= 0) return { k: 0, exp: 0, order: 1 };
+    if (giantNumber <= 0) return { k: 0, exp: 0, orderExp: 0 };
     const exp = Math.floor(Math.log10(giantNumber));
     const k = giantNumber / Math.pow(10, exp);
-    // Ordine di grandezza: potenza di 10 più vicina
-    const lowerP = Math.pow(10, exp);
-    const upperP = Math.pow(10, exp + 1);
-    const orderExp = (giantNumber - lowerP) < (upperP - giantNumber) ? exp : exp + 1;
+    // Ordine di grandezza (regola dei libri di testo): k < 5 → 10^n, k ≥ 5 → 10^(n+1)
+    const orderExp = k < 5 ? exp : exp + 1;
 
     return {
       k: Math.round(k * 100) / 100,
@@ -609,6 +608,46 @@ export default function PowersLesson({
                     </div>
                   </div>
 
+                  {/* Laboratorio: prova tu con basi ed esponente a scelta */}
+                  <div className="p-6 rounded-3xl bg-purple-50/60 border-2 border-purple-200 space-y-4">
+                    <p className="text-xs font-black uppercase text-purple-700 text-center">Laboratorio · Prova con i tuoi numeri</p>
+                    <div className="flex flex-wrap justify-center gap-4">
+                      {[
+                        { label: "Base a", value: expBaseA, set: setExpBaseA, min: 1, max: 20 },
+                        { label: "Base b", value: expBaseB, set: setExpBaseB, min: 1, max: 20 },
+                        { label: "Esponente n", value: expN, set: setExpN, min: 0, max: 4 },
+                      ].map((f) => (
+                        <label key={f.label} className="flex flex-col items-center gap-1 text-[11px] font-bold uppercase text-slate-500">
+                          {f.label}
+                          <input
+                            type="number"
+                            min={f.min}
+                            max={f.max}
+                            value={f.value}
+                            onChange={(e) => f.set(Math.min(f.max, Math.max(f.min, parseInt(e.target.value) || f.min)))}
+                            className="w-20 text-center text-xl font-mono font-black bg-white border-2 border-purple-300 rounded-xl py-1 text-slate-800 focus:outline-none focus:border-purple-600"
+                          />
+                        </label>
+                      ))}
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 font-mono text-sm font-bold text-center">
+                      <div className="p-3 bg-white rounded-xl border border-blue-200 text-slate-800">
+                        {expBaseA}{superscript(expN)} × {expBaseB}{superscript(expN)} = ({expBaseA} × {expBaseB}){superscript(expN)} = {expBaseA * expBaseB}{superscript(expN)} ={" "}
+                        <span className="text-dida-blue">{Math.pow(expBaseA * expBaseB, expN).toLocaleString("it-IT")}</span>
+                      </div>
+                      <div className="p-3 bg-white rounded-xl border border-emerald-200 text-slate-800">
+                        {expBaseA % expBaseB === 0 ? (
+                          <>
+                            {expBaseA}{superscript(expN)} : {expBaseB}{superscript(expN)} = ({expBaseA} : {expBaseB}){superscript(expN)} = {expBaseA / expBaseB}{superscript(expN)} ={" "}
+                            <span className="text-emerald-700">{Math.pow(expBaseA / expBaseB, expN).toLocaleString("it-IT")}</span>
+                          </>
+                        ) : (
+                          <span className="text-xs font-sans text-slate-500">Per il quoziente scegli a divisibile per b (es. 12 e 3).</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Problema Pratico */}
                   <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200 space-y-2">
                     <h4 className="font-black text-slate-800 text-center">
@@ -663,10 +702,10 @@ export default function PowersLesson({
                   <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200 space-y-3 text-center">
                     <h3 className="text-lg font-black text-slate-800">Cos'è l'Ordine di Grandezza?</h3>
                     <p className="text-xs text-slate-600 max-w-xl mx-auto">
-                      È la <strong>potenza di 10 più vicina</strong> al numero dato. Serve per capire subito "quanto è grande" una quantità (migliaia? milioni? miliardi?) senza perdersi nei dettagli:
+                      È la <strong>potenza di 10 a cui il numero si avvicina di più</strong>. Si scrive il numero in notazione scientifica k × 10ⁿ: se <strong>k &lt; 5</strong> l'ordine di grandezza è 10ⁿ, se <strong>k ≥ 5</strong> è 10ⁿ⁺¹. Serve per capire subito "quanto è grande" una quantità (migliaia? milioni? miliardi?):
                     </p>
                     <div className="p-4 bg-white rounded-2xl border border-slate-200 inline-block text-xs font-mono text-slate-700">
-                      10³ (1000) &lt; 8500 &lt; 10⁴ (10.000) → 8500 è più vicino a 10.000 → <strong>Ordine di grandezza = 10⁴</strong>
+                      8500 = 8,5 × 10³ → k = 8,5 ≥ 5 → <strong>Ordine di grandezza = 10⁴</strong>
                     </div>
                   </div>
 

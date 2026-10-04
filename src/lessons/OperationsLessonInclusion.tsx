@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  ArrowLeft, Volume2, VolumeX, Sparkles, CheckCircle2, XCircle,
-  HelpCircle, ChevronRight, ChevronLeft, Award, RotateCcw,
-  BookOpen, Zap, Check, X, Star, Plus, Minus, Divide
+  ArrowLeft, Volume2, VolumeX, ChevronRight, ChevronLeft, BookOpen, Zap, Star
 } from "lucide-react";
 import { useSpeech } from "../hooks/useSpeech";
 
@@ -28,7 +26,6 @@ const INCLUSION_MODULES = [
 export default function OperationsLessonInclusion({
   onBack,
   subjectName,
-  topicName,
   initialSubtopicId,
   initialTab = "impara",
 }: Props) {
@@ -42,13 +39,12 @@ export default function OperationsLessonInclusion({
   const [activeModuleId, setActiveModuleId] = useState<string>(getInitialModId);
 
   // Sintesi Vocale
-  const { ttsEnabled, isSpeaking, speak, stop, toggleTts } = useSpeech();
+  const { ttsEnabled, speak, toggleTts } = useSpeech();
 
   // Stati Esercizi Inclusione
   const [q1Answer, setQ1Answer] = useState<number | null>(null);
   const [q2Answer, setQ2Answer] = useState<boolean | null>(null);
   const [q3Answer, setQ3Answer] = useState<number | null>(null);
-  const [q4Answer, setQ4Answer] = useState<string | null>(null);
 
   const currentModIndex = INCLUSION_MODULES.findIndex(m => m.id === activeModuleId);
 

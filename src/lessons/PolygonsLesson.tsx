@@ -1,10 +1,7 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { AnimatePresence } from "motion/react";
 import {
-  ArrowLeft, Volume2, Sparkles, CheckCircle2, XCircle,
-  HelpCircle, ChevronRight, ChevronLeft, Award, RotateCcw,
-  BookOpen, Zap, Info, Check, X, AlertCircle, Grid, Sliders,
-  Shapes, LayoutGrid, Ruler, Layers
+  ArrowLeft, BookOpen, Zap
 } from "lucide-react";
 
 interface Props {
@@ -101,8 +98,6 @@ export default function PolygonsLesson({
   // INVALSI 2: Prato a scalini (10m x 5m)
   const [inv2Choice, setInv2Choice] = useState<string | null>(null);
 
-  // INVALSI 3: Ottagono sul reticolo
-  const [inv3Answer, setInv3Answer] = useState<string | null>(null);
 
   // Sfida Finale V/F
   const [vfAnswers, setVfAnswers] = useState<Record<string, boolean | null>>({});
@@ -415,7 +410,7 @@ export default function PolygonsLesson({
                       <h4 className="text-lg font-black text-slate-800">Ogni lato &lt; Somma degli altri</h4>
                       <p className="text-xs text-slate-600 leading-relaxed">
                         Un poligono si può chiudere <strong>SOLO SE</strong> ciascun lato è <strong>minore della somma di tutti gli altri lati</strong>!
-                        Se un lato è troppo lungo ($14 &gt; 2 + 4 + 5 = 11$), i lati non si toccano e la spezzata resta aperta!
+                        Se un lato è troppo lungo (14 &gt; 2 + 4 + 5 = 11), i lati non si toccano e la spezzata resta aperta!
                       </p>
                     </div>
 
@@ -425,7 +420,7 @@ export default function PolygonsLesson({
                       </span>
                       <h4 className="text-lg font-black text-slate-800">Il Giro Completo</h4>
                       <p className="text-xs text-slate-600 leading-relaxed">
-                        Il perimetro ($2p$) è la somma di tutti i lati. Due figure sono <strong>isoperimetriche</strong> quando hanno lo <strong>stesso perimetro</strong>, anche se hanno forma completamente diversa (come lo spago chiuso di 60 cm)!
+                        Il perimetro (2p) è la somma di tutti i lati. Due figure sono <strong>isoperimetriche</strong> quando hanno lo <strong>stesso perimetro</strong>, anche se hanno forma completamente diversa (come lo spago chiuso di 60 cm)!
                       </p>
                     </div>
                   </div>
@@ -637,7 +632,7 @@ export default function PolygonsLesson({
                       </span>
                       <h4 className="text-lg font-black text-slate-800 font-mono">n − 3 diagonali</h4>
                       <p className="text-xs text-slate-600">
-                        Da un vertice non puoi andare verso se stesso e verso i 2 vertici vicini, quindi escono sempre $n - 3$ diagonali!
+                        Da un vertice non puoi andare verso se stesso e verso i 2 vertici vicini, quindi escono sempre n - 3 diagonali!
                       </p>
                     </div>
 
@@ -1117,7 +1112,7 @@ export default function PolygonsLesson({
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {[
                   { id: "a", label: "A) Sì, 15 m" },
-                  { id: "b", label: "B) Sì, 30 m (Corretto)" },
+                  { id: "b", label: "B) Sì, 30 m" },
                   { id: "c", label: "C) Sì, 50 m" },
                   { id: "d", label: "D) Non si può" },
                 ].map((opt) => (

@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  ArrowLeft, BookOpen, Zap, CheckCircle2, XCircle, Sparkles,
-  Layers, HelpCircle, ChevronRight, RotateCcw, AlertCircle, Info, Award
+  ArrowLeft, BookOpen, Zap, Sparkles, RotateCcw
 } from "lucide-react";
 
 interface Props {
@@ -23,7 +22,7 @@ const SET_SUBTOPICS = [
   { id: "intersection-union", title: "Intersezione e Unione", desc: "Elementi in comune (∩), unione complessiva (∪) e insiemi disgiunti" },
 ];
 
-export default function SetsLesson({ onBack, subjectName, topicName, initialSubtopicId, initialTab = "impara" }: Props) {
+export default function SetsLesson({ onBack, subjectName, initialSubtopicId, initialTab = "impara" }: Props) {
   const [activeTab, setActiveTab] = useState<"impara" | "allena">(initialTab);
   const [selectedSubtopic, setSelectedSubtopic] = useState<string>(
     initialSubtopicId && SET_SUBTOPICS.some(s => s.id === initialSubtopicId)

@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  ArrowLeft, BookOpen, Zap, CheckCircle2, XCircle, Sparkles,
-  BarChart3, PieChart, LineChart, Table as TableIcon, Smile,
-  RotateCcw, Info, Award, HelpCircle, ChevronRight,
-  Plus, Trash2, Pencil, Check, X, LayoutGrid
+  ArrowLeft, BookOpen, Zap, Sparkles, BarChart3, PieChart, LineChart, Table as TableIcon,
+  Smile, RotateCcw, Plus, Trash2, Pencil, Check, X, LayoutGrid
 } from "lucide-react";
 
 interface Props {
@@ -58,7 +56,6 @@ const PET_PIE = [
 export default function GraphicRepresentationsLesson({
   onBack,
   subjectName,
-  topicName,
   initialSubtopicId,
   initialTab = "impara",
 }: Props) {

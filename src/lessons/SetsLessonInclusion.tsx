@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  ArrowLeft, Volume2, VolumeX, Sparkles, CheckCircle2, XCircle,
-  HelpCircle, ChevronRight, ChevronLeft, Award, RotateCcw,
-  BookOpen, Zap, FileText, Check, X
+  ArrowLeft, Volume2, VolumeX, ChevronRight, ChevronLeft, BookOpen, Zap, FileText
 } from "lucide-react";
 import { useSpeech } from "../hooks/useSpeech";
 
@@ -31,7 +29,6 @@ const INCLUSION_SET_MODULES = [
 export default function SetsLessonInclusion({
   onBack,
   subjectName,
-  topicName,
   initialSubtopicId,
   initialTab = "impara"
 }: Props) {

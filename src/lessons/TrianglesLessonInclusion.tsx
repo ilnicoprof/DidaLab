@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import {
-  ArrowLeft, Volume2, VolumeX, Sparkles, CheckCircle2, XCircle,
-  HelpCircle, ChevronRight, ChevronLeft, Award, RotateCcw,
-  BookOpen, Zap, Check, X, Triangle, Scale
+  ArrowLeft, Volume2, VolumeX, ChevronRight, ChevronLeft, BookOpen, Zap
 } from "lucide-react";
 import { useSpeech } from "../hooks/useSpeech";
 
@@ -24,6 +22,15 @@ const INCLUSION_MODULES = [
   { id: "mod5", title: "5. I Triangoli Gemelli", short: "5. Triangoli Gemelli" },
 ];
 
+// Sottoargomento scelto nell'indice → scheda da aprire
+const SUBTOPIC_TO_MODULE: Record<string, string> = {
+  "triangles-general-characteristics": "mod1",
+  "triangles-classification": "mod2",
+  "altitudes-medians-orthocenter-centroid": "mod4",
+  "bisectors-axes-incenter-circumcenter": "mod4",
+  "congruence-criteria": "mod5",
+};
+
 export default function TrianglesLessonInclusion({
   onBack,
   subjectName,
@@ -32,7 +39,9 @@ export default function TrianglesLessonInclusion({
   initialTab = "impara",
 }: Props) {
   const [activeTab, setActiveTab] = useState<"impara" | "allena">(initialTab);
-  const [activeModuleId, setActiveModuleId] = useState<string>("mod1");
+  const [activeModuleId, setActiveModuleId] = useState<string>(
+    () => SUBTOPIC_TO_MODULE[initialSubtopicId ?? ""] ?? "mod1"
+  );
 
   // TTS
   const { ttsEnabled, speak, toggleTts } = useSpeech();
