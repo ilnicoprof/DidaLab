@@ -224,6 +224,20 @@ const findLesson = (subtopicId: string | null) => {
   return id ? LESSONS.find(l => l.subtopicIds.includes(id)) : undefined;
 };
 
+/**
+ * Giochi disponibili, indicizzati per argomento (pulsante "Gioca").
+ * Anche i giochi vengono scaricati solo quando servono.
+ */
+const GAMES: { topicIds: string[]; component: ComponentType<{ onBack: () => void }> }[] = [
+  {
+    topicIds: ['set-language'],
+    component: lazy(() => import("./games/bouncer/BouncerGame")),
+  },
+];
+
+const findGame = (topicId: string | undefined) =>
+  topicId ? GAMES.find(g => g.topicIds.includes(topicId)) : undefined;
+
 const LessonLoading = () => (
   <div className="py-24 text-slate-400 font-bold animate-pulse">Caricamento lezione…</div>
 );
@@ -842,7 +856,15 @@ if (import.meta.env.DEV) {
 }
 
 export default function App() {
-  const [view, setView] = useState<'landing' | 'disciplines' | 'subject-detail' | 'quiz-selection' | 'topic-detail' | 'learn-lesson' | 'learn-lesson-inclusion'>('landing');
+  const [view, setView] = useState<'landing' | 'disciplines' | 'subject-detail' | 'quiz-selection' | 'topic-detail' | 'learn-lesson' | 'learn-lesson-inclusion' | 'play-game'>('landing');
+  // Da dove si è aperto il gioco, per tornarci all'uscita
+  const [gameReturnView, setGameReturnView] = useState<'subject-detail' | 'topic-detail'>('subject-detail');
+
+  const openGame = (topic: Topic, from: 'subject-detail' | 'topic-detail') => {
+    setSelectedTopic(topic);
+    setGameReturnView(from);
+    setView('play-game');
+  };
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const [selectedQuizItems, setSelectedQuizItems] = useState<string[]>([]);
@@ -1146,7 +1168,7 @@ export default function App() {
                         <Zap size={16} />
                         Allena
                       </button>
-                      <button id={`gioca-${topic.id}`} onClick={() => { setModalTopic(topic); setModalAction('gioca'); }} className="flex items-center justify-center gap-2 rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-emerald-600 hover:bg-emerald-50 hover:border-emerald-300 transition cursor-pointer">
+                      <button id={`gioca-${topic.id}`} onClick={() => { if (findGame(topic.id)) openGame(topic, 'subject-detail'); else { setModalTopic(topic); setModalAction('gioca'); } }} className="flex items-center justify-center gap-2 rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-emerald-600 hover:bg-emerald-50 hover:border-emerald-300 transition cursor-pointer">
                         <Gamepad size={16} />
                         Gioca
                       </button>
@@ -1304,6 +1326,7 @@ export default function App() {
                           <div className="mt-4 grid grid-cols-3 gap-2 z-10 relative">
                             {(() => {
                               const hasLesson = !!findLesson(subtopic.id);
+                              const hasGame = !!findGame(selectedTopic.id);
                               return (
                                 <>
                                   <button
@@ -1340,7 +1363,14 @@ export default function App() {
                                     <Zap size={16} />
                                     Allena
                                   </button>
-                                  <button className={`flex items-center justify-center gap-2 rounded-2xl border px-3 py-2 text-sm font-semibold hover:bg-slate-50 transition cursor-pointer bg-white ${isBack ? 'border-dida-orange/20 text-slate-700' : 'border-slate-200 text-slate-700'}`}>
+                                  <button
+                                    onClick={() => { if (hasGame) openGame(selectedTopic, 'topic-detail'); }}
+                                    className={`flex items-center justify-center gap-2 rounded-2xl border px-3 py-2 text-sm font-semibold transition ${
+                                      hasGame
+                                        ? `text-emerald-600 hover:bg-emerald-50 cursor-pointer bg-white ${isBack ? 'border-dida-orange/20' : 'border-slate-200 hover:border-emerald-300'}`
+                                        : 'text-slate-400 cursor-not-allowed bg-white/50 border-slate-200'
+                                    }`}
+                                  >
                                     <Gamepad size={16} />
                                     Gioca
                                   </button>
@@ -1399,6 +1429,17 @@ export default function App() {
             </div>
           </motion.div>
         )}
+
+        {view === 'play-game' && selectedTopic && (() => {
+          const game = findGame(selectedTopic.id);
+          if (!game) return null;
+          const Game = game.component;
+          return (
+            <Suspense key={`game-${selectedTopic.id}`} fallback={<LessonLoading />}>
+              <Game onBack={() => setView(gameReturnView)} />
+            </Suspense>
+          );
+        })()}
 
         {(view === 'learn-lesson' || view === 'learn-lesson-inclusion') && selectedSubject && selectedTopic && (() => {
           const lesson = findLesson(selectedSubtopicId);
@@ -1526,7 +1567,7 @@ export default function App() {
       </AnimatePresence>
 
       {/* Powered by ilnicoprof badge */}
-      <div className="fixed bottom-4 right-4 z-40">
+      <div className="fixed bottom-4 right-4 z-40 hidden sm:block">
         <div className="flex items-center gap-2 bg-white/70 backdrop-blur-md border border-slate-200/50 rounded-full pl-1.5 pr-4 py-1.5 shadow-md transition-all opacity-80 hover:opacity-100 hover:shadow-lg hover:bg-white/90">
           <div className="w-8 h-8 rounded-full overflow-hidden bg-white border border-slate-100 shrink-0">
             <img
