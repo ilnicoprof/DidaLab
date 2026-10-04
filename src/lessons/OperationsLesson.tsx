@@ -1,10 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  ArrowLeft, BookOpen, Zap, CheckCircle2, XCircle, Sparkles,
-  ChevronRight, RotateCcw, AlertCircle, Info, Award, HelpCircle,
-  Plus, Minus, X, Divide, Calculator, ShoppingBag, SplitSquareVertical,
-  Check, Star, Users, DollarSign
+  ArrowLeft, BookOpen, Zap, Award
 } from "lucide-react";
 
 interface Props {
@@ -28,7 +25,6 @@ const SUBTOPICS = [
 export default function OperationsLesson({
   onBack,
   subjectName,
-  topicName,
   initialSubtopicId,
   initialTab = "impara",
 }: Props) {
@@ -70,8 +66,6 @@ export default function OperationsLesson({
   // --- STATI ESERCIZI (ALLENA) ---
   // ==========================================
   const [exPropAnswers, setExPropAnswers] = useState<Record<number, string | null>>({});
-  const [exMentalAnswers, setExMentalAnswers] = useState<Record<number, string>>({});
-  const [exZeroAnswers, setExZeroAnswers] = useState<Record<number, string | null>>({});
   const [exExprAnswers, setExExprAnswers] = useState<Record<number, number | null>>({});
   const [invalsiAnswers, setInvalsiAnswers] = useState<Record<string, any>>({});
   const [vfAnswers, setVfAnswers] = useState<Record<number, boolean | null>>({});

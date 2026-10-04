@@ -5,3 +5,7 @@ coverage/
 .DS_Store
 *.log
 .env*
+
+# File privati: linee guida e regole per l'assistente di programmazione
+DIDALAB_LINEE_GUIDA.txt
+DIDALAB_REGOLE_QUALITA.md

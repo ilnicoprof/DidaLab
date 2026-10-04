@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  ArrowLeft, Volume2, Sparkles, CheckCircle2, XCircle,
-  HelpCircle, ChevronRight, ChevronLeft, Award, RotateCcw,
-  BookOpen, Zap, Info, Check, X, AlertCircle, Grid, Sliders,
-  Triangle, Scale, Target, Disc, Move, Compass, Layers
+  ArrowLeft, BookOpen, Zap
 } from "lucide-react";
 
 interface Props {
@@ -102,10 +99,6 @@ export default function TrianglesLesson({
 
   // INVALSI 2: Altezze nascoste nell'ottusangolo
   const [inv2Choice, setInv2Choice] = useState<string | null>(null);
-
-  // INVALSI 3: Ombre e sole a 45°
-  const [inv3Alpha, setInv3Alpha] = useState<string>("");
-  const [inv3Submitted, setInv3Submitted] = useState<boolean>(false);
 
   // Sfida Finale V/F
   const [vfAnswers, setVfAnswers] = useState<Record<string, boolean | null>>({});
@@ -408,7 +401,7 @@ export default function TrianglesLesson({
                       <ul className="text-xs text-slate-700 space-y-2 leading-relaxed">
                         <li>• <strong>Scaleno:</strong> 3 lati completamente diversi tra loro.</li>
                         <li>• <strong>Isoscele:</strong> 2 lati congruenti (lati obliqui) e <strong>angoli alla base uguali</strong>!</li>
-                        <li>• <strong>Equilatero:</strong> 3 lati uguali e 3 angoli di <strong>60° ciascuno</strong> ($180° : 3 = 60°$). È un poligono regolare!</li>
+                        <li>• <strong>Equilatero:</strong> 3 lati uguali e 3 angoli di <strong>60° ciascuno</strong> (180° : 3 = 60°). È un poligono regolare!</li>
                       </ul>
                     </div>
 
@@ -783,6 +776,79 @@ export default function TrianglesLesson({
                       </p>
                     </div>
 
+                    <div className="flex justify-center flex-wrap gap-2">
+                      {([
+                        { id: 1, label: "1° L-A-L" },
+                        { id: 2, label: "2° A-L-A" },
+                        { id: 3, label: "3° L-L-L" },
+                      ] as const).map((c) => (
+                        <button
+                          key={c.id}
+                          onClick={() => setActiveCriterion(c.id)}
+                          className={`px-4 py-2 rounded-xl text-xs font-bold border transition cursor-pointer ${
+                            activeCriterion === c.id ? "bg-dida-blue text-white border-dida-blue shadow-sm" : "bg-white text-slate-700 border-slate-300 hover:bg-slate-100"
+                          }`}
+                        >
+                          {c.label}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* I due triangoli: in evidenza i 3 elementi che il criterio chiede di confrontare */}
+                    {(() => {
+                      const A = { x: 20, y: 150 };
+                      const B = { x: 150, y: 150 };
+                      const C = { x: 60, y: 45 };
+                      const sides = { AB: [A, B], AC: [A, C], BC: [B, C] } as const;
+                      const given = {
+                        1: { sides: ["AB", "AC"], angles: ["A"] },
+                        2: { sides: ["AB"], angles: ["A", "B"] },
+                        3: { sides: ["AB", "AC", "BC"], angles: [] },
+                      }[activeCriterion];
+                      const arc = (v: { x: number; y: number }, p: { x: number; y: number }, q: { x: number; y: number }) => {
+                        const r = 22;
+                        const u = (t: { x: number; y: number }) => {
+                          const d = Math.hypot(t.x - v.x, t.y - v.y);
+                          return { x: v.x + ((t.x - v.x) / d) * r, y: v.y + ((t.y - v.y) / d) * r };
+                        };
+                        const s1 = u(p);
+                        const s2 = u(q);
+                        return `M ${v.x} ${v.y} L ${s1.x} ${s1.y} A ${r} ${r} 0 0 ${v === A ? 0 : 1} ${s2.x} ${s2.y} Z`;
+                      };
+                      const angles = { A: arc(A, B, C), B: arc(B, A, C) } as const;
+                      const Triangle = ({ color }: { color: string }) => (
+                        <>
+                          <polygon points={`${A.x},${A.y} ${B.x},${B.y} ${C.x},${C.y}`} fill={color} fillOpacity="0.15" stroke="#94A3B8" strokeWidth="2" />
+                          {given.angles.map((k) => (
+                            <path key={k} d={angles[k as "A" | "B"]} fill={color} fillOpacity="0.55" />
+                          ))}
+                          {given.sides.map((k) => {
+                            const [p, q] = sides[k as keyof typeof sides];
+                            return <line key={k} x1={p.x} y1={p.y} x2={q.x} y2={q.y} stroke={color} strokeWidth="5" strokeLinecap="round" />;
+                          })}
+                        </>
+                      );
+                      return (
+                        <div className="bg-white rounded-3xl border border-slate-200 p-4 flex justify-center">
+                          <svg viewBox="0 0 360 170" className="w-full max-w-lg">
+                            <Triangle color="#2563EB" />
+                            <motion.g
+                              initial={false}
+                              animate={{ x: congruenceOverlay ? 0 : 190, opacity: congruenceOverlay ? 0.75 : 1 }}
+                              transition={{ duration: 0.8, ease: "easeInOut" }}
+                            >
+                              <Triangle color="#EA580C" />
+                            </motion.g>
+                          </svg>
+                        </div>
+                      );
+                    })()}
+                    <p className="text-xs text-center text-slate-600 font-medium">
+                      {activeCriterion === 1 && "Se due lati e l'angolo tra loro sono uguali, il terzo lato è obbligato: i triangoli coincidono."}
+                      {activeCriterion === 2 && "Se un lato e i due angoli ai suoi estremi sono uguali, le altre due semirette si incontrano nello stesso punto."}
+                      {activeCriterion === 3 && "Con tre lati uguali c'è un solo modo di chiudere il triangolo: il telaio è rigido!"}
+                    </p>
+
                     <div className="flex justify-center gap-3">
                       <button
                         onClick={() => setCongruenceOverlay(!congruenceOverlay)}
@@ -853,7 +919,7 @@ export default function TrianglesLesson({
                   { id: "a", label: "A) 6,5 cm" },
                   { id: "b", label: "B) 10 cm" },
                   { id: "c", label: "C) 15,5 cm" },
-                  { id: "d", label: "D) 17 cm (Non può essere!)" },
+                  { id: "d", label: "D) 17 cm" },
                 ].map((opt) => (
                   <button
                     key={opt.id}

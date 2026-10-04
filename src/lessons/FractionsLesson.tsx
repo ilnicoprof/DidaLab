@@ -1,11 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  ArrowLeft, BookOpen, Zap, CheckCircle2, XCircle, Sparkles,
-  ChevronRight, RotateCcw, AlertCircle, Info, Award, HelpCircle,
-  Hash, Scissors, RefreshCw, Check, X, Star, Users, Search,
-  PieChart, Scale, ArrowRight, Layers, HelpCircle as QuestionIcon,
-  CheckCircle, BatteryCharging, Gamepad2, Timer, Bookmark
+  ArrowLeft, BookOpen, Zap, AlertCircle, Award, BatteryCharging, Gamepad2, Timer
 } from "lucide-react";
 
 interface Props {
@@ -57,7 +53,6 @@ const SUBTOPICS = [
 export default function FractionsLesson({
   onBack,
   subjectName,
-  topicName,
   initialSubtopicId,
   initialTab = "impara",
 }: Props) {

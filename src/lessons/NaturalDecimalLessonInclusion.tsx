@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  ArrowLeft, Volume2, VolumeX, Sparkles, CheckCircle2, XCircle,
-  HelpCircle, ChevronRight, ChevronLeft, Award, RotateCcw,
-  BookOpen, Zap, Check, X, Hand, Star
+  ArrowLeft, Volume2, VolumeX, ChevronRight, ChevronLeft, BookOpen, Zap, Star
 } from "lucide-react";
 import { useSpeech } from "../hooks/useSpeech";
 
@@ -28,7 +26,6 @@ const INCLUSION_MODULES = [
 export default function NaturalDecimalLessonInclusion({
   onBack,
   subjectName,
-  topicName,
   initialSubtopicId,
   initialTab = "impara",
 }: Props) {
@@ -42,18 +39,16 @@ export default function NaturalDecimalLessonInclusion({
   const [activeModuleId, setActiveModuleId] = useState<string>(getInitialModId);
 
   // Sintesi Vocale
-  const { ttsEnabled, isSpeaking, speak, stop, toggleTts } = useSpeech();
+  const { ttsEnabled, speak, toggleTts } = useSpeech();
 
   // Stati Interattivi Inclusione
   const [selectedBallCount, setSelectedBallCount] = useState<number>(4);
   const [pizzaFetteInc, setPizzaFetteInc] = useState<number>(1);
-  const [compChoice, setCompChoice] = useState<number | null>(null);
 
   // Stati Esercizi Inclusione
   const [q1Answer, setQ1Answer] = useState<number | null>(null);
   const [q2Answer, setQ2Answer] = useState<string | null>(null);
   const [q3Answer, setQ3Answer] = useState<boolean | null>(null);
-  const [q4Answer, setQ4Answer] = useState<number | null>(null);
 
   const currentModIndex = INCLUSION_MODULES.findIndex(m => m.id === activeModuleId);
 

@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import {
-  ArrowLeft, Volume2, VolumeX, Sparkles, CheckCircle2, XCircle,
-  ChevronRight, ChevronLeft, Award, RotateCcw, BookOpen, Zap,
-  Check, X, Box, Layers, Cuboid, HelpCircle
+  ArrowLeft, Volume2, VolumeX, XCircle, ChevronRight, ChevronLeft, Award, RotateCcw,
+  BookOpen, Zap, Check, X
 } from "lucide-react";
 import { useSpeech } from "../hooks/useSpeech";
 
@@ -23,15 +22,24 @@ const INCLUSION_MODULES = [
   { id: "mod4", title: "4. Il Quadrato di Binomio", short: "4. Il Quadrato Magico" },
 ];
 
+// Sottoargomento scelto nell'indice → scheda da aprire
+const SUBTOPIC_TO_MODULE: Record<string, string> = {
+  "literal-expressions-intro": "mod1",
+  "monomials-def-characteristics": "mod2",
+  "monomials-operations-rules": "mod3",
+  "polynomials-def-operations": "mod3",
+  "special-products-shortcuts": "mod4",
+};
+
 export default function LiteralCalculusLessonInclusion({
   onBack,
-  subjectName,
-  topicName,
   initialSubtopicId,
   initialTab = "impara",
 }: Props) {
   const [activeTab, setActiveTab] = useState<"impara" | "allena">(initialTab);
-  const [activeModuleId, setActiveModuleId] = useState<string>("mod1");
+  const [activeModuleId, setActiveModuleId] = useState<string>(
+    () => SUBTOPIC_TO_MODULE[initialSubtopicId ?? ""] ?? "mod1"
+  );
 
   // TTS
   const { ttsEnabled, speak, toggleTts } = useSpeech();

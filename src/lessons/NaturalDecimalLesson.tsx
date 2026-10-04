@@ -1,9 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  ArrowLeft, BookOpen, Zap, CheckCircle2, XCircle, Sparkles,
-  ChevronRight, RotateCcw, AlertCircle, Info, Award, HelpCircle,
-  Hash, ArrowUpDown, PieChart, Layers, Sliders, Check, X, ShoppingCart, Calculator
+  ArrowLeft, BookOpen, Zap, AlertCircle, Award, X
 } from "lucide-react";
 
 interface Props {
@@ -27,7 +25,6 @@ const SUBTOPICS = [
 export default function NaturalDecimalLesson({
   onBack,
   subjectName,
-  topicName,
   initialSubtopicId,
   initialTab = "impara",
 }: Props) {
@@ -76,9 +73,6 @@ export default function NaturalDecimalLesson({
   // ==========================================
   const [exNatAnswers, setExNatAnswers] = useState<Record<number, string>>({});
   const [exCompAnswers, setExCompAnswers] = useState<Record<number, "<" | "=" | ">" | null>>({});
-  const [exDecAnswers, setExDecAnswers] = useState<Record<number, string>>({});
-  const [exPolyAnswers, setExPolyAnswers] = useState<Record<number, number | null>>({});
-  const [exRoundAnswers, setExRoundAnswers] = useState<Record<number, number | null>>({});
   const [invalsiAnswers, setInvalsiAnswers] = useState<Record<string, any>>({});
   const [eliminaSelected, setEliminaSelected] = useState<number[]>([]);
   const [vfAnswers, setVfAnswers] = useState<Record<number, boolean | null>>({});
@@ -147,7 +141,6 @@ export default function NaturalDecimalLesson({
 
   // Calcolo arrotondamento
   const roundInfo = useMemo(() => {
-    let factor = 1;
     let desc = "alle unità";
     let placeDigit = 0;
     let nextDigit = 0;
@@ -155,31 +148,26 @@ export default function NaturalDecimalLesson({
 
     const num = roundNumber;
     if (roundTarget === "k") {
-      factor = 1000;
       desc = "alle migliaia";
       placeDigit = Math.floor(Math.abs(num) / 1000) % 10;
       nextDigit = Math.floor(Math.abs(num) / 100) % 10;
       rounded = Math.round(num / 1000) * 1000;
     } else if (roundTarget === "da") {
-      factor = 10;
       desc = "alle decine";
       placeDigit = Math.floor(Math.abs(num) / 10) % 10;
       nextDigit = Math.floor(Math.abs(num)) % 10;
       rounded = Math.round(num / 10) * 10;
     } else if (roundTarget === "u") {
-      factor = 1;
       desc = "alle unità";
       placeDigit = Math.floor(Math.abs(num)) % 10;
       nextDigit = Math.floor((Math.abs(num) * 10) % 10);
       rounded = Math.round(num);
     } else if (roundTarget === "decimi") {
-      factor = 0.1;
       desc = "ai decimi";
       placeDigit = Math.floor((Math.abs(num) * 10) % 10);
       nextDigit = Math.floor((Math.abs(num) * 100) % 10);
       rounded = Math.round(num * 10) / 10;
     } else if (roundTarget === "centesimi") {
-      factor = 0.01;
       desc = "ai centesimi";
       placeDigit = Math.floor((Math.abs(num) * 100) % 10);
       nextDigit = Math.floor((Math.abs(num) * 1000) % 10);
@@ -1565,7 +1553,7 @@ export default function NaturalDecimalLesson({
                         }}
                         className={`w-14 h-14 rounded-2xl font-mono text-lg font-black transition border-2 cursor-pointer ${
                           isChosen
-                            ? num === 65
+                            ? !isEliminated
                               ? "bg-emerald-500 text-white border-emerald-600 scale-110 shadow-lg"
                               : "bg-rose-500 text-white border-rose-600 line-through opacity-70"
                             : "bg-white text-slate-800 border-slate-300 hover:border-amber-400"
@@ -1720,8 +1708,6 @@ export default function NaturalDecimalLesson({
                     { id: 6, text: "Il numero 6,48 arrotondato ai decimi con la regola del 5 diventa ≈ 6,5.", correct: true, note: "Vero: l'8 sui centesimi è ≥ 5, quindi arrotondiamo per eccesso." },
                   ].map((q) => {
                     const ans = vfAnswers[q.id];
-                    const isAnswered = ans !== undefined && ans !== null;
-                    const isRight = isAnswered && ans === q.correct;
 
                     return (
                       <div key={q.id} className="p-3.5 rounded-2xl bg-white border border-slate-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">

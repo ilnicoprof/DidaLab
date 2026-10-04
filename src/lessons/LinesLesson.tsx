@@ -1,10 +1,7 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { AnimatePresence } from "motion/react";
 import {
-  ArrowLeft, Volume2, Sparkles, CheckCircle2, XCircle,
-  HelpCircle, ChevronRight, ChevronLeft, Award, RotateCcw,
-  BookOpen, Zap, Info, Check, X, AlertCircle, Grid, Sliders,
-  Move, Scissors, Ruler, Split, Layers, Sun
+  ArrowLeft, BookOpen, Zap
 } from "lucide-react";
 
 interface Props {
@@ -96,8 +93,6 @@ export default function LinesLesson({
   // INVALSI 1: Foglio Piegato
   const [inv1Choice, setInv1Choice] = useState<string | null>(null);
 
-  // INVALSI 2: Squadra che scorre lungo la riga
-  const [inv2Choice, setInv2Choice] = useState<string | null>(null);
 
   // INVALSI 3: Trasversale con DAC = 55°
   const [inv3Choice, setInv3Choice] = useState<string | null>(null);
@@ -351,8 +346,8 @@ export default function LinesLesson({
                     </span>
                     <h4 className="text-lg font-black text-slate-800">Unicità della Perpendicolare</h4>
                     <p className="text-xs text-slate-600 leading-relaxed">
-                      Per un punto $P$ (che si trovi sulla retta o fuori da essa) passa <strong>UNA E UNA SOLA perpendicolare</strong> alla retta data!
-                      Il punto d'incrocio $H$ sulla retta prende il nome ufficiale di <strong>piede della perpendicolare</strong>.
+                      Per un punto P (che si trovi sulla retta o fuori da essa) passa <strong>UNA E UNA SOLA perpendicolare</strong> alla retta data!
+                      Il punto d'incrocio H sulla retta prende il nome ufficiale di <strong>piede della perpendicolare</strong>.
                     </p>
                   </div>
 
@@ -460,7 +455,7 @@ export default function LinesLesson({
                       </span>
                       <h4 className="text-lg font-black text-slate-800">Il Percorso Più Breve</h4>
                       <p className="text-xs text-slate-600 leading-relaxed">
-                        La distanza di un punto da una retta è la lunghezza del <strong>segmento di perpendicolare PH</strong>. Qualsiasi segmento obliquo $PQ$ è più lungo!
+                        La distanza di un punto da una retta è la lunghezza del <strong>segmento di perpendicolare PH</strong>. Qualsiasi segmento obliquo PQ è più lungo!
                         La <strong>proiezione</strong> è l'ombra del segmento: se obliquo è più corta, se parallelo è uguale, se perpendicolare è un solo punto!
                       </p>
                     </div>
@@ -621,7 +616,7 @@ export default function LinesLesson({
                       </span>
                       <h4 className="text-lg font-black text-slate-800">Distanza Rigorosamente Uguale</h4>
                       <p className="text-xs text-slate-600 leading-relaxed">
-                        I segmenti di perpendicolare tra due rette parallele sono tutti identici ($AH \equiv BK \equiv CL$). La distanza tra due parallele è la lunghezza di un qualsiasi segmento di perpendicolare!
+                        I segmenti di perpendicolare tra due rette parallele sono tutti identici (AH ≡ BK ≡ CL). La distanza tra due parallele è la lunghezza di un qualsiasi segmento di perpendicolare!
                       </p>
                     </div>
 
@@ -631,7 +626,7 @@ export default function LinesLesson({
                       </span>
                       <h4 className="text-lg font-black text-slate-800">Una e Una Sola Parallela</h4>
                       <p className="text-xs text-slate-600 leading-relaxed">
-                        Dato un punto esterno $P$ a una retta $r$, esiste <strong>una sola retta passante per P e parallela a r</strong>. È uno dei postulati più celebri della storia della matematica!
+                        Dato un punto esterno P a una retta r, esiste <strong>una sola retta passante per P e parallela a r</strong>. È uno dei postulati più celebri della storia della matematica!
                       </p>
                     </div>
                   </div>
@@ -891,7 +886,7 @@ export default function LinesLesson({
                   { id: "a", label: "A) Perpendicolari e non incidenti" },
                   { id: "b", label: "B) Incidenti e parallele" },
                   { id: "c", label: "C) Parallele e non incidenti" },
-                  { id: "d", label: "D) Incidenti ma non perpendicolari (Corretto)" },
+                  { id: "d", label: "D) Incidenti ma non perpendicolari" },
                 ].map((opt) => (
                   <button
                     key={opt.id}
@@ -926,13 +921,13 @@ export default function LinesLesson({
                 <span className="text-xs text-slate-400 font-bold">6 minuti</span>
               </div>
               <p className="text-sm font-medium text-slate-700">
-                Data una retta trasversale che taglia due parallele $r \parallel s$, quali tra queste coppie di angoli hanno <strong>somma uguale a 180°</strong> (supplementari)?
+                Data una retta trasversale che taglia due parallele r ∥ s, quali tra queste coppie di angoli hanno <strong>somma uguale a 180°</strong> (supplementari)?
               </p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {[
                   { id: "a", label: "A) Alterni interni" },
                   { id: "b", label: "B) Corrispondenti" },
-                  { id: "c", label: "C) Coniugati interni (Corretto)" },
+                  { id: "c", label: "C) Coniugati interni" },
                   { id: "d", label: "D) Alterni esterni" },
                 ].map((opt) => (
                   <button

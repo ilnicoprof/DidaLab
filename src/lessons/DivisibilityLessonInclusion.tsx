@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  ArrowLeft, Volume2, VolumeX, Sparkles, CheckCircle2, XCircle,
-  HelpCircle, ChevronRight, ChevronLeft, Award, RotateCcw,
-  BookOpen, Zap, Check, X, Star, Calendar, Scissors
+  ArrowLeft, Volume2, VolumeX, ChevronRight, ChevronLeft, BookOpen, Zap, Star
 } from "lucide-react";
 import { useSpeech } from "../hooks/useSpeech";
 
@@ -28,7 +26,6 @@ const INCLUSION_MODULES = [
 export default function DivisibilityLessonInclusion({
   onBack,
   subjectName,
-  topicName,
   initialSubtopicId,
   initialTab = "impara",
 }: Props) {
@@ -42,7 +39,7 @@ export default function DivisibilityLessonInclusion({
   const [activeModuleId, setActiveModuleId] = useState<string>(getInitialModId);
 
   // Sintesi Vocale
-  const { ttsEnabled, isSpeaking, speak, stop, toggleTts } = useSpeech();
+  const { ttsEnabled, speak, toggleTts } = useSpeech();
 
   // Stati Esercizi Inclusione
   const [q1Answer, setQ1Answer] = useState<boolean | null>(null);

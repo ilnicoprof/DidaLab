@@ -1,10 +1,32 @@
 import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  ArrowLeft, BookOpen, Zap, CheckCircle2, XCircle, Sparkles,
-  ChevronRight, RotateCcw, AlertCircle, Info, Award, HelpCircle,
-  Hash, Calendar, Scissors, RefreshCw, Check, X, Star, Users, Search
+  ArrowLeft, BookOpen, Zap, RotateCcw, Award, Calendar, Scissors
 } from "lucide-react";
+import { gcd, lcm, divisors, factorSteps, factorize, formatFactors, commonFactors, allFactors } from "../lib/math";
+
+const clampInt = (value: string, min: number, max: number) =>
+  Math.min(max, Math.max(min, parseInt(value) || min));
+
+const NumberField = ({ value, onChange, min, max, label }: {
+  value: number; onChange: (n: number) => void; min: number; max: number; label: string;
+}) => (
+  <label className="flex flex-col items-center gap-1">
+    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">{label}</span>
+    <input
+      type="number"
+      min={min}
+      max={max}
+      value={value}
+      onChange={(e) => onChange(clampInt(e.target.value, min, max))}
+      className="w-28 text-center text-2xl font-mono font-black bg-white border-2 border-slate-300 rounded-2xl py-1.5 text-slate-800 focus:outline-none focus:border-dida-blue"
+    />
+  </label>
+);
+
+/** Elenco con puntini se troppo lungo: mostra i primi elementi e l'ultimo */
+const shortList = (list: number[], max = 12) =>
+  list.length <= max ? list.join(", ") : `${list.slice(0, max - 1).join(", ")}, …, ${list[list.length - 1]}`;
 
 interface Props {
   key?: string;
@@ -27,7 +49,6 @@ const SUBTOPICS = [
 export default function DivisibilityLesson({
   onBack,
   subjectName,
-  topicName,
   initialSubtopicId,
   initialTab = "impara",
 }: Props) {
@@ -66,71 +87,48 @@ export default function DivisibilityLesson({
   // --- STATI ESERCIZI (ALLENA) ---
   // ==========================================
   const [exDivAnswers, setExDivAnswers] = useState<Record<number, string | null>>({});
-  const [exCritAnswers, setExCritAnswers] = useState<Record<number, string | null>>({});
-  const [exCalcAnswers, setExCalcAnswers] = useState<Record<number, number | null>>({});
+  const [exCalcAnswers, setExCalcAnswers] = useState<Record<number, string>>({});
   const [invalsiAnswers, setInvalsiAnswers] = useState<Record<string, any>>({});
   const [vfAnswers, setVfAnswers] = useState<Record<number, boolean | null>>({});
 
   // Calcolo divisori di activeNum
-  const divisoriList = useMemo(() => {
-    const list: number[] = [];
-    const n = Math.abs(activeNum);
-    if (n === 0) return [0];
-    for (let i = 1; i <= n; i++) {
-      if (n % i === 0) list.push(i);
-    }
-    return list;
-  }, [activeNum]);
+  const divisoriList = useMemo(() => divisors(activeNum), [activeNum]);
 
   // Calcolo primi 8 multipli di activeNum
-  const multipliList = useMemo(() => {
-    const list: number[] = [];
-    const n = Math.abs(activeNum);
-    for (let i = 1; i <= 8; i++) {
-      list.push(n * i);
-    }
-    return list;
-  }, [activeNum]);
+  const multipliList = useMemo(
+    () => Array.from({ length: 8 }, (_, i) => activeNum * (i + 1)),
+    [activeNum]
+  );
 
-  // Calcolo M.C.D. tra mcdNumA e mcdNumB
+  // Scomposizione in colonna di treeNum
+  const treeSteps = useMemo(() => factorSteps(treeNum), [treeNum]);
+
+  // Calcolo M.C.D. tra mcdNumA e mcdNumB con i tre metodi
   const mcdCalc = useMemo(() => {
-    const a = Math.abs(mcdNumA) || 1;
-    const b = Math.abs(mcdNumB) || 1;
-
-    // Divisori di A
-    const divA: number[] = [];
-    for (let i = 1; i <= a; i++) if (a % i === 0) divA.push(i);
-
-    // Divisori di B
-    const divB: number[] = [];
-    for (let i = 1; i <= b; i++) if (b % i === 0) divB.push(i);
-
-    // Comuni
+    const a = mcdNumA;
+    const b = mcdNumB;
+    const divA = divisors(a);
+    const divB = divisors(b);
     const common = divA.filter(x => divB.includes(x));
-    const mcd = Math.max(...common);
-
     const soloA = divA.filter(x => !divB.includes(x));
     const soloB = divB.filter(x => !divA.includes(x));
-
-    return { a, b, divA, divB, common, mcd, soloA, soloB };
+    const factA = factorize(a);
+    const factB = factorize(b);
+    return { a, b, divA, divB, common, soloA, soloB, mcd: gcd(a, b), factA, factB, factMcd: commonFactors(factA, factB) };
   }, [mcdNumA, mcdNumB]);
 
-  // Calcolo m.c.m. tra mcmNumA e mcmNumB
+  // Calcolo m.c.m. tra mcmNumA e mcmNumB con i tre metodi
   const mcmCalc = useMemo(() => {
-    const a = Math.abs(mcmNumA) || 1;
-    const b = Math.abs(mcmNumB) || 1;
-
-    // Trova GCD con Euclide
-    const gcd = (x: number, y: number): number => (y === 0 ? x : gcd(y, x % y));
-    const mcdVal = gcd(a, b);
-    const mcm = (a * b) / mcdVal;
-
-    // Multipli primi 10
-    const multA = Array.from({ length: 10 }, (_, i) => a * (i + 1));
-    const multB = Array.from({ length: 10 }, (_, i) => b * (i + 1));
+    const a = mcmNumA;
+    const b = mcmNumB;
+    const mcm = lcm(a, b);
+    // Multipli fino al m.c.m. compreso, più un giro per far vedere che si ripete
+    const multA = Array.from({ length: (2 * mcm) / a }, (_, i) => a * (i + 1));
+    const multB = Array.from({ length: (2 * mcm) / b }, (_, i) => b * (i + 1));
     const commonMult = multA.filter(x => multB.includes(x));
-
-    return { a, b, multA, multB, commonMult, mcm };
+    const factA = factorize(a);
+    const factB = factorize(b);
+    return { a, b, multA, multB, commonMult, mcm, factA, factB, factMcm: allFactors(factA, factB) };
   }, [mcmNumA, mcmNumB]);
 
   return (
@@ -285,7 +283,7 @@ export default function DivisibilityLesson({
                         min="1"
                         max="200"
                         value={activeNum}
-                        onChange={(e) => setActiveNum(Math.max(1, parseInt(e.target.value) || 1))}
+                        onChange={(e) => setActiveNum(clampInt(e.target.value, 1, 200))}
                         className="w-36 text-center text-3xl font-mono font-black bg-white border-2 border-orange-300 rounded-2xl py-2 text-slate-800 focus:outline-none focus:border-dida-orange shadow-xs"
                       />
                     </div>
@@ -497,6 +495,33 @@ export default function DivisibilityLesson({
                       60 = 2 × 2 × 3 × 5 = <span className="text-dida-blue">2² × 3 × 5</span>
                     </div>
 
+                    {/* Laboratorio: scomponi il tuo numero in colonna */}
+                    <div className="p-5 rounded-2xl bg-white border-2 border-purple-200 space-y-4 max-w-xl mx-auto">
+                      <p className="text-xs font-black uppercase text-purple-700 text-center">Laboratorio · Scomponi il tuo numero</p>
+                      <div className="flex justify-center">
+                        <NumberField label="Numero da scomporre" value={treeNum} onChange={setTreeNum} min={2} max={9999} />
+                      </div>
+                      <div className="flex justify-center">
+                        <table className="font-mono text-base font-bold text-slate-800">
+                          <tbody>
+                            {treeSteps.map(([n, p], i) => (
+                              <tr key={i}>
+                                <td className="pr-4 text-right border-r-2 border-slate-400">{n}</td>
+                                <td className="pl-4 text-purple-700">{p}</td>
+                              </tr>
+                            ))}
+                            <tr>
+                              <td className="pr-4 text-right border-r-2 border-slate-400">1</td>
+                              <td />
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <p className="text-center font-mono text-lg font-black text-purple-900">
+                        {treeNum} = {treeSteps.length === 1 ? `${treeNum} (è un numero primo!)` : formatFactors(factorize(treeNum))}
+                      </p>
+                    </div>
+
                     {/* Scorciatoia degli zeri */}
                     <div className="p-4 rounded-2xl bg-amber-50 border border-amber-300 text-center text-xs space-y-1">
                       <span className="text-amber-900 font-bold block">
@@ -584,6 +609,13 @@ export default function DivisibilityLesson({
                     </div>
                   )}
 
+                  {mcdStrategy !== "sacchetti" && (
+                    <div className="flex justify-center gap-6">
+                      <NumberField label="Primo numero" value={mcdNumA} onChange={setMcdNumA} min={1} max={200} />
+                      <NumberField label="Secondo numero" value={mcdNumB} onChange={setMcdNumB} min={1} max={200} />
+                    </div>
+                  )}
+
                   {/* STRATEGIA: Metodo dell'Elenco */}
                   {mcdStrategy === "elenco" && (
                     <div className="p-6 rounded-3xl bg-slate-50 border-2 border-slate-200 space-y-4">
@@ -592,16 +624,20 @@ export default function DivisibilityLesson({
                       </span>
                       <div className="max-w-md mx-auto space-y-3 font-mono text-sm">
                         <div className="p-3 bg-white rounded-xl border border-slate-200">
-                          D(24) = &#123; <strong>1</strong>, <strong>2</strong>, 3, <strong>4</strong>, 6, <strong>8</strong>, 12, 24 &#125;
+                          D({mcdCalc.a}) = &#123; {mcdCalc.divA.map((d, i) => (
+                            <React.Fragment key={d}>{i > 0 && ", "}{mcdCalc.common.includes(d) ? <strong>{d}</strong> : d}</React.Fragment>
+                          ))} &#125;
                         </div>
                         <div className="p-3 bg-white rounded-xl border border-slate-200">
-                          D(32) = &#123; <strong>1</strong>, <strong>2</strong>, <strong>4</strong>, <strong>8</strong>, 16, 32 &#125;
+                          D({mcdCalc.b}) = &#123; {mcdCalc.divB.map((d, i) => (
+                            <React.Fragment key={d}>{i > 0 && ", "}{mcdCalc.common.includes(d) ? <strong>{d}</strong> : d}</React.Fragment>
+                          ))} &#125;
                         </div>
                         <div className="p-3 bg-blue-50 rounded-xl border border-blue-200 text-xs font-sans text-dida-blue">
-                          Divisori comuni: 1, 2, 4, <strong>8</strong>. Il più grande è <strong>8</strong>!
+                          Divisori comuni: {mcdCalc.common.join(", ")}. Il più grande è <strong>{mcdCalc.mcd}</strong>!
                         </div>
                         <div className="text-center text-lg font-black text-emerald-700">
-                          M.C.D.(24, 32) = 8
+                          M.C.D.({mcdCalc.a}, {mcdCalc.b}) = {mcdCalc.mcd}
                         </div>
                       </div>
                     </div>
@@ -615,23 +651,36 @@ export default function DivisibilityLesson({
                       </span>
                       <div className="flex justify-center py-2">
                         {/* SVG Venn M.C.D. */}
-                        <svg viewBox="0 0 380 180" className="w-80 h-40 select-none">
-                          <circle cx="140" cy="90" r="70" fill="#DBEAFE" fillOpacity="0.7" stroke="#3B82F6" strokeWidth="3" />
-                          <circle cx="240" cy="90" r="70" fill="#FEF3C7" fillOpacity="0.7" stroke="#F59E0B" strokeWidth="3" />
-                          <text x="95" y="45" className="font-bold text-xs fill-blue-700">D(24)</text>
-                          <text x="275" y="45" className="font-bold text-xs fill-amber-700">D(32)</text>
+                        <svg viewBox="0 0 420 230" className="w-full max-w-md select-none">
+                          <circle cx="150" cy="110" r="95" fill="#DBEAFE" fillOpacity="0.7" stroke="#3B82F6" strokeWidth="3" />
+                          <circle cx="270" cy="110" r="95" fill="#FEF3C7" fillOpacity="0.7" stroke="#F59E0B" strokeWidth="3" />
+                          <text x="70" y="22" className="font-bold text-sm fill-blue-700">D({mcdCalc.a})</text>
+                          <text x="350" y="22" textAnchor="end" className="font-bold text-sm fill-amber-700">D({mcdCalc.b})</text>
 
-                          {/* Elementi solo in 24 */}
-                          <text x="105" y="90" className="font-mono text-xs fill-slate-800">3, 6, 12, 24</text>
-                          {/* Elementi solo in 32 */}
-                          <text x="260" y="90" className="font-mono text-xs fill-slate-800">16, 32</text>
-                          {/* Intersezione */}
-                          <text x="190" y="85" textAnchor="middle" className="font-mono text-xs font-bold fill-slate-900">1, 2, 4</text>
-                          <text x="190" y="110" textAnchor="middle" className="font-mono text-base font-black fill-emerald-700">8 (M.C.D.)</text>
+                          {/* Divisori solo del primo, solo del secondo e comuni (nell'intersezione) */}
+                          {[
+                            { items: mcdCalc.soloA, x: 105, perRow: 3 },
+                            { items: mcdCalc.soloB, x: 315, perRow: 3 },
+                            { items: mcdCalc.common, x: 210, perRow: 3 },
+                          ].map(({ items, x, perRow }) => {
+                            const rows = Math.ceil(items.length / perRow);
+                            return Array.from({ length: rows }, (_, row) => (
+                              <text
+                                key={`${x}-${row}`}
+                                x={x}
+                                y={114 + (row - (rows - 1) / 2) * 17}
+                                textAnchor="middle"
+                                className={`font-mono text-xs ${x === 210 ? "font-bold fill-slate-900" : "fill-slate-800"}`}
+                              >
+                                {items.slice(row * perRow, row * perRow + perRow).join(", ")}
+                              </text>
+                            ));
+                          })}
+                          <text x="210" y="224" textAnchor="middle" className="font-mono text-sm font-black fill-emerald-700">M.C.D. = {mcdCalc.mcd}</text>
                         </svg>
                       </div>
                       <p className="text-xs text-slate-600 text-center">
-                        Nell'intersezione ci sono i divisori in comune &#123;1, 2, 4, 8&#125;. Il più grande dell'intersezione è <strong>8</strong>!
+                        Nell'intersezione ci sono i divisori in comune &#123;{mcdCalc.common.join(", ")}&#125;. Il più grande dell'intersezione è <strong>{mcdCalc.mcd}</strong>!
                       </p>
                     </div>
                   )}
@@ -643,12 +692,15 @@ export default function DivisibilityLesson({
                         Metodo 3: La Ricetta della Scomposizione (Per Numeri Grandi)
                       </span>
                       <div className="p-4 bg-white rounded-2xl border border-slate-200 max-w-lg mx-auto space-y-2 font-mono text-xs">
-                        <div>168 = 2³ × 3 × 7</div>
-                        <div>140 = 2² × 5 × 7</div>
+                        <div>{mcdCalc.a} = {formatFactors(mcdCalc.factA)}</div>
+                        <div>{mcdCalc.b} = {formatFactors(mcdCalc.factB)}</div>
                         <div className="p-3 bg-emerald-50 rounded-xl text-emerald-900 font-sans border border-emerald-200">
-                          <strong>La regola:</strong> prendi <em>SOLO i fattori COMUNI</em> (il 2 e il 7), ciascuno con l'<em>esponente MINORE</em>!
+                          <strong>La regola:</strong> prendi <em>SOLO i fattori COMUNI</em>
+                          {mcdCalc.factMcd.length > 0 ? ` (${mcdCalc.factMcd.map(([p]) => p).join(" e ")})` : ""}, ciascuno con l'<em>esponente MINORE</em>!
                           <div className="font-mono font-black text-sm pt-1">
-                            M.C.D.(168, 140) = 2² × 7 = 4 × 7 = 28
+                            {mcdCalc.factMcd.length === 0
+                              ? `Nessun fattore comune: M.C.D.(${mcdCalc.a}, ${mcdCalc.b}) = 1`
+                              : `M.C.D.(${mcdCalc.a}, ${mcdCalc.b}) = ${formatFactors(mcdCalc.factMcd)} = ${mcdCalc.mcd}`}
                           </div>
                         </div>
                       </div>
@@ -740,6 +792,13 @@ export default function DivisibilityLesson({
                     </div>
                   )}
 
+                  {mcmStrategy !== "calendario" && (
+                    <div className="flex justify-center gap-6">
+                      <NumberField label="Primo numero" value={mcmNumA} onChange={setMcmNumA} min={1} max={30} />
+                      <NumberField label="Secondo numero" value={mcmNumB} onChange={setMcmNumB} min={1} max={30} />
+                    </div>
+                  )}
+
                   {/* STRATEGIA: Metodo dell'Elenco */}
                   {mcmStrategy === "elenco" && (
                     <div className="p-6 rounded-3xl bg-slate-50 border-2 border-slate-200 space-y-4">
@@ -748,16 +807,16 @@ export default function DivisibilityLesson({
                       </span>
                       <div className="max-w-md mx-auto space-y-3 font-mono text-sm">
                         <div className="p-3 bg-white rounded-xl border border-slate-200">
-                          M(6) = &#123; 6, 12, 18, <strong className="text-emerald-600">24</strong>, 30, 36, 42, 48… &#125;
+                          M({mcmCalc.a}) = &#123; {shortList(mcmCalc.multA.filter(m => m <= mcmCalc.mcm))}… &#125;
                         </div>
                         <div className="p-3 bg-white rounded-xl border border-slate-200">
-                          M(8) = &#123; 8, 16, <strong className="text-emerald-600">24</strong>, 32, 40, 48… &#125;
+                          M({mcmCalc.b}) = &#123; {shortList(mcmCalc.multB.filter(m => m <= mcmCalc.mcm))}… &#125;
                         </div>
                         <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-xs font-sans text-emerald-800 text-center">
-                          Il primo multiplo comune incontrato (diverso da zero) è <strong>24</strong>!
+                          Il primo multiplo comune incontrato (diverso da zero) è <strong>{mcmCalc.mcm}</strong>!
                         </div>
                         <div className="text-center text-lg font-black text-emerald-700">
-                          m.c.m.(6, 8) = 24
+                          m.c.m.({mcmCalc.a}, {mcmCalc.b}) = {mcmCalc.mcm}
                         </div>
                       </div>
                     </div>
@@ -770,9 +829,12 @@ export default function DivisibilityLesson({
                         Metodo 2: Intersezione dei Multipli
                       </span>
                       <div className="p-4 bg-white rounded-2xl border border-slate-200 max-w-md mx-auto font-mono text-xs space-y-2">
-                        <div>Multipli in comune M(6) ∩ M(8) = &#123; <strong className="text-emerald-600">24</strong>, 48, 72, 96… &#125;</div>
+                        <div>
+                          Multipli in comune M({mcmCalc.a}) ∩ M({mcmCalc.b}) = &#123; <strong className="text-emerald-600">{mcmCalc.mcm}</strong>,{" "}
+                          {[2, 3, 4].map(k => mcmCalc.mcm * k).join(", ")}… &#125;
+                        </div>
                         <div className="p-2 bg-sky-50 text-sky-900 rounded-lg">
-                          Il m.c.m. è il <strong>minimo elemento</strong> dell'intersezione: <strong>24</strong>!
+                          Il m.c.m. è il <strong>minimo elemento</strong> dell'intersezione: <strong>{mcmCalc.mcm}</strong>!
                         </div>
                       </div>
                     </div>
@@ -785,12 +847,12 @@ export default function DivisibilityLesson({
                         Metodo 3: La Ricetta del m.c.m. con la Scomposizione
                       </span>
                       <div className="p-4 bg-white rounded-2xl border border-slate-200 max-w-lg mx-auto space-y-2 font-mono text-xs">
-                        <div>168 = 2³ × 3 × 7</div>
-                        <div>140 = 2² × 5 × 7</div>
+                        <div>{mcmCalc.a} = {formatFactors(mcmCalc.factA)}</div>
+                        <div>{mcmCalc.b} = {formatFactors(mcmCalc.factB)}</div>
                         <div className="p-3 bg-emerald-50 rounded-xl text-emerald-900 font-sans border border-emerald-200">
                           <strong>La regola:</strong> prendi <em>TUTTI i fattori (comuni e non comuni)</em>, ciascuno una sola volta con l'<em>esponente MAGGIORE</em>!
                           <div className="font-mono font-black text-sm pt-1">
-                            m.c.m.(168, 140) = 2³ × 3 × 5 × 7 = 8 × 15 × 7 = 840
+                            m.c.m.({mcmCalc.a}, {mcmCalc.b}) = {formatFactors(mcmCalc.factMcm)} = {mcmCalc.mcm}
                           </div>
                         </div>
                       </div>
@@ -962,9 +1024,9 @@ export default function DivisibilityLesson({
                     id: 2,
                     q: "Quale tra questi numeri è un NUMERO PRIMO?",
                     options: [
-                      { id: "a", label: "27 (3 × 9)", correct: false },
-                      { id: "b", label: "1 (ha 1 solo divisore)", correct: false },
-                      { id: "c", label: "41 (ha solo 1 e 41)", correct: true },
+                      { id: "a", label: "27", correct: false },
+                      { id: "b", label: "1", correct: false },
+                      { id: "c", label: "41", correct: true },
                     ],
                     explain: "41 si può dividere solo per 1 e per 41!"
                   },
@@ -973,7 +1035,7 @@ export default function DivisibilityLesson({
                     q: "Qual è il M.C.D. tra 10 e 9?",
                     options: [
                       { id: "a", label: "90", correct: false },
-                      { id: "b", label: "1 (sono primi tra loro)", correct: true },
+                      { id: "b", label: "1", correct: true },
                       { id: "c", label: "0", correct: false },
                     ],
                     explain: "10 e 9 non hanno fattori primi in comune: il loro M.C.D. è 1!"
@@ -982,8 +1044,8 @@ export default function DivisibilityLesson({
                     id: 4,
                     q: "Qual è il m.c.m. tra 4 e 6?",
                     options: [
-                      { id: "a", label: "24 (prodotto)", correct: false },
-                      { id: "b", label: "12 (minimo comune)", correct: true },
+                      { id: "a", label: "24", correct: false },
+                      { id: "b", label: "12", correct: true },
                       { id: "c", label: "2", correct: false },
                     ],
                     explain: "12 è il più piccolo multiplo comune di 4 e 6 (4×3 = 12, 6×2 = 12)!"
@@ -1015,6 +1077,68 @@ export default function DivisibilityLesson({
                           {ans === item.options.find(o => o.correct)?.id
                             ? `✅ ${item.explain}`
                             : "❌ Riprova, rifletti sulle regole!"}
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* SEZIONE 1b: Calcola tu M.C.D. e m.c.m. */}
+            <div className="rounded-[2rem] border border-slate-200 bg-white p-6 md:p-8 shadow-sm space-y-6">
+              <div className="border-b border-slate-100 pb-4 text-center md:text-left flex flex-col md:flex-row md:items-end justify-between gap-2">
+                <div>
+                  <span className="text-xs font-bold text-dida-orange uppercase tracking-wider">
+                    Attività 2 · Calcola tu
+                  </span>
+                  <h3 className="text-xl font-black text-slate-800 mt-1">Scrivi il risultato</h3>
+                  <p className="text-xs text-slate-500">Usa il metodo che preferisci: elenco, Venn o scomposizione.</p>
+                </div>
+                <button
+                  onClick={() => setExCalcAnswers({})}
+                  className="flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-slate-700 cursor-pointer self-center"
+                >
+                  <RotateCcw size={14} /> Azzera Risposte
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {[
+                  { id: 1, kind: "M.C.D.", a: 18, b: 24 },
+                  { id: 2, kind: "m.c.m.", a: 10, b: 15 },
+                  { id: 3, kind: "M.C.D.", a: 36, b: 48 },
+                  { id: 4, kind: "m.c.m.", a: 6, b: 9 },
+                ].map((item) => {
+                  const correct = item.kind === "M.C.D." ? gcd(item.a, item.b) : lcm(item.a, item.b);
+                  const raw = exCalcAnswers[item.id] ?? "";
+                  const answered = raw.trim() !== "";
+                  const isCorrect = answered && parseInt(raw) === correct;
+                  return (
+                    <div
+                      key={item.id}
+                      className={`p-5 rounded-2xl border space-y-2 ${
+                        !answered ? "bg-slate-50 border-slate-200" : isCorrect ? "bg-emerald-50 border-emerald-300" : "bg-rose-50 border-rose-300"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="font-mono font-black text-slate-800">{item.kind}({item.a}, {item.b}) =</span>
+                        <input
+                          type="number"
+                          inputMode="numeric"
+                          value={raw}
+                          onChange={(e) => setExCalcAnswers(prev => ({ ...prev, [item.id]: e.target.value }))}
+                          className="w-24 text-center font-mono text-lg font-black bg-white border-2 border-slate-300 rounded-xl py-1 focus:outline-none focus:border-dida-orange"
+                          aria-label={`${item.kind} di ${item.a} e ${item.b}`}
+                        />
+                      </div>
+                      {answered && (
+                        <p className={`text-xs font-semibold ${isCorrect ? "text-emerald-700" : "text-rose-700"}`}>
+                          {isCorrect
+                            ? `✅ Esatto: ${item.a} = ${formatFactors(factorize(item.a))}, ${item.b} = ${formatFactors(factorize(item.b))}.`
+                            : item.kind === "M.C.D."
+                              ? "❌ Riprova: cerca il divisore comune PIÙ GRANDE (fattori comuni, esponente minore)."
+                              : "❌ Riprova: cerca il multiplo comune PIÙ PICCOLO (tutti i fattori, esponente maggiore)."}
                         </p>
                       )}
                     </div>

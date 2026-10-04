@@ -6,10 +6,9 @@
 import React, { useState, lazy, Suspense, type ComponentType } from "react";
 import { motion, AnimatePresence, MotionConfig } from "motion/react";
 import {
-  Rocket, Search, Settings, GraduationCap, School, ArrowLeft,
-  Calculator, Triangle, Beaker, BookText, History, Globe,
-  Languages, Music, Palette, Monitor, Dumbbell, Sparkles, DollarSign,
-  BookOpen, Zap, Gamepad
+  Rocket, Search, Settings, ArrowLeft, Calculator, Triangle, Beaker, BookText,
+  History, Globe, Languages, Music, Palette, Monitor, Dumbbell, Sparkles,
+  DollarSign, BookOpen, Zap, Gamepad
 } from "lucide-react";
 
 interface LessonProps {
@@ -33,8 +32,6 @@ const LESSONS: { subtopicIds: string[]; standard: ComponentType<LessonProps>; in
       'decimal-comparison',
       'polynomial-form',
       'rounding-estimation',
-      'our-numeration-system',
-      'roman-numeration-system',
     ],
     standard: lazy(() => import("./lessons/NaturalDecimalLesson")),
     inclusion: lazy(() => import("./lessons/NaturalDecimalLessonInclusion")),
@@ -57,8 +54,6 @@ const LESSONS: { subtopicIds: string[]; standard: ComponentType<LessonProps>; in
       'division-properties',
       'expressions-order',
       'problem-solving-methods',
-      'resolution-phases',
-      'situation-schematization',
     ],
     standard: lazy(() => import("./lessons/OperationsLesson")),
     inclusion: lazy(() => import("./lessons/OperationsLessonInclusion")),
@@ -79,7 +74,6 @@ const LESSONS: { subtopicIds: string[]; standard: ComponentType<LessonProps>; in
       'divisors-multiples',
       'divisibility-criteria',
       'prime-composite-numbers',
-      'prime-factorization',
       'gcd',
       'lcm',
       'gcd-lcm-problems',
@@ -101,7 +95,6 @@ const LESSONS: { subtopicIds: string[]; standard: ComponentType<LessonProps>; in
   },
   {
     subtopicIds: [
-      'fraction-as-number',
       'fraction-addition',
       'fraction-subtraction',
       'fraction-multiplication',
@@ -120,9 +113,6 @@ const LESSONS: { subtopicIds: string[]; standard: ComponentType<LessonProps>; in
       'segments-operations',
       'segment-midpoint',
       'segments-problems',
-      'segments-comparison-operations',
-      'segment-measure-midpoint',
-      'segments-problem-solving',
     ],
     standard: lazy(() => import("./lessons/SegmentsLesson")),
     inclusion: lazy(() => import("./lessons/SegmentsLessonInclusion")),
@@ -133,7 +123,6 @@ const LESSONS: { subtopicIds: string[]; standard: ComponentType<LessonProps>; in
       'angles-comparison-vertical',
       'angles-consecutive-adjacent-operations',
       'bisector-angle-types',
-      'angle-measure',
       'complementary-supplementary-explementary',
     ],
     standard: lazy(() => import("./lessons/AnglesLesson")),
@@ -142,7 +131,6 @@ const LESSONS: { subtopicIds: string[]; standard: ComponentType<LessonProps>; in
   {
     subtopicIds: [
       'polygon-characteristics',
-      'congruent-polygons',
       'polygon-diagonals',
       'polygon-angles-sum',
       'regular-polygons-properties',
@@ -156,9 +144,6 @@ const LESSONS: { subtopicIds: string[]; standard: ComponentType<LessonProps>; in
       'quadrilateral-sides-angles',
       'trapezoids',
       'parallelograms',
-      'rectangles',
-      'rhombuses',
-      'squares',
       'special-parallelograms',
       'tangram-euler',
     ],
@@ -171,7 +156,6 @@ const LESSONS: { subtopicIds: string[]; standard: ComponentType<LessonProps>; in
       'triangles-classification',
       'altitudes-medians-orthocenter-centroid',
       'bisectors-axes-incenter-circumcenter',
-      'notable-points-isosceles-equilateral',
       'congruence-criteria',
     ],
     standard: lazy(() => import("./lessons/TrianglesLesson")),
@@ -182,7 +166,6 @@ const LESSONS: { subtopicIds: string[]; standard: ComponentType<LessonProps>; in
       'lines-positions-plane',
       'perpendicular-lines',
       'distance-point-line-segment-bisector',
-      'cartesian-reference-perpendicular-rays',
       'parallel-lines',
       'transversal-lines',
     ],
@@ -224,8 +207,22 @@ const LESSONS: { subtopicIds: string[]; standard: ComponentType<LessonProps>; in
   },
 ];
 
-const findLesson = (subtopicId: string | null) =>
-  subtopicId ? LESSONS.find(l => l.subtopicIds.includes(subtopicId)) : undefined;
+/**
+ * Sottoargomenti dell'indice che si aprono dentro la sezione di un'altra lezione.
+ * Chiave: id nell'indice; valore: id della sezione nella lezione.
+ */
+const SUBTOPIC_ALIASES: Record<string, string> = {
+  'resolution-phases': 'problem-solving-methods',
+  'situation-schematization': 'problem-solving-methods',
+};
+
+const resolveSubtopic = (subtopicId: string | null) =>
+  subtopicId ? SUBTOPIC_ALIASES[subtopicId] ?? subtopicId : null;
+
+const findLesson = (subtopicId: string | null) => {
+  const id = resolveSubtopic(subtopicId);
+  return id ? LESSONS.find(l => l.subtopicIds.includes(id)) : undefined;
+};
 
 const LessonLoading = () => (
   <div className="py-24 text-slate-400 font-bold animate-pulse">Caricamento lezione…</div>
@@ -834,6 +831,16 @@ const subtopics: Record<string, Subtopic[]> = {
   ],
 };
 
+// Controllo in sviluppo: ogni id del registro LESSONS deve esistere nell'indice dei sottoargomenti
+if (import.meta.env.DEV) {
+  const known = new Set(Object.values(subtopics).flat().map(s => s.id));
+  for (const id of [...LESSONS.flatMap(l => l.subtopicIds), ...Object.keys(SUBTOPIC_ALIASES)]) {
+    if (!known.has(id) && !Object.values(SUBTOPIC_ALIASES).includes(id)) {
+      console.warn(`[DidaLab] Il registro LESSONS cita "${id}", che non esiste nell'indice dei sottoargomenti.`);
+    }
+  }
+}
+
 export default function App() {
   const [view, setView] = useState<'landing' | 'disciplines' | 'subject-detail' | 'quiz-selection' | 'topic-detail' | 'learn-lesson' | 'learn-lesson-inclusion'>('landing');
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
@@ -1404,7 +1411,7 @@ export default function App() {
                 onBack={() => { setView('topic-detail'); setSelectedSubtopicId(null); }}
                 subjectName={selectedSubject.name}
                 topicName={selectedTopic.name}
-                initialSubtopicId={selectedSubtopicId ?? undefined}
+                initialSubtopicId={resolveSubtopic(selectedSubtopicId) ?? undefined}
                 initialTab={lessonInitialTab}
               />
             </Suspense>

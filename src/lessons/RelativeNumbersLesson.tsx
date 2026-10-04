@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import {
-  ArrowLeft, Info, Thermometer, Building, ArrowRightLeft,
-  CircleDot, HelpCircle, Layers, Check, X, MoveHorizontal, RotateCcw
+  ArrowLeft, Info, ArrowRightLeft, Check
 } from "lucide-react";
 
 interface Props {

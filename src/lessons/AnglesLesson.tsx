@@ -1,10 +1,7 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { AnimatePresence } from "motion/react";
 import {
-  ArrowLeft, Volume2, Sparkles, CheckCircle2, XCircle,
-  HelpCircle, ChevronRight, ChevronLeft, Award, RotateCcw,
-  BookOpen, Zap, Compass, Scissors, Clock, Info, Check, X,
-  AlertCircle, Scale, Eye, Sliders, Play, Calculator, Layers
+  ArrowLeft, BookOpen, Zap, Info
 } from "lucide-react";
 
 interface Props {
@@ -75,7 +72,6 @@ export default function AnglesLesson({
 
   // LAB 1: Goniometro & Pac-Man
   const [lab1Angle, setLab1Angle] = useState<number>(60);
-  const [lab1ShowConcave, setLab1ShowConcave] = useState<boolean>(false);
 
   // LAB 2: Stima e Lunghezza Bracci
   const [lab2ArmLengthA, setLab2ArmLengthA] = useState<number>(140);
@@ -105,6 +101,8 @@ export default function AnglesLesson({
   const [lab5ProblemModel, setLab5ProblemModel] = useState<"sum_mult" | "diff_sub">("sum_mult");
   const [lab5SumVal, setLab5SumVal] = useState<number>(120); // Dalla slide 39: somma 120, uno doppio dell'altro
   const [lab5DiffVal, setLab5DiffVal] = useState<number>(68); // Dalla slide 40: diff 68, uno 1/3 dell'altro
+  const sumPart = lab5SumVal / 3; // α = 1 parte, β = 2 parti
+  const diffPart = lab5DiffVal / 2; // β = 1 parte, α = 3 parti
 
   // ==========================================
   // --- STATI PALESTRA ALLENA ---
@@ -116,11 +114,6 @@ export default function AnglesLesson({
 
   // Invalsi 2: Piero e Rubinetto
   const [inv2Direction, setInv2Direction] = useState<string | null>(null);
-  const [inv2Rotation, setInv2Rotation] = useState<string | null>(null);
-
-  // Invalsi 3: Le due bisettrici
-  const [inv3Answer, setInv3Answer] = useState<string>("");
-  const [inv3Submitted, setInv3Submitted] = useState<boolean>(false);
 
   // Sfida Finale: 6 Vero/Falso
   const [vfAnswers, setVfAnswers] = useState<Record<string, boolean | null>>({});
@@ -142,38 +135,18 @@ export default function AnglesLesson({
     return { name: "Giro (360°)", color: "text-rose-700", bg: "bg-rose-100", border: "border-rose-300" };
   };
 
-  // Helper calcolo sessagesimale
+  // Helper calcolo sessagesimale (lavora in secondi totali, poi riporta in forma normale)
   const computeSexagesimal = () => {
-    if (calcOp === "add") {
-      let totalSec = calcSec1 + calcSec2;
-      let extraMin = Math.floor(totalSec / 60);
-      let remSec = totalSec % 60;
-
-      let totalMin = calcMin1 + calcMin2 + extraMin;
-      let extraDeg = Math.floor(totalMin / 60);
-      let remMin = totalMin % 60;
-
-      let totalDeg = calcDeg1 + calcDeg2 + extraDeg;
-      return { deg: totalDeg, min: remMin, sec: remSec, rawSec: totalSec, rawMin: totalMin };
-    } else {
-      let sec1 = calcSec1;
-      let min1 = calcMin1;
-      let deg1 = calcDeg1;
-
-      if (sec1 < calcSec2) {
-        min1 -= 1;
-        sec1 += 60;
-      }
-      if (min1 < calcMin2) {
-        deg1 -= 1;
-        min1 += 60;
-      }
-      let diffSec = sec1 - calcSec2;
-      let diffMin = min1 - calcMin2;
-      let diffDeg = deg1 - calcDeg2;
-
-      return { deg: Math.max(0, diffDeg), min: Math.max(0, diffMin), sec: Math.max(0, diffSec), rawSec: 0, rawMin: 0 };
-    }
+    const first = calcDeg1 * 3600 + calcMin1 * 60 + calcSec1;
+    const second = calcDeg2 * 3600 + calcMin2 * 60 + calcSec2;
+    const total = calcOp === "add" ? first + second : first - second;
+    const abs = Math.abs(total);
+    return {
+      deg: Math.floor(abs / 3600),
+      min: Math.floor((abs % 3600) / 60),
+      sec: abs % 60,
+      negative: total < 0,
+    };
   };
 
   const sexagesimalRes = computeSexagesimal();
@@ -286,7 +259,7 @@ export default function AnglesLesson({
                       </span>
                       <h4 className="text-lg font-black text-slate-800">Origine O & Semirette a, b</h4>
                       <p className="text-xs text-slate-600 leading-relaxed">
-                        L'angolo è la <strong>parte di piano</strong> compresa tra due semirette che hanno la stessa origine $O$, detta <strong>vertice</strong>. I lati sono le semirette!
+                        L'angolo è la <strong>parte di piano</strong> compresa tra due semirette che hanno la stessa origine O, detta <strong>vertice</strong>. I lati sono le semirette!
                       </p>
                     </div>
 
@@ -754,7 +727,7 @@ export default function AnglesLesson({
                       </span>
                       <h4 className="text-lg font-black text-slate-800">Due rette che si incrociano</h4>
                       <p className="text-xs text-slate-600">
-                        I due angoli opposti hanno la stessa identica ampiezza: $\alpha \equiv \alpha'$ e $\beta \equiv \beta'$!
+                        I due angoli opposti hanno la stessa identica ampiezza: α ≡ α' e β ≡ β'!
                       </p>
                     </div>
                   </div>
@@ -770,7 +743,7 @@ export default function AnglesLesson({
                         Il Meccano a X & Forbici Snodate
                       </h3>
                       <p className="text-xs text-slate-500">
-                        Muovi l'angolo $\alpha$ e osserva come cambiano gli altri tre angoli generati dall'incrocio di due rette!
+                        Muovi l'angolo α e osserva come cambiano gli altri tre angoli generati dall'incrocio di due rette!
                       </p>
                     </div>
 
@@ -894,23 +867,40 @@ export default function AnglesLesson({
                         </div>
 
                         <div className="flex justify-around text-base font-bold text-slate-800">
-                          <span>{calcDeg1}°</span>
-                          <span>{calcMin1}'</span>
-                          <span>{calcSec1}''</span>
+                          <span><input type="number" min={0} max={359} value={calcDeg1} onChange={(e) => setCalcDeg1(Math.min(359, Math.max(0, parseInt(e.target.value) || 0)))} className="w-14 text-center bg-slate-50 border border-slate-300 rounded-lg py-0.5 focus:outline-none focus:border-dida-orange" aria-label="gradi primo angolo" />°</span>
+                          <span><input type="number" min={0} max={59} value={calcMin1} onChange={(e) => setCalcMin1(Math.min(59, Math.max(0, parseInt(e.target.value) || 0)))} className="w-14 text-center bg-slate-50 border border-slate-300 rounded-lg py-0.5 focus:outline-none focus:border-dida-orange" aria-label="primi primo angolo" />'</span>
+                          <span><input type="number" min={0} max={59} value={calcSec1} onChange={(e) => setCalcSec1(Math.min(59, Math.max(0, parseInt(e.target.value) || 0)))} className="w-14 text-center bg-slate-50 border border-slate-300 rounded-lg py-0.5 focus:outline-none focus:border-dida-orange" aria-label="secondi primo angolo" />''</span>
                         </div>
 
                         <div className="flex justify-around text-base font-bold text-slate-800">
                           <span className="text-dida-orange mr-4">{calcOp === "add" ? "+" : "−"}</span>
-                          <span>{calcDeg2}°</span>
-                          <span>{calcMin2}'</span>
-                          <span>{calcSec2}''</span>
+                          <span><input type="number" min={0} max={359} value={calcDeg2} onChange={(e) => setCalcDeg2(Math.min(359, Math.max(0, parseInt(e.target.value) || 0)))} className="w-14 text-center bg-slate-50 border border-slate-300 rounded-lg py-0.5 focus:outline-none focus:border-dida-orange" aria-label="gradi secondo angolo" />°</span>
+                          <span><input type="number" min={0} max={59} value={calcMin2} onChange={(e) => setCalcMin2(Math.min(59, Math.max(0, parseInt(e.target.value) || 0)))} className="w-14 text-center bg-slate-50 border border-slate-300 rounded-lg py-0.5 focus:outline-none focus:border-dida-orange" aria-label="primi secondo angolo" />'</span>
+                          <span><input type="number" min={0} max={59} value={calcSec2} onChange={(e) => setCalcSec2(Math.min(59, Math.max(0, parseInt(e.target.value) || 0)))} className="w-14 text-center bg-slate-50 border border-slate-300 rounded-lg py-0.5 focus:outline-none focus:border-dida-orange" aria-label="secondi secondo angolo" />''</span>
                         </div>
 
-                        <div className="border-t-2 border-slate-700 pt-2 flex justify-around text-lg font-black text-emerald-700 bg-emerald-50 py-2 rounded-xl">
-                          <span>{sexagesimalRes.deg}°</span>
-                          <span>{sexagesimalRes.min}'</span>
-                          <span>{sexagesimalRes.sec}''</span>
-                        </div>
+                        {sexagesimalRes.negative ? (
+                          <div className="border-t-2 border-slate-700 pt-2 text-xs font-bold text-rose-700 bg-rose-50 py-2 rounded-xl font-sans space-y-1.5">
+                            <p>Il secondo angolo è più grande del primo: non si può sottrarre!</p>
+                            <button
+                              onClick={() => {
+                                const [d, m, sec] = [calcDeg1, calcMin1, calcSec1];
+                                setCalcDeg1(calcDeg2); setCalcMin1(calcMin2); setCalcSec1(calcSec2);
+                                setCalcDeg2(d); setCalcMin2(m); setCalcSec2(sec);
+                              }}
+                              className="px-3 py-1 rounded-lg bg-white border border-rose-300 text-rose-700 hover:bg-rose-100 cursor-pointer"
+                            >
+                              ⇅ Scambia i due angoli
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="border-t-2 border-slate-700 pt-2 flex justify-around text-lg font-black text-emerald-700 bg-emerald-50 py-2 rounded-xl">
+                            <span>{sexagesimalRes.deg}°</span>
+                            <span>{sexagesimalRes.min}'</span>
+                            <span>{sexagesimalRes.sec}''</span>
+                          </div>
+                        )}
+                        <p className="text-[11px] text-slate-500 font-sans">Cambia i valori: ricorda che 60'' = 1' e 60' = 1°.</p>
                       </div>
                     </div>
                   </div>
@@ -1211,58 +1201,68 @@ export default function AnglesLesson({
                       {lab5ProblemModel === "sum_mult" ? (
                         <div className="p-6 rounded-3xl bg-white border border-slate-200 space-y-4 max-w-xl mx-auto shadow-xs">
                           <div className="text-xs text-slate-600 bg-blue-50 p-3 rounded-xl border border-blue-200">
-                            <strong>Problema Slide 39:</strong> La somma di due angoli α e β è <strong>120°</strong> e β è il <strong>doppio</strong> di α (β = 2 × α). Quanto misura ciascuno?
+                            <strong>Problema Slide 39:</strong> La somma di due angoli α e β è <strong>{lab5SumVal}°</strong> e β è il <strong>doppio</strong> di α (β = 2 × α). Quanto misura ciascuno?
                           </div>
+                          <label className="flex items-center gap-3 text-xs font-bold text-slate-600">
+                            Cambia la somma:
+                            <input type="range" min={30} max={330} step={3} value={lab5SumVal} onChange={(e) => setLab5SumVal(Number(e.target.value))} className="flex-1 accent-blue-600" />
+                            <span className="font-mono text-dida-blue w-12 text-right">{lab5SumVal}°</span>
+                          </label>
 
                           <div className="space-y-2">
                             <div className="flex items-center gap-2">
                               <span className="font-bold text-xs text-blue-700 w-16">α (1 parte):</span>
                               <div className="h-6 w-20 bg-blue-500 rounded-md text-white font-bold text-xs flex items-center justify-center">
-                                40°
+                                {sumPart}°
                               </div>
                             </div>
                             <div className="flex items-center gap-2">
                               <span className="font-bold text-xs text-orange-700 w-16">β (2 parti):</span>
                               <div className="h-6 w-20 bg-orange-500 rounded-md text-white font-bold text-xs flex items-center justify-center mr-1">
-                                40°
+                                {sumPart}°
                               </div>
                               <div className="h-6 w-20 bg-orange-500 rounded-md text-white font-bold text-xs flex items-center justify-center">
-                                40°
+                                {sumPart}°
                               </div>
                             </div>
                           </div>
 
                           <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 font-mono text-xs text-slate-700 space-y-1">
                             <p>1. Conta le parti totali: 1 + 2 = <strong>3 parti uguali</strong>.</p>
-                            <p>2. Valore di 1 parte: 120° : 3 = <strong>40° (quindi α = 40°)</strong>.</p>
-                            <p>3. Valore di 2 parti: 40° × 2 = <strong>80° (quindi β = 80°)</strong>.</p>
-                            <p className="text-emerald-700 font-bold">✓ Verifica: 40° + 80° = 120°!</p>
+                            <p>2. Valore di 1 parte: {lab5SumVal}° : 3 = <strong>{sumPart}° (quindi α = {sumPart}°)</strong>.</p>
+                            <p>3. Valore di 2 parti: {sumPart}° × 2 = <strong>{sumPart * 2}° (quindi β = {sumPart * 2}°)</strong>.</p>
+                            <p className="text-emerald-700 font-bold">✓ Verifica: {sumPart}° + {sumPart * 2}° = {lab5SumVal}°!</p>
                           </div>
                         </div>
                       ) : (
                         <div className="p-6 rounded-3xl bg-white border border-slate-200 space-y-4 max-w-xl mx-auto shadow-xs">
                           <div className="text-xs text-slate-600 bg-orange-50 p-3 rounded-xl border border-orange-200">
-                            <strong>Problema Slide 40:</strong> La differenza tra α e β è <strong>68°</strong> e β è <Frac num="1" den="3" size="xs" /> di α. Quanto misura ciascuno?
+                            <strong>Problema Slide 40:</strong> La differenza tra α e β è <strong>{lab5DiffVal}°</strong> e β è <Frac num="1" den="3" size="xs" /> di α. Quanto misura ciascuno?
                           </div>
+                          <label className="flex items-center gap-3 text-xs font-bold text-slate-600">
+                            Cambia la differenza:
+                            <input type="range" min={10} max={170} step={2} value={lab5DiffVal} onChange={(e) => setLab5DiffVal(Number(e.target.value))} className="flex-1 accent-orange-500" />
+                            <span className="font-mono text-dida-orange w-12 text-right">{lab5DiffVal}°</span>
+                          </label>
 
                           <div className="space-y-2">
                             <div className="flex items-center gap-2">
                               <span className="font-bold text-xs text-blue-700 w-16">α (3 parti):</span>
-                              <div className="h-6 w-16 bg-blue-500 rounded-md text-white font-bold text-xs flex items-center justify-center">34°</div>
-                              <div className="h-6 w-16 bg-emerald-500 rounded-md text-white font-bold text-xs flex items-center justify-center">34°</div>
-                              <div className="h-6 w-16 bg-emerald-500 rounded-md text-white font-bold text-xs flex items-center justify-center">34°</div>
+                              <div className="h-6 w-16 bg-blue-500 rounded-md text-white font-bold text-xs flex items-center justify-center">{diffPart}°</div>
+                              <div className="h-6 w-16 bg-emerald-500 rounded-md text-white font-bold text-xs flex items-center justify-center">{diffPart}°</div>
+                              <div className="h-6 w-16 bg-emerald-500 rounded-md text-white font-bold text-xs flex items-center justify-center">{diffPart}°</div>
                             </div>
                             <div className="flex items-center gap-2">
                               <span className="font-bold text-xs text-orange-700 w-16">β (1 parte):</span>
-                              <div className="h-6 w-16 bg-orange-500 rounded-md text-white font-bold text-xs flex items-center justify-center">34°</div>
+                              <div className="h-6 w-16 bg-orange-500 rounded-md text-white font-bold text-xs flex items-center justify-center">{diffPart}°</div>
                             </div>
                           </div>
 
                           <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 font-mono text-xs text-slate-700 space-y-1">
                             <p>1. Con la differenza si tolgono le parti: 3 − 1 = <strong>2 parti</strong>.</p>
-                            <p>2. Valore di 1 parte: 68° : 2 = <strong>34° (quindi β = 34°)</strong>.</p>
-                            <p>3. Valore di 3 parti: 34° × 3 = <strong>102° (quindi α = 102°)</strong>.</p>
-                            <p className="text-emerald-700 font-bold">✓ Verifica: 102° − 34° = 68°!</p>
+                            <p>2. Valore di 1 parte: {lab5DiffVal}° : 2 = <strong>{diffPart}° (quindi β = {diffPart}°)</strong>.</p>
+                            <p>3. Valore di 3 parti: {diffPart}° × 3 = <strong>{diffPart * 3}° (quindi α = {diffPart * 3}°)</strong>.</p>
+                            <p className="text-emerald-700 font-bold">✓ Verifica: {diffPart * 3}° − {diffPart}° = {lab5DiffVal}°!</p>
                           </div>
                         </div>
                       )}
@@ -1377,7 +1377,7 @@ export default function AnglesLesson({
                 {[
                   { id: "sud", label: "A) Sud" },
                   { id: "ovest", label: "B) Ovest" },
-                  { id: "nord", label: "C) Nord (Corretto)" },
+                  { id: "nord", label: "C) Nord" },
                   { id: "est", label: "D) Est" },
                 ].map((opt) => (
                   <button

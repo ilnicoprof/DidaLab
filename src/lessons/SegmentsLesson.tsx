@@ -1,10 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  ArrowLeft, BookOpen, Zap, CheckCircle2, XCircle, Sparkles,
-  ChevronRight, RotateCcw, AlertCircle, Info, Award, HelpCircle,
-  Scissors, Check, X, Star, Ruler, Compass, Grid, Layers,
-  Split, MoveHorizontal, Eye, Navigation, MapPin, Calculator, Play
+  ArrowLeft, BookOpen, Zap, RotateCcw, AlertCircle, Info, Scissors, Ruler
 } from "lucide-react";
 
 interface Props {
@@ -55,7 +52,6 @@ const SUBTOPICS = [
 export default function SegmentsLesson({
   onBack,
   subjectName,
-  topicName,
   initialSubtopicId,
   initialTab = "impara",
 }: Props) {
@@ -82,14 +78,11 @@ export default function SegmentsLesson({
   // Lab 2: Confronto con Compasso & Calibro
   const [compLenA, setCompLenA] = useState<number>(14);
   const [compLenB, setCompLenB] = useState<number>(11);
-  const [isCompassActive, setIsCompassActive] = useState<boolean>(false);
 
   // Lab 3: Somma e Differenza
   const [opMode, setOpMode] = useState<"somma" | "differenza">("somma");
   const [segLenA, setSegLenA] = useState<number>(21);
   const [segLenB, setSegLenB] = useState<number>(8);
-  const [unitA, setUnitA] = useState<"cm" | "mm">("cm");
-  const [unitB, setUnitB] = useState<"cm" | "mm">("cm");
 
   // Lab 4: Multipli, Sottomultipli e Punto Medio
   const [midBaseLen, setMidBaseLen] = useState<number>(16);
@@ -113,7 +106,6 @@ export default function SegmentsLesson({
   const [exErrors, setExErrors] = useState<Record<number, boolean | null>>({});
   const [invalsiAnswers, setInvalsiAnswers] = useState<Record<string, string>>({});
   const [vfAnswers, setVfAnswers] = useState<Record<string, boolean | null>>({});
-  const [exitTicketText, setExitTicketText] = useState({ seg1: "", seg2: "", seg3: "", word1: "", word2: "", question: "" });
 
   // Calcolo punto medio coordinate cartesiane
   const midPointCoords = useMemo(() => {
@@ -248,7 +240,7 @@ export default function SegmentsLesson({
                       Il Segmento, la Misura & la Spezzata
                     </h2>
                     <p className="text-slate-600 text-sm md:text-base leading-relaxed max-w-2xl">
-                      Il <strong>segmento</strong> è la parte di retta compresa tra due punti detti <strong>estremi</strong> ($A$ e $B$). Rappresenta la strada più breve tra due punti!
+                      Il <strong>segmento</strong> è la parte di retta compresa tra due punti detti <strong>estremi</strong> (A e B). Rappresenta la strada più breve tra due punti!
                     </p>
                   </div>
 
@@ -550,7 +542,7 @@ export default function SegmentsLesson({
                         Confronta i Due Segmenti con il Compasso
                       </h3>
                       <p className="text-xs text-slate-500">
-                        Regola le lunghezze dei due segmenti e attiva il compasso per misurare l'apertura e vedere dove cade l'estremo!
+                        Regola le lunghezze dei due segmenti: il compasso riporta CD sopra AB partendo dallo stesso estremo, e vedi dove cade l'altro!
                       </p>
 
                       {/* Presets di Esempio Reale */}
@@ -868,7 +860,7 @@ export default function SegmentsLesson({
                       Multipli, Sottomultipli & Il Punto Medio
                     </h2>
                     <p className="text-slate-600 text-sm md:text-base leading-relaxed max-w-2xl">
-                      Un segmento può essere replicato più volte (<strong>multiplo</strong>) o diviso in parti uguali (<strong>sottomultiplo</strong>). Il <strong>punto medio</strong> è il punto che divide il segmento esattamente a metà ($AM \equiv MB$)!
+                      Un segmento può essere replicato più volte (<strong>multiplo</strong>) o diviso in parti uguali (<strong>sottomultiplo</strong>). Il <strong>punto medio</strong> è il punto che divide il segmento esattamente a metà (AM ≡ MB)!
                     </p>
                   </div>
 
@@ -916,7 +908,10 @@ export default function SegmentsLesson({
                       <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-blue-100 pb-3">
                         <div>
                           <span className="text-xs font-black uppercase text-blue-900 block">1. Il Punto Medio Fisico</span>
-                          <span className="text-sm font-bold text-slate-700">Lunghezza di AB: {midBaseLen} cm</span>
+                          <label className="flex items-center gap-2 text-sm font-bold text-slate-700">
+                            Lunghezza di AB: <span className="font-mono text-dida-blue w-14">{midBaseLen} cm</span>
+                            <input type="range" min={2} max={30} value={midBaseLen} onChange={(e) => setMidBaseLen(Number(e.target.value))} className="w-32 accent-dida-blue" />
+                          </label>
                         </div>
                         <div className="flex items-center gap-2">
                           <button
@@ -965,9 +960,40 @@ export default function SegmentsLesson({
                         </div>
 
                         <div className="flex justify-around w-full max-w-md text-xs font-mono font-bold">
-                          <span className="text-blue-700">AM = {(midBaseLen / 2).toFixed(1)} cm</span>
+                          <span className="text-blue-700">AM = {midBaseLen / 2} cm</span>
                           <span className="text-emerald-700">AM ≡ MB</span>
-                          <span className="text-orange-700">MB = {(midBaseLen / 2).toFixed(1)} cm</span>
+                          <span className="text-orange-700">MB = {midBaseLen / 2} cm</span>
+                        </div>
+                      </div>
+
+                      {/* Multipli e sottomultipli di AB */}
+                      <div className="p-5 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
+                        <label className="flex flex-wrap items-center justify-center gap-3 text-xs font-bold text-slate-700">
+                          Multipli e sottomultipli: scegli il numero
+                          <input type="range" min={2} max={5} value={multMultiplier} onChange={(e) => setMultMultiplier(Number(e.target.value))} className="w-28 accent-dida-orange" />
+                          <span className="font-mono text-dida-orange text-base">{multMultiplier}</span>
+                        </label>
+                        <div className="space-y-2 max-w-lg mx-auto">
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono text-xs font-bold w-24 text-right text-blue-700">AB</span>
+                            <div className="flex-1">
+                              <div className="h-3 bg-blue-500 rounded-full" style={{ width: `${100 / multMultiplier}%` }} />
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono text-xs font-bold w-24 text-right text-orange-700">{multMultiplier} × AB</span>
+                            <div className="flex-1 flex gap-0.5">
+                              {Array.from({ length: multMultiplier }, (_, i) => (
+                                <div key={i} className="h-3 bg-orange-500 rounded-full" style={{ width: `${100 / multMultiplier}%` }} />
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex flex-col sm:flex-row justify-around gap-2 text-xs font-mono font-bold text-center">
+                          <span className="text-orange-700">Multiplo: {multMultiplier} × {midBaseLen} cm = {multMultiplier * midBaseLen} cm</span>
+                          <span className="text-purple-700">
+                            Sottomultiplo: {midBaseLen} cm : {multMultiplier} = {Number.isInteger(midBaseLen / multMultiplier) ? midBaseLen / multMultiplier : (midBaseLen / multMultiplier).toFixed(2)} cm
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -982,7 +1008,7 @@ export default function SegmentsLesson({
                           Punto Medio sul Piano Cartesiano
                         </h4>
                         <p className="text-xs text-slate-500">
-                          Modifica le coordinate dei punti A e B: le formule calcolano la media aritmetica di $x$ e di $y$ per posizionare il punto medio $M$!
+                          Modifica le coordinate dei punti A e B: le formule calcolano la media aritmetica di x e di y per posizionare il punto medio M!
                         </p>
                       </div>
 
@@ -1131,7 +1157,7 @@ export default function SegmentsLesson({
                       </span>
                       <h3 className="text-xl font-black text-slate-800">"Conta le Parti Uguali"</h3>
                       <p className="text-xs text-slate-600 leading-relaxed">
-                        Se Lucia ha il doppio di Gerardo, Gerardo ha 1 parte e Lucia 2 parti $\rightarrow$ 3 parti in tutto!<br />
+                        Se Lucia ha il doppio di Gerardo, Gerardo ha 1 parte e Lucia 2 parti → 3 parti in tutto!<br />
                         <strong>1 parte</strong> = Totale : (1 + 2) = Totale : 3.
                       </p>
                     </div>

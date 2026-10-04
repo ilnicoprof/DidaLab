@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
 import {
-  ArrowLeft, Info, Calculator, Rocket, Check, ArrowRight, X, Play, Repeat, Target
+  ArrowLeft, Calculator, Check, ArrowRight
 } from "lucide-react";
 
 interface Props {
